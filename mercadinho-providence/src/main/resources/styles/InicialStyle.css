@@ -1,0 +1,21 @@
+/* src/main/resources/css/sidebar_styles.css */
+
+.sidebar-button {
+    -fx-font-size: 16px;
+    -fx-text-fill: white;
+    -fx-background-color: transparent;
+    -fx-font-weight: bold;
+    -fx-background-radius: 0px;
+    -fx-padding: 10px 20px;
+    -fx-cursor: hand; /* Equivalente a Cursor.HAND */
+}
+
+/* Estilo para quando o mouse está sobre o botão (hover) */
+.sidebar-button:hover {
+    -fx-background-color: rgba(0,0,0,0.2); /* Fundo semi-transparente no hover */
+}
+
+/* Opcional: Estilo para quando o botão é pressionado */
+.sidebar-button:pressed {
+    -fx-background-color: rgba(0,0,0,0.4); /* Um pouco mais escuro quando pressionado */
+}

@@ -1,0 +1,121 @@
+/*
+ * Arquivo CSS para a Tela de Confirmação de Venda e Pagamento
+ * Nome: pdv_styles.css
+ */
+
+/* ================== ESTILOS GERAIS DA JANELA ================== */
+
+.confirmacao-venda-root {
+    -fx-background-color: #f0f2f5; /* Fundo cinza claro */
+    -fx-font-family: 'Segoe UI', 'Roboto', sans-serif;
+}
+
+/* ================== BARRA DE MENU SUPERIOR ================== */
+
+.menu-bar-dialog {
+    -fx-background-color: #ffffff;
+    -fx-padding: 10 20;
+    -fx-spacing: 15;
+    -fx-border-color: #dddddd;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.dialog-menu-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #333333;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.dialog-menu-button:hover {
+    -fx-background-color: #e6e6e6;
+}
+
+.dialog-menu-button-concluir {
+    -fx-background-color: #4CAF50; /* Verde */
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 15;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.dialog-menu-button-concluir:hover {
+    -fx-background-color: #45a049;
+}
+
+/* ================== SEÇÃO DE PAGAMENTO E DETALHES ================== */
+
+.vbox {
+    -fx-spacing: 20;
+}
+
+.hbox {
+    -fx-spacing: 10;
+}
+
+.dialog-label-bold {
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-text-fill: #555555;
+    -fx-min-width: 200px; 
+}
+
+.dialog-text-field {
+    -fx-pref-height: 35px;
+    -fx-font-size: 14px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5;
+    -fx-padding: 5;
+}
+
+.dialog-text-field:focused {
+    -fx-border-color: #2196F3; /* Azul */
+    -fx-border-width: 2px;
+}
+
+.dialog-combo-box {
+    -fx-pref-height: 35px;
+    -fx-font-size: 14px;
+}
+
+.dialog-combo-box .list-cell:selected {
+    -fx-background-color: #2196F3;
+    -fx-text-fill: black;
+}
+
+/* ================== ESTILOS PARA VALORES E TROCO ================== */
+
+.dialog-value-subtotal,
+.dialog-value-total,
+.dialog-value-troco {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+.dialog-value-subtotal {
+    -fx-text-fill: #666666;
+}
+
+.dialog-value-total {
+    -fx-text-fill: #333333;
+    -fx-font-size: 20px;
+}
+
+.dialog-value-troco-positivo {
+    -fx-text-fill: #4CAF50; /* Verde para troco positivo */
+}
+
+.dialog-value-troco-negativo {
+    -fx-text-fill: #F44336; /* Vermelho para troco negativo (falta) */
+    -fx-font-style: italic;
+}
+
+/* ================== ESTILOS DE PLACEHOLDER PARA TEXTFIELDS ================== */
+.text-field .prompt-text {
+    -fx-text-fill: #999999;
+}

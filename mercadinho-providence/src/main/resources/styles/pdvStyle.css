@@ -1,0 +1,286 @@
+/* src/main/resources/css/pdv-styles.css */
+
+/* Estilos globais para a tela PDV */
+.pdv-root {
+    -fx-background-color: #ECEFF1; /* Cinza claro de fundo */
+    -fx-font-family: 'Arial', sans-serif;
+}
+
+/* Estilo para a barra de menu principal */
+.main-menu-bar {
+    -fx-background-color: #37474F; /* Azul escuro quase preto */
+    -fx-padding: 0;
+}
+
+.main-menu-bar .menu .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.main-menu-bar .menu-item {
+    -fx-padding: 5px 10px;
+}
+
+.main-menu-bar .menu-item:hover {
+    -fx-background-color: #546E7A; /* Azul mais claro ao passar o mouse */
+}
+
+/* Estilos para o label de status (Modo: Adição/Remoção) */
+.status-label-adicao {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1B5E20; /* Verde escuro */
+    -fx-padding: 5px;
+    -fx-alignment: center;
+    -fx-max-width: infinity;
+    -fx-background-color: #DCEDC8; /* Verde claro */
+}
+
+.status-label-remocao {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #B71C1C; /* Vermelho escuro */
+    -fx-padding: 5px;
+    -fx-alignment: center;
+    -fx-max-width: infinity;
+    -fx-background-color: #FFCDD2; /* Vermelho claro */
+}
+
+/* Estilos para o container central (HBox) */
+.pdv-center-box {
+    -fx-background-color: transparent;
+    -fx-padding: 10px;
+    -fx-spacing: 10px;
+}
+
+/* Estilos para o painel esquerdo (Cupom Fiscal) */
+.left-panel {
+    -fx-background-color: #CFD8DC; /* Cinza azulado claro */
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+    -fx-padding: 10px;
+    -fx-max-width: 550px;
+    -fx-pref-width: 550px;
+    -fx-min-width: 550px;
+}
+
+.receipt-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #263238; /* Azul escuro */
+    -fx-alignment: center;
+    -fx-max-width: infinity;
+    -fx-padding: 0 0 10px 0;
+}
+
+.receipt-items-box {
+    -fx-background-color: #FFFFFF; /* Fundo branco para os itens do cupom */
+    -fx-padding: 10px;
+    -fx-border-radius: 5px;
+    -fx-spacing: 5px;
+}
+
+.receipt-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.receipt-header-grid {
+    -fx-font-weight: bold;
+    -fx-padding: 2px 0 5px 0;
+    -fx-border-width: 0 0 1px 0;
+    -fx-border-color: #607D8B; /* Cinza azulado escuro */
+    -fx-font-size: 14px;
+}
+
+.receipt-item-grid {
+    -fx-padding: 2px 0;
+    -fx-font-size: 13px;
+}
+
+.receipt-separator-line {
+    -fx-font-family: 'Consolas', 'Monospaced', monospace; /* Fonte monoespaçada */
+    -fx-font-size: 12px;
+    -fx-padding: 5px 0;
+    -fx-text-fill: #78909C; /* Cinza suave */
+}
+
+/* Estilos para o painel direito (Detalhes do Produto/Venda) */
+.right-panel {
+    -fx-background-color: transparent;
+    -fx-padding: 10px;
+    -fx-spacing: 15px;
+}
+
+/* Caixas de informação (Quantidade, Valor Unitário, Nome Produto, Input Código) */
+.info-box {
+    -fx-background-color: white;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-border-color: #90A4AE; /* Cinza suave de borda */
+    -fx-border-width: 1px;
+    -fx-padding: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2); /* Sutil sombra */
+}
+
+.info-label {
+    -fx-font-size: 18px; /* Ajustado um pouco para menor */
+    -fx-font-weight: bold;
+    -fx-text-fill: #455A64; /* Azul cinza escuro */
+    -fx-padding: 0 0 5px 0; /* Espaçamento abaixo do label */
+}
+
+.info-value {
+    -fx-font-weight: bold;
+    -fx-font-size: 16px; /* Ajustado um pouco para menor */
+    -fx-text-fill: #37474F; /* Azul escuro quase preto */
+    -fx-alignment: bottom-right;
+    -fx-max-width: infinity;
+}
+
+.product-name-label {
+    -fx-font-size: 18px; /* Ajustado */
+    -fx-font-weight: bold;
+    -fx-text-fill: #263238;
+    -fx-alignment: center;
+    -fx-max-width: infinity;
+    -fx-wrap-text: true;
+    -fx-padding: 0 0 5px 0;
+}
+
+.item-sub-info {
+    -fx-font-size: 13px; /* Ajustado */
+    -fx-text-fill: #546E7A;
+    -fx-font-weight: bold; /* Para o total do item atual */
+}
+
+/* Caixa de Total da Compra (destaque) */
+.total-box {
+    -fx-background-color: #64B5F6; /* Azul claro */
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-border-color: #2196F3; /* Azul mais escuro */
+    -fx-border-width: 1px;
+    -fx-padding: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 4);
+}
+
+.total-label {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-alignment: center-left;
+    -fx-padding: 0 0 5px 0;
+}
+
+.total-value {
+    -fx-font-size: 28px; /* Aumentado */
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-alignment: center-right;
+    -fx-max-width: infinity;
+}
+
+/* Input de código de barras */
+.input-label {
+    -fx-font-size: 18px; /* Ajustado */
+    -fx-font-weight: bold;
+    -fx-text-fill: #455A64;
+    -fx-padding: 0 0 5px 0;
+}
+
+.product-input {
+    -fx-font-size: 16px;
+    -fx-padding: 8px;
+    -fx-border-color: #B0BEC5; /* Cinza azulado */
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.product-input:focused {
+    -fx-border-color: #4CAF50; /* Verde ao focar */
+    -fx-background-color: #E8F5E9; /* Fundo verde claro ao focar */
+}
+
+/* Estilos para o Footer */
+.pdv-footer {
+    -fx-background-color: #263238; /* Azul escuro bem escuro */
+    -fx-padding: 10px;
+    -fx-spacing: 10px;
+    -fx-alignment: center-left;
+}
+
+.footer-text {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.footer-small-text {
+    -fx-font-size: 13px;
+    -fx-text-fill: #CFD8DC; /* Cinza azulado claro */
+}
+
+.menu-atalhos-box {
+    -fx-background-color: #EF5350; /* Vermelho vibrante */
+    -fx-background-radius: 5px;
+    -fx-padding: 5px 10px;
+    -fx-alignment: center;
+}
+
+.menu-atalhos-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.menu-atalhos-key {
+    -fx-font-size: 12px;
+    -fx-text-fill: #FFEBEE; /* Vermelho muito claro */
+}
+
+.time-label {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #BBDEFB; /* Azul muito claro */
+}
+
+/* Estilos para as Labels dos itens do cupom fiscal para fonte monoespaçada */
+.label {
+    -fx-font-family: 'Consolas', 'Monospaced', monospace; /* Fallback para fontes genéricas */
+}
+
+.total-item {
+    -fx-font-weight: bold;
+}
+
+/* Estilos para botões (ex: se usar em TelaInicialView para "Abrir PDV") */
+.primary-button {
+    -fx-background-color: #4CAF50; /* Verde */
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+.primary-button:hover {
+    -fx-background-color: #66BB6A; /* Verde mais claro */
+}
+
+.pdv-button {
+    -fx-background-color: #009688; /* Verde Água */
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+.pdv-button:hover {
+    -fx-background-color: #26A69A; /* Verde Água mais claro */
+}

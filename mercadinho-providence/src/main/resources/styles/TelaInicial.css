@@ -1,0 +1,72 @@
+/* Estilo geral do BorderPane */
+.root-pane {
+    -fx-background-color: white;
+}
+
+/* Área central */
+.center-pane {
+    -fx-background-color: lightgray;
+    -fx-padding: 20;
+}
+
+/* Texto de boas-vindas */
+.welcome-label {
+    -fx-font-size: 24px;
+    -fx-text-fill: #333;
+    -fx-font-weight: bold;
+}
+
+/* Cabeçalho principal */
+.header-pane {
+    -fx-background-color: #D32F2F;
+    -fx-padding: 10px;
+}
+
+/* Título do cabeçalho */
+.header-title {
+    -fx-font-size: 18px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+/* Informações do usuário */
+.user-info-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: white;
+}
+
+/* Hora exibida */
+.hour-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: white;
+}
+
+/* Botão da sidebar */
+.sidebar-button {
+    -fx-font-size: 16px;
+    -fx-text-fill: white;
+    -fx-background-color: transparent;
+    -fx-font-weight: bold;
+    -fx-background-radius: 0px;
+    -fx-padding: 10px 20px;
+    -fx-cursor: hand;
+}
+
+/* Hover */
+.sidebar-button:hover {
+    -fx-background-color: rgba(0,0,0,0.2);
+}
+
+/* Sidebar */
+.sidebar-pane {
+    -fx-background-color: #E65100;
+    -fx-alignment: top-center;
+    -fx-padding: 20;
+}
+
+/* Placeholder do logo */
+.logo-placeholder {
+    -fx-font-size: 18px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
