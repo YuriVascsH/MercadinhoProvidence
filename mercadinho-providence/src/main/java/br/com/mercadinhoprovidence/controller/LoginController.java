@@ -4,6 +4,7 @@ import br.com.mercadinhoprovidence.Service.LoginService;
 import br.com.mercadinhoprovidence.dto.LoginRequestDto;
 import br.com.mercadinhoprovidence.dto.LoginResponseDto;
 import br.com.mercadinhoprovidence.dto.LoginVerificationRequestDto;
+import br.com.mercadinhoprovidence.exceptions.LoginFluxoIncorretoException;
 import br.com.mercadinhoprovidence.model.Funcionario;
 
 public class LoginController {
@@ -21,7 +22,7 @@ public class LoginController {
      *
      * @param loginRequestDto fornecido pelo usuário contendo(Id e senha)
      */
-    public void primeiraEtapa(LoginRequestDto loginRequestDto) throws IllegalArgumentException {
+    public void primeiraEtapa(LoginRequestDto loginRequestDto) throws LoginFluxoIncorretoException {
         this.funcionarioLoginParcial = loginService.validarCredenciais(loginRequestDto.getId(), loginRequestDto.getSenha());
     }
 
@@ -33,13 +34,13 @@ public class LoginController {
      */
     public LoginResponseDto segundaEtapa(LoginVerificationRequestDto loginVerificationRequestDto) {
         if(this.funcionarioLoginParcial == null) {
-            throw new IllegalStateException("A primeira etapa não foi realizada.");
+            throw new LoginFluxoIncorretoException("A primeira etapa não foi realizada.");
         }
 
         if (loginService.validarCodigoVerificador(this.funcionarioLoginParcial, loginVerificationRequestDto.getCodigoVerificador())) {
             return loginService.converterParaLoginResponseDto(funcionarioLoginParcial);
         } else {
-            throw new IllegalArgumentException("O código verificador está incorreto");
+            throw new LoginFluxoIncorretoException("O código verificador está incorreto");
         }
 
     }
