@@ -5,7 +5,6 @@ import br.com.mercadinhoprovidence.MainApplication;
 import br.com.mercadinhoprovidence.controller.LoginController;
 import br.com.mercadinhoprovidence.dto.LoginResponseDto;
 import br.com.mercadinhoprovidence.dto.LoginVerificationRequestDto;
-import br.com.mercadinhoprovidence.model.Funcionario;
 import br.com.mercadinhoprovidence.util.AlertUtils;
 import br.com.mercadinhoprovidence.util.InputUtils;
 import br.com.mercadinhoprovidence.view.component.TitleComponents;
@@ -57,7 +56,7 @@ public class TelaCodigoVerificador {
         // Adição do conteúdo
         root.setTop(TitleComponents.createHeaderBox());
         root.setCenter(createCodeContent());
-        root.setBottom(crateButtonBox());
+        root.setBottom(createButtonBox());
 
         // Definindo o tamnho da tela e a Scene
         this.scene = new Scene(root, 500, 300);
@@ -88,13 +87,13 @@ public class TelaCodigoVerificador {
      * Cria e retorna um VBox que contém o botão para submeter o código verificador.
      * @return VBox contendo o botão de verificação.
      */
-    private VBox crateButtonBox() {
+    private VBox createButtonBox() {
         VBox buttonBox = new VBox();
         buttonBox.setId("button-box");
         buttonVerify = new Button("Verificar Código");
         buttonVerify.getStyleClass().add("login-button");
 
-        // Define a ação do botão para chamar o método de tentativa de código
+        // Define a ação do botão para chamar o metodo de tentativa de código
         buttonVerify.setOnAction(e -> handleCodeAttempt());
 
         buttonBox.setAlignment(Pos.CENTER);
@@ -145,7 +144,6 @@ public class TelaCodigoVerificador {
         } catch (Exception ex) {
             AlertUtils.showError("Erro Inesperado", "Ocorreu um problema ao tentar verificar o código.",
                     "Detalhes: " + ex.getMessage() + "\nPor favor, tente novamente mais tarde ou contate o suporte.");
-            ex.printStackTrace();
             codeField.clear();
             codeField.requestFocus();
         }
