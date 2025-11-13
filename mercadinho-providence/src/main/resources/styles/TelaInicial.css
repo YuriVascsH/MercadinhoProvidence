@@ -41,32 +41,51 @@
     -fx-text-fill: white;
 }
 
-/* Botão da sidebar */
-.sidebar-button {
-    -fx-font-size: 16px;
-    -fx-text-fill: white;
-    -fx-background-color: transparent;
-    -fx-font-weight: bold;
-    -fx-background-radius: 0px;
-    -fx-padding: 10px 20px;
-    -fx-cursor: hand;
-}
-
-/* Hover */
-.sidebar-button:hover {
-    -fx-background-color: rgba(0,0,0,0.2);
-}
-
 /* Sidebar */
 .sidebar-pane {
     -fx-background-color: #E65100;
     -fx-alignment: top-center;
-    -fx-padding: 20;
+ /*   -fx-padding: 0;*/
 }
 
-/* Placeholder do logo */
+/* Placeholder do logo  Por enquanto */
 .logo-placeholder {
     -fx-font-size: 18px;
     -fx-text-fill: white;
     -fx-font-weight: bold;
 }
+
+/* Botão da SideBar*/
+.sidebar-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-pref-width: 200;
+    -fx-pref-height: 50;
+    -fx-alignment: center-left;
+    -fx-content-display: left;
+    -fx-graphic-text-gap: 10;
+    -fx-padding: 5 15 5 15;
+    -fx-cursor: hand;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+/* Hover (passar o mouse) */
+.sidebar-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Estado de foco (opcional, ao clicar) */
+.sidebar-button:focused {
+    -fx-background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Se quiser destacar botão ativo (ex: página atual) */
+.sidebar-button-active {
+    -fx-background-color: #FF8A00;
+    -fx-text-fill: #FFF;
+}
+
+
