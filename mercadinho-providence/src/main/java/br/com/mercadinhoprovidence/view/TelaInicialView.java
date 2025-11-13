@@ -1,6 +1,5 @@
 package br.com.mercadinhoprovidence.view;
 
-
 import br.com.mercadinhoprovidence.MainApplication;
 import br.com.mercadinhoprovidence.dto.LoginResponseDto;
 import br.com.mercadinhoprovidence.util.Timeutils;
@@ -59,7 +58,7 @@ public class TelaInicialView {
         this.funcionarioLogado = funcionarioLogado;
         this.botoesDesabilitados = botoesDesabilitados != null ? botoesDesabilitados : new HashSet<>();
         this.onOpenPdvScreen = onOpenPdvSceen;
-        // initializeViewData();
+        initializeViewData();
         setupUI();
     }
 
@@ -68,10 +67,10 @@ public class TelaInicialView {
      */
     private void initializeViewData() {
         // Adicionando as telas nos botões
-        telasConfig.put("Estoque", () -> new EstoqueView(mainApplication, funcionarioLogado).getView());
+        //telasConfig.put("Estoque", () -> new EstoqueView(mainApplication, funcionarioLogado).getView());
         telasConfig.put("Relatorio", RelatorioView::getView);
-        telasConfig.put("Funcionarios", () -> new FuncionariosView(mainApplication, funcionarioLogado).getView());
-        telasConfig.put("Ajuda", () -> new EstoqueView(mainApplication, funcionarioLogado).getView());
+        //telasConfig.put("Funcionarios", () -> new FuncionariosView(mainApplication, funcionarioLogado).getView());
+        //telasConfig.put("Ajuda", () -> new EstoqueView(mainApplication, funcionarioLogado).getView());
 
         // Adicionando btns (caminhos dos ícones)
         botoesConfig.put("PDV", "/images/carinho.png");
@@ -82,16 +81,16 @@ public class TelaInicialView {
         botoesConfig.put("Sair", "/images/sair.png");
     }
 
+    /***/
     private void setupUI() {
         BorderPane root = new BorderPane();
-        root.getStyleClass().add("center-pane");
-
         root.setTop(createHeader());
         root.setLeft(createSidebar());
 
-        // --- CENTER: Área de Conteúdo Principal ---
         centerPane = new StackPane();
         centerPane.getStyleClass().add("center-pane");
+        centerPane.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
         Label welcomeContentLabel = new Label(
                 "Bem-vindo ao Mercadinho Providence, " + funcionarioLogado.getName() + "!");
         welcomeContentLabel.getStyleClass().add("welcome-label");
@@ -101,9 +100,7 @@ public class TelaInicialView {
 
         this.scene = new Scene(root);
         configurarAtalhosDeTeclado();
-        this.scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/TelaInicial.css")).toExternalForm());
-
-    }
+        this.scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/TelaInicial.css")).toExternalForm());    }
 
     /**
      * Cria e retorna o painel do cabeçalho superior.
@@ -146,30 +143,25 @@ public class TelaInicialView {
      */
     private Button createSidebarButton(String texto, String caminhoIcone) {
         Button btn = new Button(texto);
-
-        try {
-            ImageView icon = new ImageView(new Image(getClass().getResource(caminhoIcone).toExternalForm()));
-            icon.setFitHeight(24);
-            icon.setFitWidth(24);
-            icon.setPreserveRatio(true);
-            btn.setGraphic(icon);
-        } catch (IllegalArgumentException e) {
-            System.err.println("Erro ao carregar ícone para '" + texto + "': " + caminhoIcone + " - " + e.getMessage());
-        }
-
         btn.getStyleClass().add("sidebar-button");
+        if (caminhoIcone != null && !caminhoIcone.trim().isEmpty()) {
+            try {
+                java.net.URL resourceUrl = getClass().getResource(caminhoIcone);
 
-        btn.setGraphicTextGap(10);
-        btn.setContentDisplay(ContentDisplay.LEFT);
-        btn.setAlignment(Pos.CENTER_LEFT);
-        btn.setCursor(Cursor.HAND);
-
-        btn.setPrefWidth(200);
-        btn.setPrefHeight(50);
-
-        // Define a ação do botão
+                if (resourceUrl != null) {
+                    ImageView icon = new ImageView(new Image(resourceUrl.toExternalForm()));
+                    icon.setFitHeight(24);
+                    icon.setFitWidth(24);
+                    icon.setPreserveRatio(true);
+                    btn.setGraphic(icon);
+                } else {
+                    System.err.println("Aviso: Ícone não encontrado em '" + caminhoIcone + "' para o botão '" + texto + "'.");
+                }
+            } catch (IllegalArgumentException e) {
+                System.err.println("Erro ao carregar ícone para '" + texto + "': " + caminhoIcone + " - " + e.getMessage());
+            }
+        }
         handleButtonClick(texto, btn);
-
         return btn;
     }
 
@@ -191,12 +183,10 @@ public class TelaInicialView {
             });
             return;
         }
-
         if (texto.equalsIgnoreCase("Sair")) {
             // btn.setOnAction(e -> mainApplication.fecharAplicacao());
             return;
         }
-
         Supplier<StackPane> view = telasConfig.get(texto);
         if (view != null) {
             btn.setOnAction(e -> {
@@ -218,18 +208,22 @@ public class TelaInicialView {
         VBox sidebarVBox = new VBox(20);
         sidebarVBox.getStyleClass().add("sidebar-pane");
         sidebarVBox.setPrefWidth(250);
-        sidebarVBox.setAlignment(Pos.TOP_CENTER);
-
         // --- Logo do Mercadinho ---
         try {
-            String logoPath = System.getProperty("user.dir") + "/resources/images/logoMercado.jpeg";
-            Image logoImage = new Image("file:" + logoPath);
-            ImageView imageLogoView = new ImageView(logoImage);
-            imageLogoView.setFitWidth(250);
-            imageLogoView.setPreserveRatio(true);
-            VBox.setMargin(imageLogoView, new Insets(0, 0, 20, 0));
-            sidebarVBox.getChildren().add(imageLogoView);
+            String logoResourcePath = "images/logoMercado.png";
 
+            // Tenta carregar o recurso
+            java.net.URL imageUrl = ClassLoader.getSystemResource(logoResourcePath);
+            if (imageUrl != null) {
+                Image logoImage = new Image(imageUrl.toExternalForm());
+                ImageView imageLogoView = new ImageView(logoImage);
+                imageLogoView.setFitWidth(250);
+                imageLogoView.setPreserveRatio(true);
+                VBox.setMargin(imageLogoView, new Insets(0, 0, 0, 0));
+                sidebarVBox.getChildren().add(imageLogoView);
+            } else {
+                throw new IllegalArgumentException("Recurso não encontrado: " + logoResourcePath);
+            }
         } catch (IllegalArgumentException e) {
             System.err.println("Erro ao carregar a imagem do logo: " + e.getMessage());
             Label logoPlaceholder = new Label("Logo Aqui");
@@ -237,7 +231,6 @@ public class TelaInicialView {
             VBox.setMargin(logoPlaceholder, new Insets(0, 0, 20, 0));
             sidebarVBox.getChildren().add(logoPlaceholder);
         }
-
         // --- Botões do Menu ---
         botoesConfig.forEach((texto, caminhoIcone) -> {
             if (!texto.equalsIgnoreCase("Sair")) {
@@ -248,20 +241,20 @@ public class TelaInicialView {
                 sidebarVBox.getChildren().add(btn);
             }
         });
-
         // Espaçador para empurrar o botão "Sair" para o final da sidebar
         Region spacer = new Region();
         VBox.setVgrow(spacer, Priority.ALWAYS);
         sidebarVBox.getChildren().add(spacer);
 
-        // --- Botão Sair ---
         Button btnSair = createSidebarButton("Sair", botoesConfig.get("Sair"));
         sidebarVBox.getChildren().add(btnSair);
 
         return sidebarVBox;
     }
 
-
+    /**
+     *
+     * */
     private void configurarAtalhosDeTeclado() {
         scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             switch (event.getCode()) {
@@ -279,6 +272,8 @@ public class TelaInicialView {
         });
     }
 
+    /**
+     * */
     private void carregarTela(String nomeTela) {
         Supplier<StackPane> view = telasConfig.get(nomeTela);
         if (view != null) {
