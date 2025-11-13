@@ -49,4 +49,21 @@ public class FormatUtils {
         }
         return currencyFormat.format(unformattedSalary);
     }
+
+    /**
+     * @param cpfSemFormato cpf que vem do banco de dados sem estar formatoda xxxxxxxxxxx
+     *
+     * @return a string cpf no formato xxx.xxx.xxx-xx
+     */
+    public static String formatarCpf(String cpfSemFormato){
+
+        cpfSemFormato = cpfSemFormato.replaceAll("[^0-9]", "");
+
+        return String.format("%s.%s.%s-%s",
+                cpfSemFormato.substring(0,3),
+                cpfSemFormato.substring(3,6),
+                cpfSemFormato.substring(6,9),
+                cpfSemFormato.substring(9,11));
+    }
+
 }
