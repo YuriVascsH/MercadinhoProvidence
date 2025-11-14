@@ -15,12 +15,12 @@ public class FuncionarioDao {
     /**
      * Insere um novo funcionário (seja gerente, operador ou outro cargo)
      */
-    public boolean inserir(Funcionario f) {
+    public Funcionario inserir(Funcionario f) {
         String sql = """
                     INSERT INTO funcionario (
                         codigoVerificador, cpf, nome, data_nascimento, telefone, email, endereco,
-                        dataAdmissao, cargo, salario, senha, ativo
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        dataAdmissao, cargo, salario, senha, ativo, ultima_venda
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """;
 
         try (Connection conn = ConexaoMySQL.getConnection();
@@ -38,7 +38,11 @@ public class FuncionarioDao {
             stmt.setBigDecimal(10, f.getSalario());
             stmt.setString(11, f.getSenha());
             stmt.setBoolean(12, f.getAtivo());
-
+            if (f.getUltimaVenda() != null) {
+                stmt.setTimestamp(13, java.sql.Timestamp.valueOf(f.getUltimaVenda()));
+            } else {
+                stmt.setNull(13, java.sql.Types.TIMESTAMP);
+            }
             int rows = stmt.executeUpdate();
 
             if (rows > 0) {
@@ -47,13 +51,13 @@ public class FuncionarioDao {
                         f.setIdFuncionario(rs.getInt(1));
                     }
                 }
-                return true;
+                return f;
             }
 
         } catch (SQLException e) {
             System.err.println("Erro ao inserir funcionário: " + e.getMessage());
         }
-        return false;
+        return null;
     }
 
     /**
@@ -334,7 +338,6 @@ public class FuncionarioDao {
         funcionario.setSalario(rs.getBigDecimal("salario"));
         funcionario.setSenha(rs.getString("senha"));
         funcionario.setAtivo(rs.getBoolean("ativo"));
-
         Timestamp tsUltimaVenda = rs.getTimestamp("ultima_venda");
         if (tsUltimaVenda != null) {
             funcionario.setUltimaVenda(tsUltimaVenda.toLocalDateTime());
