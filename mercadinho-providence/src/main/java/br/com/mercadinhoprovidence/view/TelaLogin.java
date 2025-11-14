@@ -1,11 +1,11 @@
 package br.com.mercadinhoprovidence.view;
 
 import br.com.mercadinhoprovidence.MainApplication;
-import br.com.mercadinhoprovidence.components.TitleHeaderPane;
 import br.com.mercadinhoprovidence.controller.LoginController;
 import br.com.mercadinhoprovidence.dto.LoginRequestDto;
 import br.com.mercadinhoprovidence.util.AlertUtils;
 import br.com.mercadinhoprovidence.util.InputUtils;
+import br.com.mercadinhoprovidence.view.component.TitleComponents;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -47,7 +47,7 @@ public class TelaLogin {
         root.getStyleClass().add("root");
 
         // Adição do conteúdo
-        root.setTop(TitleHeaderPane.createHeaderBox());
+        root.setTop(TitleComponents.createHeaderBox());
         root.setCenter(createLoginContent());
         root.setBottom(createButtonBox());
 
