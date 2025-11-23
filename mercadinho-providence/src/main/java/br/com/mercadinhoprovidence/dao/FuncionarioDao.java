@@ -1,25 +1,28 @@
 package br.com.mercadinhoprovidence.dao;
 
 import br.com.mercadinhoprovidence.config.ConexaoMySQL;
+import br.com.mercadinhoprovidence.dto.Funcionario.FuncionarioResponseDto;
 import br.com.mercadinhoprovidence.model.Funcionario;
 import br.com.mercadinhoprovidence.model.enums.Cargo;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.sql.Date;
+import java.util.*;
 
 public class FuncionarioDao {
 
     /**
-     * Insere um novo funcionário (seja gerente, operador ou outro cargo)
+     * Insere um novo funcionário (seja gerente ou operador)
+     *
+     * @param f Funcionario contendo os atributos para realizar o cadastro
+     *
+     * @return Funcionario
      */
     public Funcionario inserir(Funcionario f) {
         String sql = """
                     INSERT INTO funcionario (
-                        codigoVerificador, cpf, nome, data_nascimento, telefone, email, endereco,
-                        dataAdmissao, cargo, salario, senha, ativo, ultima_venda
+                        codigo_verificador, cpf, nome, data_nascimento, telefone, email, endereco,
+                        data_admissao, cargo, salario, senha, ativo, ultima_venda
                     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """;
 
@@ -62,6 +65,8 @@ public class FuncionarioDao {
 
     /**
      * Lista todos os funcionários (independente do cargo)
+     *
+     *
      */
     public List<Funcionario> listarTodos() {
         List<Funcionario> lista = new ArrayList<>();
@@ -109,13 +114,15 @@ public class FuncionarioDao {
 
     /**
      * Atualiza um funcionário existente
+     *
+     * @return
      */
-    public void atualizar(Funcionario f) throws SQLException {
+    public Optional<FuncionarioResponseDto> atualizar(Funcionario f) throws SQLException {
         String sql = """
                     UPDATE funcionario
                     SET nome=?, data_nascimento=?, telefone=?, email=?, endereco=?,
-                        salario=?, senha=?, ativo=?, cargo=?, codigoVerificador=?, cpf=?, dataAdmissao=?
-                    WHERE idFuncionario=?
+                        salario=?, ativo=?, cargo=?
+                    WHERE id_funcionario=?
                 """;
 
         try (Connection conn = ConexaoMySQL.getConnection();
@@ -127,27 +134,30 @@ public class FuncionarioDao {
             stmt.setString(4, f.getEmail());
             stmt.setString(5, f.getEndereco());
             stmt.setBigDecimal(6, f.getSalario());
-            stmt.setString(7, f.getSenha());
-            stmt.setBoolean(8, f.getAtivo());
-            stmt.setString(9, f.getCargo().name());
-            stmt.setInt(10, f.getCodigoVerificador());
-            stmt.setString(11, f.getCpf());
-            stmt.setDate(12, Date.valueOf(f.getDataAdmissao()));
-            stmt.setInt(13, f.getIdFuncionario());
+            stmt.setBoolean(7, f.getAtivo());
+            stmt.setString(8, f.getCargo().name());
+            stmt.setInt(9, f.getIdFuncionario());
 
-            stmt.executeUpdate();
+            int linhasAfetadas = stmt.executeUpdate();
+
+            if (linhasAfetadas > 0) {
+                return Optional.of(new FuncionarioResponseDto(f));
+            } else {
+                return Optional.empty();
+            }
 
         } catch (SQLException e) {
             System.err.println("Erro ao atualizar funcionário: " + e.getMessage());
             throw e;
         }
+
     }
 
     /**
      * Exclui um funcionário pelo ID
      */
     public boolean deletar(Integer idFuncionario) {
-        String sql = "DELETE FROM funcionario WHERE idFuncionario = ?";
+        String sql = "DELETE FROM funcionario WHERE id_funcionario = ?";
 
         try (Connection conn = ConexaoMySQL.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -165,7 +175,7 @@ public class FuncionarioDao {
      * Busca funcionário por ID
      */
     public Funcionario buscarPorId(Integer id) {
-        String sql = "SELECT * FROM funcionario WHERE idFuncionario = ?";
+        String sql = "SELECT * FROM funcionario WHERE id_funcionario = ?";
 
         try (Connection conn = ConexaoMySQL.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -213,7 +223,7 @@ public class FuncionarioDao {
      * Busca funcionário por ID e senha (para login, por exemplo)
      */
     public Funcionario buscarPorIdSenha(Integer id, String senha) {
-        String sql = "SELECT * FROM funcionario WHERE idFuncionario = ? AND senha = ?";
+        String sql = "SELECT * FROM funcionario WHERE id_funcionario = ? AND senha = ?";
 
         try (Connection conn = ConexaoMySQL.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -237,13 +247,13 @@ public class FuncionarioDao {
     /**
      * Busca funcionário por código verificador
      */
-    public Funcionario buscarPorCodigoVerificador(String codigoVerificador) {
-        String sql = "SELECT * FROM funcionario WHERE codigoVerificador = ?";
+    public Funcionario buscarPorCodigoVerificador(Integer codigoVerificador) {
+        String sql = "SELECT * FROM funcionario WHERE codigo_verificador = ?";
 
         try (Connection conn = ConexaoMySQL.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, codigoVerificador);
+            stmt.setInt(1, codigoVerificador);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -301,7 +311,7 @@ public class FuncionarioDao {
      * @param idFuncionario fornecido pelo funcionario na sessão de gerenciamento de funcionários
      */
     public String buscarNomePorId(Integer idFuncionario) {
-        String sql = "SELECT nome FROM funcionario WHERE idFuncionario = ?";
+        String sql = "SELECT nome FROM funcionario WHERE id_funcionario = ?";
         try (Connection conn = ConexaoMySQL.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -325,15 +335,15 @@ public class FuncionarioDao {
     private Funcionario mapearFuncionario(ResultSet rs) throws SQLException {
         Funcionario funcionario = new Funcionario();
 
-        funcionario.setIdFuncionario(rs.getInt("idFuncionario"));
-        funcionario.setCodigoVerificador(rs.getInt("codigoVerificador"));
+        funcionario.setIdFuncionario(rs.getInt("id_funcionario"));
+        funcionario.setCodigoVerificador(rs.getInt("codigo_verificador"));
         funcionario.setCpf(rs.getString("cpf"));
         funcionario.setNome(rs.getString("nome"));
         funcionario.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
         funcionario.setTelefone(rs.getString("telefone"));
         funcionario.setEmail(rs.getString("email"));
         funcionario.setEndereco(rs.getString("endereco"));
-        funcionario.setDataAdmissao(rs.getDate("dataAdmissao").toLocalDate());
+        funcionario.setDataAdmissao(rs.getDate("data_admissao").toLocalDate());
         funcionario.setCargo(Cargo.fromString(rs.getString("cargo")));
         funcionario.setSalario(rs.getBigDecimal("salario"));
         funcionario.setSenha(rs.getString("senha"));
@@ -342,7 +352,14 @@ public class FuncionarioDao {
         if (tsUltimaVenda != null) {
             funcionario.setUltimaVenda(tsUltimaVenda.toLocalDateTime());
         }
-
+        Timestamp tsCadastro = rs.getTimestamp("data_cadastro");
+        if (tsCadastro != null) {
+            funcionario.setDataCadastro(tsCadastro.toLocalDateTime());
+        }
+        Timestamp tsAtualizacao = rs.getTimestamp("data_atualizacao");
+        if (tsAtualizacao != null) {
+            funcionario.setDataAtualizacao(tsAtualizacao.toLocalDateTime());
+        }
         return funcionario;
     }
 
