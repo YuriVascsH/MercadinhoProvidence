@@ -4,10 +4,14 @@ import br.com.mercadinhoprovidence.Service.FuncionarioService;
 import br.com.mercadinhoprovidence.dto.Funcionario.FuncionarioCreateDto;
 import br.com.mercadinhoprovidence.dto.Funcionario.FuncionarioResponseDto;
 import br.com.mercadinhoprovidence.dto.FuncionarioTableDto;
+import br.com.mercadinhoprovidence.dto.FuncionarioUpdateDto;
+import br.com.mercadinhoprovidence.model.Funcionario;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public class FuncionarioController {
 
@@ -76,5 +80,25 @@ public class FuncionarioController {
     public boolean verificarCpfExistente(String cpf) {
         return funcionarioService.verificarCpfExistente(cpf);
     }
+    /**
+     * Função que busca um funcionario pelo seu id e retorna o funcionario correspondente
+     *
+     * @param id informado pelo funcionario
+     * @return funcionario correspondente da busca pelo id
+     */
+    public Funcionario buscarPeloId(Integer id) {
+        return funcionarioService.buscarPeloId(id);
+    }
 
+    /**
+     * Função que atualiza os dados do funcionario
+     *
+     * @param id do funcionario informado pelo funcionario
+     * @param funcionarioUpdateDto os dados do funcionario encapsulado
+     *
+     * @return um Optional contendo o funcionarioResponseDto
+     */
+    public Optional<FuncionarioResponseDto> atualizar(Integer id, FuncionarioUpdateDto funcionarioUpdateDto) throws SQLException {
+        return funcionarioService.atualizar(id, funcionarioUpdateDto);
+    }
 }
