@@ -9,7 +9,7 @@ import br.com.mercadinhoprovidence.util.AlertUtils;
 import br.com.mercadinhoprovidence.util.FormatUtils;
 import br.com.mercadinhoprovidence.view.component.TitleComponents;
 import br.com.mercadinhoprovidence.view.dialogs.CadastroFuncionarioDialog;
-import br.com.mercadinhoprovidence.view.dialogs.ConfirmarDialogFuncionario;
+import br.com.mercadinhoprovidence.view.dialogs.ConfirmarDialog;
 import br.com.mercadinhoprovidence.view.dialogs.EditarFuncionarioDialog;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -255,26 +255,25 @@ public class FuncionariosView {
 
                 // Ações dos botões
                 btnEdit.setOnAction(event -> {
-                    Funcionario funcionario = getTableView().getItems().get(getIndex());
-                    EditarFuncionarioDialog.show(mainApplication.getPrimaryStage(), funcionario, () -> {
+                    FuncionarioTableDto funcionario = getTableView().getItems().get(getIndex());
+                    EditarFuncionarioDialog.show(mainApplication.getPrimaryStage(), funcionario.getIdFuncionario(), () -> {
                         refreshTableData();
                     });
                 });
 
                 btnDelete.setOnAction(event -> {
-                    Funcionario funcionario = getTableView().getItems().get(getIndex());
-                    ConfirmarDialogFuncionario confirmDialog = new ConfirmarDialogFuncionario();
-                    boolean confirmed = confirmDialog.show(mainApplication.getPrimaryStage(), funcionario.getNome());
+                    FuncionarioTableDto funcionarioTableDto = getTableView().getItems().get(getIndex());
+                    if (Objects.equals(funcionarioLogado.getCodigoVerificador(), funcionarioTableDto.getCodigoFuncionario())) {
+                        AlertUtils.showInfo("Ação inválida", "Não é possível deletar o funcionário que está logado");
+                    }
+                    ConfirmarDialog confirmDialog = new ConfirmarDialog();
+                    boolean confirmed = confirmDialog.show(mainApplication.getPrimaryStage(), funcionarioTableDto.getNome(), "Funcinonário");
                     if (confirmed) {
                         try {
-                            boolean success = funcionarioController.deletarFuncionario(funcionario.getIdFuncionario());
-
+                            boolean success = funcionarioController.deletarFuncionario(funcionarioTableDto.getIdFuncionario());
                             if (success) {
                                 AlertUtils.showSuccess("Excluído!", "Funcionário excluído com sucesso.");
                                 refreshTableData();
-                            } else {
-                                AlertUtils.showError("Erro",
-                                        "Não foi possível excluir o funcionário. Verifique se há dependências ou consulte o log.");
                             }
                         } catch (Exception e) {
                             AlertUtils.showError("Erro na Exclusão",
