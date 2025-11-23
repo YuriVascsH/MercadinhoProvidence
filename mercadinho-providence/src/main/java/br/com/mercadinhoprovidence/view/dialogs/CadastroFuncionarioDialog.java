@@ -276,11 +276,17 @@ public class CadastroFuncionarioDialog {
                 String cpf = cpfField.getText().trim();
                 String nome = nomeField.getText().trim();
                 String telefone = telefoneField.getText().trim();
-                String email = emailField.getText().trim(); // Não
-                String endereco = enderecoField.getText().trim(); // Não
+                String email = emailField.getText().trim();
+                String endereco = enderecoField.getText().trim();
                 String cargoString = cargoCombo.getValue();
 
-                // Aqui
+                if (email.isEmpty()) {
+                    email = null;
+                }
+                if (endereco.isEmpty()) {
+                    endereco = null;
+                }
+
                 FuncionarioController funcionarioController = new FuncionarioController();
 
                 if (funcionarioController.verificarCpfExistente(cpf)) {
@@ -326,8 +332,6 @@ public class CadastroFuncionarioDialog {
                         if (updateTableRunnable != null) {
                             updateTableRunnable.run();
                         }
-                    } else {
-                        AlertUtils.showError("Erro ao Salvar", "Não foi possível cadastrar o funcionário. Verifique os logs.");
                     }
                 } catch (Exception ex) {
                     AlertUtils.showError("Erro de Execução",
