@@ -4,8 +4,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.util.StringConverter;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -235,17 +238,23 @@ public class InputUtils {
     }
 
     /**
-     * Converte uma String com vírgula para Double, utilizando o Locale brasileiro.
+     * Converte uma String com vírgula para BigDecimal, utilizando o Locale brasileiro.
      * @param value A String a ser convertida (ex: "123,45").
      * @return O valor Double.
      * @throws NumberFormatException se a String não for um número válido.
      */
-    public static Double parseDoubleFromCommaString(String value) throws NumberFormatException {
+    public static BigDecimal parseBigDecimalFromCommaString(String value) throws NumberFormatException {
         if (value == null || value.trim().isEmpty()) {
-            return 0.0;
+            return BigDecimal.ZERO;
         }
-        // Substitui a vírgula por ponto para permitir parsear com Double.parseDouble
-        return Double.parseDouble(value.trim().replace(',', '.'));
+        Locale localeBR = new Locale("pt", "BR");
+        NumberFormat formatador = NumberFormat.getNumberInstance(localeBR);
+        try {
+            Number numero = formatador.parse(value.trim());
+            return new BigDecimal(numero.toString());
+        } catch (ParseException e) {
+            throw new NumberFormatException("Erro ao converter a String para BigDecimal: " + value);
+        }
     }
 
     /**
