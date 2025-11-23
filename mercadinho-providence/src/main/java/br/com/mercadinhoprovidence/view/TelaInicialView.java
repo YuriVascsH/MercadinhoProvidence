@@ -5,10 +5,8 @@ import br.com.mercadinhoprovidence.dto.LoginResponseDto;
 import br.com.mercadinhoprovidence.util.Timeutils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -69,7 +67,7 @@ public class TelaInicialView {
         // Adicionando as telas nos botões
         //telasConfig.put("Estoque", () -> new EstoqueView(mainApplication, funcionarioLogado).getView());
         telasConfig.put("Relatorio", RelatorioView::getView);
-        //telasConfig.put("Funcionarios", () -> new FuncionariosView(mainApplication, funcionarioLogado).getView());
+        telasConfig.put("Funcionarios", () -> new FuncionariosView(mainApplication, funcionarioLogado).getView());
         //telasConfig.put("Ajuda", () -> new EstoqueView(mainApplication, funcionarioLogado).getView());
 
         // Adicionando btns (caminhos dos ícones)
