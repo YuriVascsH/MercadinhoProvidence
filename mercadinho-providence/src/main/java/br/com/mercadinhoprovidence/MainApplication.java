@@ -16,9 +16,19 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import lombok.Getter;
 
 public class MainApplication extends Application {
 
+    //
+    //    /**
+    //     * Fecha a aplicação
+    //     */
+    //    public void fecharAplicacao() {
+    //        primaryStage.close();
+    //    }
+    //
+    @Getter
     private Stage primaryStage;
 
     private LoginResponseDto funcionarioLogadoNaSessao;
@@ -122,7 +132,7 @@ public class MainApplication extends Application {
                 this, funcionarioLogado, botoesDesabilitados, this::mostrarTelaVenda);
 
         primaryStage.setTitle("Mercadinho Providence PDV");
-//        primaryStage.setScene(telaInicialView.getScene());
+        primaryStage.setScene(telaInicialView.getScene());
 
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 
@@ -161,19 +171,8 @@ public class MainApplication extends Application {
 //        primaryStage.show();
 //        System.out.println(funcionarioParaVenda);
     }
-//
-//    /**
-//     * Fecha a aplicação
-//     */
-//    public void fecharAplicacao() {
-//        primaryStage.close();
-//    }
-//
-//    public Stage getPrimaryStage() {
-//        return primaryStage;
-//    }
-//
-   public static void main(String[] args) {
+
+    public static void main(String[] args) {
        launch(args);
    }
 }
