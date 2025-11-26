@@ -4,9 +4,12 @@ import br.com.mercadinhoprovidence.dao.FuncionarioDao;
 import br.com.mercadinhoprovidence.dto.Funcionario.FuncionarioCreateDto;
 import br.com.mercadinhoprovidence.dto.Funcionario.FuncionarioResponseDto;
 import br.com.mercadinhoprovidence.dto.FuncionarioTableDto;
+import br.com.mercadinhoprovidence.dto.FuncionarioUpdateDto;
 import br.com.mercadinhoprovidence.model.Funcionario;
 
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public class FuncionarioService {
 
@@ -54,5 +57,20 @@ public class FuncionarioService {
         return funcionarioDao.deletar(idFuncionario);
     }
 
+    public Funcionario buscarPeloId(Integer id) {
+        return funcionarioDao.buscarPorId(id);
+    }
 
+    public Optional<FuncionarioResponseDto> atualizar(Integer id, FuncionarioUpdateDto funcionarioUpdateDto) throws SQLException {
+        Funcionario funcionario = funcionarioDao.buscarPorId(id);
+        funcionario.setNome(funcionarioUpdateDto.getNome());
+        funcionario.setTelefone(funcionarioUpdateDto.getTelefone());
+        funcionario.setEmail(funcionarioUpdateDto.getEmail());
+        funcionario.setEndereco(funcionarioUpdateDto.getEndereco());
+        funcionario.setCargo(funcionarioUpdateDto.getCargo());
+        funcionario.setSalario(funcionarioUpdateDto.getSalario());
+        funcionario.setAtivo(funcionarioUpdateDto.getAtivo());
+
+        return funcionarioDao.atualizar(funcionario);
+    }
 }
