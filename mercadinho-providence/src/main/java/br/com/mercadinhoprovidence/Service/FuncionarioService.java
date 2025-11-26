@@ -25,7 +25,7 @@ public class FuncionarioService {
 
     public List<FuncionarioTableDto> buscarTodosOsFuncionarios() {
         List<Funcionario> funcionarios = funcionarioDao.listarTodos();
-        return funcionarios.stream().map(funcionario -> new FuncionarioTableDto()).toList();
+        return funcionarios.stream().map(FuncionarioTableDto::new).toList();
     }
 
     public boolean verificarCpfExistente(String cpf) {
