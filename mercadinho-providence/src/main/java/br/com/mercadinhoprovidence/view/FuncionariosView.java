@@ -225,7 +225,7 @@ public class FuncionariosView {
 
         // --- DEFINIÇÃO DAS COLUNAS ---
         TableColumn<FuncionarioTableDto, Integer> colId = createColumn("ID", "idFuncionario", 0, Pos.CENTER, null);
-        TableColumn<FuncionarioTableDto, Integer> colCodigoFun = createColumn("Código Verificador", "codigoVerificador", 0,
+        TableColumn<FuncionarioTableDto, Integer> colCodigoFun = createColumn("Código Verificador", "codigoFuncionario", 0,
                 Pos.CENTER, null);
         TableColumn<FuncionarioTableDto, String> colNome = createColumn("Nome", "nome", 200, Pos.CENTER, null);
         TableColumn<FuncionarioTableDto, String> colCPF = createColumn("CPF", "cpf", 120, Pos.CENTER, FormatUtils::formatarCpf);
@@ -233,7 +233,7 @@ public class FuncionariosView {
         TableColumn<FuncionarioTableDto, BigDecimal> colSalario = createColumn("Salário (R$)", "salario", 100, Pos.CENTER,
                 FormatUtils::formatCurrency);
         TableColumn<FuncionarioTableDto, LocalDate> colDataContratacao =
-                createColumn("Contratação", "DataAdmissao", 120, Pos.CENTER,
+                createColumn("Contratação", "dataAdmissao", 120, Pos.CENTER,
                         FormatUtils::formatDate);
         TableColumn<FuncionarioTableDto, Boolean> colAtivo = createColumn("Ativo", "ativo", 60, Pos.CENTER,
                 FormatUtils::formatBoolean);
