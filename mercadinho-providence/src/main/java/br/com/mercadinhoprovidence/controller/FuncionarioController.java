@@ -1,10 +1,10 @@
 package br.com.mercadinhoprovidence.controller;
 
 import br.com.mercadinhoprovidence.Service.FuncionarioService;
-import br.com.mercadinhoprovidence.dto.Funcionario.FuncionarioCreateDto;
-import br.com.mercadinhoprovidence.dto.Funcionario.FuncionarioResponseDto;
-import br.com.mercadinhoprovidence.dto.FuncionarioTableDto;
-import br.com.mercadinhoprovidence.dto.FuncionarioUpdateDto;
+import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioCreateDto;
+import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioResponseDto;
+import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioTableDto;
+import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioUpdateDto;
 import br.com.mercadinhoprovidence.model.Funcionario;
 
 import java.math.BigDecimal;
@@ -15,7 +15,11 @@ import java.util.Optional;
 
 public class FuncionarioController {
 
-    FuncionarioService funcionarioService = new FuncionarioService();
+    private FuncionarioService funcionarioService;
+
+    public FuncionarioController(FuncionarioService funcionarioService) {
+        this.funcionarioService = funcionarioService;
+    }
 
     /**
      * Função que busca um funcionario no banco a partir do cpf informado e retorana um FuncionarioTableDto
