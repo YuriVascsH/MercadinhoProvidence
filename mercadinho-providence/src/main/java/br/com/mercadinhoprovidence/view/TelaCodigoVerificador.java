@@ -3,8 +3,8 @@ package br.com.mercadinhoprovidence.view;
 
 import br.com.mercadinhoprovidence.MainApplication;
 import br.com.mercadinhoprovidence.controller.LoginController;
-import br.com.mercadinhoprovidence.dto.LoginResponseDto;
-import br.com.mercadinhoprovidence.dto.LoginVerificationRequestDto;
+import br.com.mercadinhoprovidence.dto.login.LoginResponseDto;
+import br.com.mercadinhoprovidence.dto.login.LoginVerificationRequestDto;
 import br.com.mercadinhoprovidence.util.AlertUtils;
 import br.com.mercadinhoprovidence.util.InputUtils;
 import br.com.mercadinhoprovidence.view.component.TitleComponents;
