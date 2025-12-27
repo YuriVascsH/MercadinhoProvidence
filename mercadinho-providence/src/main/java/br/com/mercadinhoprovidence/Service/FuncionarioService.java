@@ -1,10 +1,10 @@
 package br.com.mercadinhoprovidence.Service;
 
 import br.com.mercadinhoprovidence.dao.FuncionarioDao;
-import br.com.mercadinhoprovidence.dto.Funcionario.FuncionarioCreateDto;
-import br.com.mercadinhoprovidence.dto.Funcionario.FuncionarioResponseDto;
-import br.com.mercadinhoprovidence.dto.FuncionarioTableDto;
-import br.com.mercadinhoprovidence.dto.FuncionarioUpdateDto;
+import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioCreateDto;
+import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioResponseDto;
+import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioTableDto;
+import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioUpdateDto;
 import br.com.mercadinhoprovidence.model.Funcionario;
 
 import java.sql.SQLException;
@@ -13,7 +13,15 @@ import java.util.Optional;
 
 public class FuncionarioService {
 
-    private final FuncionarioDao funcionarioDao = new FuncionarioDao();
+    private final FuncionarioDao funcionarioDao;
+
+    public FuncionarioService() {
+        this.funcionarioDao = new FuncionarioDao();
+    }
+
+    public FuncionarioService(FuncionarioDao funcionarioDao) {
+        this.funcionarioDao = funcionarioDao;
+    }
 
     public FuncionarioTableDto buscarPorCpf(String cpf) {
         Funcionario funcionario = funcionarioDao.buscarPorCpf(cpf);

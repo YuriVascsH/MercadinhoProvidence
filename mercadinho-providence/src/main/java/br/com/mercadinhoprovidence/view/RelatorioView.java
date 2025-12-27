@@ -1,7 +1,7 @@
 package br.com.mercadinhoprovidence.view;
 
 import br.com.mercadinhoprovidence.view.component.TitleComponents;
-import br.com.mercadinhoprovidence.view.panel.PainelEstoqueFX;
+// import br.com.mercadinhoprovidence.view.panel.PainelEstoqueFX;
 import br.com.mercadinhoprovidence.view.panel.PainelRelatorioVendasFX;
 import javafx.geometry.Insets;
 import javafx.scene.control.Tab;
@@ -34,7 +34,7 @@ public class RelatorioView {
 
         // Aba Estoque
         Tab estoqueTab = new Tab("ESTOQUE");
-        estoqueTab.setContent(PainelEstoqueFX.getView());
+        // estoqueTab.setContent(PainelEstoqueFX.getView());
         estoqueTab.getStyleClass().add("tab-custom");
 
         tabPane.getTabs().addAll(vendasTab, estoqueTab);
