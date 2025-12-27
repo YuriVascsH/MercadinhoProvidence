@@ -12,8 +12,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.release>21</maven.compiler.release>
-    <javafx.version>21.0.1</javafx.version>
+    <maven.compiler.release>17</maven.compiler.release>
+    <javafx.version>17.0.10</javafx.version>
     <junit.version>5.10.0</junit.version>
   </properties>
 
@@ -31,6 +31,7 @@
       <artifactId>javafx-controls</artifactId>
       <version>${javafx.version}</version>
     </dependency>
+
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
@@ -61,7 +62,21 @@
       <version>1.18.30</version>
       <scope>provided</scope>
     </dependency>
-    
+      <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
+      <dependency>
+          <groupId>org.mockito</groupId>
+          <artifactId>mockito-core</artifactId>
+          <version>5.18.0</version>
+          <scope>test</scope>
+      </dependency>
+
+      <dependency>
+          <groupId>org.mockito</groupId>
+          <artifactId>mockito-junit-jupiter</artifactId>
+          <version>5.18.0</version>
+          <scope>test</scope>
+      </dependency>
+
   </dependencies>
 
   <build>
