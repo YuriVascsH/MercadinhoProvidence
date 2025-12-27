@@ -12,14 +12,14 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductUpdateDto {
-
+public class ProdutoFormDto {
+    
     private Integer id;
-    private String nome;
-    private Category categoria;
-    private String descricao;
-    private BigDecimal precoUnitario;
-    private BigDecimal precoPorKg;
-    private Boolean controlaEstoque;
-
+    public String nome;
+    public String codigoBarras;
+    public String descricao;
+    public Category categoria;
+    public boolean controlaEstoque;
+    public BigDecimal precoUnitario;
+    public BigDecimal precoPorKg;
 }
