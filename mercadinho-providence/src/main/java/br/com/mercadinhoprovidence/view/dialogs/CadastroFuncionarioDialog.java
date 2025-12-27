@@ -1,10 +1,10 @@
 package br.com.mercadinhoprovidence.view.dialogs;
 
 import br.com.mercadinhoprovidence.controller.FuncionarioController;
-import br.com.mercadinhoprovidence.dto.Funcionario.FuncionarioCreateDto;
-import br.com.mercadinhoprovidence.dto.Funcionario.FuncionarioResponseDto;
+import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioCreateDto;
+import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioResponseDto;
 import br.com.mercadinhoprovidence.model.enums.Cargo;
-import br.com.mercadinhoprovidence.printer.Impressora;
+//import br.com.mercadinhoprovidence.printer.Impressora;
 import br.com.mercadinhoprovidence.util.AlertUtils;
 import br.com.mercadinhoprovidence.util.InputUtils;
 import javafx.geometry.HPos;
@@ -326,7 +326,7 @@ public class CadastroFuncionarioDialog {
                     FuncionarioCreateDto funcionarioCreateDto = new FuncionarioCreateDto(cpf, nome, dataNascimento, telefone, email, endereco, dataAdmissao, cargoEnum, salario, senha, ativo);
                     FuncionarioResponseDto funcionarioResponseDto = funcionarioController.salvarFuncionario(funcionarioCreateDto);
                     if (funcionarioResponseDto != null) {
-                        Impressora.imprimirCodigoFuncionario(funcionarioResponseDto.getCodigoVerificador());
+                        //Impressora.imprimirCodigoFuncionario(funcionarioResponseDto.getCodigoVerificador());
                         AlertUtils.showSuccess("Sucesso!", "Operador " + nome + " cadastrado com sucesso.");
                         dialogStage.close();
                         if (updateTableRunnable != null) {

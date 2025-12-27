@@ -1,7 +1,7 @@
 package br.com.mercadinhoprovidence.view;
 
 import br.com.mercadinhoprovidence.MainApplication;
-import br.com.mercadinhoprovidence.dto.LoginResponseDto;
+import br.com.mercadinhoprovidence.dto.login.LoginResponseDto;
 import br.com.mercadinhoprovidence.util.Timeutils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

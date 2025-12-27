@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import br.com.mercadinhoprovidence.controller.LoginController;
-import br.com.mercadinhoprovidence.dto.LoginResponseDto;
+import br.com.mercadinhoprovidence.dto.login.LoginResponseDto;
 import br.com.mercadinhoprovidence.model.Funcionario;
 import br.com.mercadinhoprovidence.model.enums.Cargo;
 import br.com.mercadinhoprovidence.view.TelaCodigoVerificador;
@@ -174,5 +174,6 @@ public class MainApplication extends Application {
 
     public static void main(String[] args) {
        launch(args);
+
    }
 }
