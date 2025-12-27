@@ -1,7 +1,7 @@
 package br.com.mercadinhoprovidence.dao;
 
 import br.com.mercadinhoprovidence.config.ConexaoMySQL;
-import br.com.mercadinhoprovidence.dto.Funcionario.FuncionarioResponseDto;
+import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioResponseDto;
 import br.com.mercadinhoprovidence.model.Funcionario;
 import br.com.mercadinhoprovidence.model.enums.Cargo;
 

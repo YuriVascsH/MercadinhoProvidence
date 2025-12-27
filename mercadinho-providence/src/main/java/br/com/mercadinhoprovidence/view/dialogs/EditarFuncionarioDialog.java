@@ -1,7 +1,5 @@
 package br.com.mercadinhoprovidence.view.dialogs;
 
-import br.com.mercadinhoprovidence.dto.Funcionario.FuncionarioResponseDto;
-import br.com.mercadinhoprovidence.dto.FuncionarioUpdateDto;
 import br.com.mercadinhoprovidence.model.Funcionario;
 import javafx.scene.Node;
 import javafx.stage.Stage;
@@ -23,6 +21,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import br.com.mercadinhoprovidence.controller.FuncionarioController;
+import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioResponseDto;
+import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioUpdateDto;
 import br.com.mercadinhoprovidence.model.enums.Cargo;
 //import br.com.mercadinhoprovidence.printer.Impressora;
 import br.com.mercadinhoprovidence.util.AlertUtils;
