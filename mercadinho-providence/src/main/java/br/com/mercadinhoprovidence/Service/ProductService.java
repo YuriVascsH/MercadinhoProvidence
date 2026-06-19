@@ -10,7 +10,7 @@ import br.com.mercadinhoprovidence.dto.produto.ProductUpdateDto;
 import br.com.mercadinhoprovidence.exceptions.BusinessException;
 import br.com.mercadinhoprovidence.mapper.ProductMapper;
 import br.com.mercadinhoprovidence.model.Product;
-import br.com.mercadinhoprovidence.model.enums.Categoria;
+import br.com.mercadinhoprovidence.model.enums.Category;
 
 public class ProductService {
 
@@ -35,7 +35,8 @@ public class ProductService {
         }
 
         Product product = productDao.findByCode(code)
-                .orElseThrown(() -> new EntityNotFoundException("Produto não encontrado"));
+        .orElseThrow(() -> new BusinessException("Produto não encontrado"));
+        //o que estava antes: .orElseThrown(() -> new EntityNotFoundException("Produto não encontrado"));
 
         return ProductMapper.toTableDto(product);
     }
@@ -74,14 +75,28 @@ public class ProductService {
             }
         }
         //
-        if (productUpdateDto.getCategoria() == Categoria.PESO) {
-            product.setPrecoPorKg(productUpdateDto.getPrecoPorKg());
-        } else {
-            product.setPrecoUnitario(productUpdateDto.getPrecoUnitario());
+        if (productUpdateDto.getCategoria() != null) {
+
+            product.setCategoria(productUpdateDto.getCategoria());
+            if (productUpdateDto.getCategoria() == Category.PESO) {
+                product.setPrecoPorKg(productUpdateDto.getPrecoPorKg());
+                product.setPrecoUnitario(null);
+            } else {
+                product.setPrecoUnitario(productUpdateDto.getPrecoUnitario());
+                product.setPrecoPorKg(null);
+            }
         }
 
-        // falta realizar essa última verificação aqui
-        product.setControlaEstoque(productUpdateDto.getControlaEstoque());
+        if (productUpdateDto.getCategoria() != null) {
+            product.setCategoria(productUpdateDto.getCategoria());
+            if (productUpdateDto.getCategoria() == Category.PESO) {
+                product.setPrecoPorKg(productUpdateDto.getPrecoPorKg());
+                product.setPrecoUnitario(null);
+            } else {
+                product.setPrecoUnitario(productUpdateDto.getPrecoUnitario());
+                product.setPrecoPorKg(null);
+            }
+        }
 
         productDao.save(product);
 
@@ -95,12 +110,13 @@ public class ProductService {
      * @param productCreateDto Informações do produto.
      */
     public void createProduct(ProductCreateDto productCreateDto) {
-        if (productDao.existsBycode(productCreateDto.getCodigoBarras())) {
+        if (productDao.existsByCode(productCreateDto.getCodigoBarras())) {
             throw new BusinessException("Produto já cadastrado.");
         }
 
         Product product = ProductMapper.toProduct(productCreateDto);
         validateProduct(product);
+        product.setActive(true);
         productDao.save(product);
         // Ainda estou em dúvida se vai retornar algo aqui
         return;
@@ -129,7 +145,7 @@ public class ProductService {
      * 
      * @param id identificador fornecido do produto.
      */
-    public void desactiveteProduct(Integer id) {
+    public void deactivateProduct(Integer id) {
         Product product = productDao.findById(id)
                 .orElseThrow(() -> new BusinessException("Produto não encontrado em nosso sistema"));
 
@@ -144,17 +160,17 @@ public class ProductService {
      * @param product vindo da função de crete
      */
     private void validateProduct(Product product) {
-        if (product.getCategoria() == Categoria.UNIDADE) {
+        if (product.getCategoria() == Category.UNIDADE) {
 
             if (product.getPrecoUnitario() == null) {
                 throw new BusinessException("Produto por unidade precisa de preço unitário");
             }
 
-            validatePrice(product.getPrecoPorKg(), "Preço unitário deve ser maior que zero");
+            validatePrice(product.getPrecoPorKg(), "Preço por Kg deve ser maior que zero");
 
         }
 
-        if (product.getCategoria() == Categoria.PESO) {
+        if (product.getCategoria() == Category.PESO) {
 
             if (product.getPrecoPorKg() == null) {
                 throw new BusinessException("Produto por peso precisa de preço por Kg");
@@ -173,7 +189,7 @@ public class ProductService {
      * @param message Erro que será informado.
      */
     private void validatePrice(BigDecimal value, String message) {
-        if (value != null && value.compareTo(BigDecimal.ZERO) < 0) {
+        if (value != null && value.compareTo(BigDecimal.ZERO) <= 0) {
             throw new BusinessException(message);
         }
     }
@@ -183,8 +199,8 @@ public class ProductService {
      * @param productUpdateDto
      */
     private void validateProductUpdatePrice(ProductUpdateDto productUpdateDto) {
-        validatePrice(productUpdateDto.getPrecoPorKg(), "Preço unitário deve ser maior que zero");
-        validatePrice(productUpdateDto.getPrecoUnitario(), "Preço por kg deve ser maior que zero");
+        validatePrice(productUpdateDto.getPrecoPorKg(), "Preço por Kg deve ser maior que zero");
+        validatePrice(productUpdateDto.getPrecoUnitario(), "Preço unitário deve ser maior que zero");
         validateProductUpdate(productUpdateDto);
     }
 
@@ -198,7 +214,7 @@ public class ProductService {
             throw new BusinessException("Nome ultrapassa o limite de 75 caracteres");
         }
 
-        if (productUpdateDto.getNome().isEmpty()) {
+        if (productUpdateDto.getNome() != null && productUpdateDto.getNome().strip().isEmpty()) {
             throw new BusinessException("Nome do produto não pode ser vazio");
         }
 
@@ -206,10 +222,19 @@ public class ProductService {
             throw new BusinessException("Descrição ultrapassa o limite de 150 caracteres");
         }
 
-        if (productUpdateDto.getCategoria() != null && (productUpdateDto.getCategoria() == Categoria.PESO
-                && productUpdateDto.getCategoria() == Categoria.UNIDADE)) {
+        if (productUpdateDto.getCategoria() != null && (productUpdateDto.getCategoria() != Category.PESO
+                && productUpdateDto.getCategoria() != Category.UNIDADE)) {
             throw new BusinessException("A categoria informada não é válida.");
         }
+    }
+    
+    public void updateStatus(Integer id, boolean active) {
+        if (active) {
+            activateProduct(id);
+        } else {
+            deactivateProduct(id);
+        }
+
     }
 
 }

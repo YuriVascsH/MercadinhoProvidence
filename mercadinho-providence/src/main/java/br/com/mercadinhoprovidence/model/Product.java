@@ -22,6 +22,6 @@ public class Product {
     private Boolean controlaEstoque;
     private BigDecimal precoUnitario;
     private BigDecimal precoPorKg;
-    private Boolean ativo;
+    private Boolean active;
 
 }

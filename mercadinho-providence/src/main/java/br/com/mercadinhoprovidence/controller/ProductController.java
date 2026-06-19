@@ -39,7 +39,7 @@ public class ProductController {
      * 
      * @return retorna uma lista contendo todos os produtos
      */
-    public List<ProdutoTableDto> findAll() {
+    public List<ProductTableDto> findAll() {
         return productService.findAll();
     } 
 
@@ -50,7 +50,7 @@ public class ProductController {
      * @param produtoUpdateDto informações encapsulada passada pelo funcionário;
      * @return um Optional contendo a reposta de atualização.
      */
-    public ProdutoTableDto update(Integer id, ProductUpdateDto produtoUpdateDto) {
+    public ProductTableDto update(Integer id, ProductUpdateDto produtoUpdateDto) {
         return productService.update(id, produtoUpdateDto);
     }
 

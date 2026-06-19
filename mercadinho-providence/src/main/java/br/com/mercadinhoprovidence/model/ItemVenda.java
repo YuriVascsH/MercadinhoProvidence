@@ -17,6 +17,6 @@ public class ItemVenda {
     private Double precoUnitarioVenda;
     private Double totalItem;
 
-    private Produto produto;
+    private Product produto;
 
 }
