@@ -6,14 +6,12 @@ import java.util.Set;
 
 import br.com.mercadinhoprovidence.controller.LoginController;
 import br.com.mercadinhoprovidence.dto.login.LoginResponseDto;
-import br.com.mercadinhoprovidence.model.Funcionario;
 import br.com.mercadinhoprovidence.model.enums.Cargo;
 import br.com.mercadinhoprovidence.view.TelaCodigoVerificador;
 import br.com.mercadinhoprovidence.view.TelaInicialView;
 import br.com.mercadinhoprovidence.view.TelaLogin;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import lombok.Getter;
