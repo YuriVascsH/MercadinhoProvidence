@@ -1,6 +1,6 @@
 package br.com.mercadinhoprovidence.balance;
 
-public interface Balanca {
+public interface Balance {
 
     void conectar();
 

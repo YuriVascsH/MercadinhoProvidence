@@ -1,10 +1,11 @@
 package br.com.mercadinhoprovidence.balance;
 
+import br.com.mercadinhoprovidence.balance.config.BalanceConfig;
 import br.com.mercadinhoprovidence.balance.serial.SerialConnection;
 
-public abstract class AbstractBalance implements Balanca {
+public abstract class AbstractBalance implements Balance {
 
-    protected BalancaConfig config;
+    protected BalanceConfig config;
 
     protected SerialConnection serialConnection;
 

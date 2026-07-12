@@ -1,6 +1,6 @@
-package br.com.mercadinhoprovidence.balance;
+package br.com.mercadinhoprovidence.balance.config;
 
-public class BalancaConfig {
+public class BalanceConfig {
 
     private String porta; // COM4 (provavelmente)
 

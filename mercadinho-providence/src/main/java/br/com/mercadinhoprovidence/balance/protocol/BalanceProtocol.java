@@ -1,6 +1,6 @@
 package br.com.mercadinhoprovidence.balance.protocol;
 
-public interface ProtocoloBalanca {
+public interface BalanceProtocol {
 
     Peso interpretar(String resposta);
 
