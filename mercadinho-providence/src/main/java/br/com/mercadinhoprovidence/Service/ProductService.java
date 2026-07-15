@@ -35,14 +35,14 @@ public class ProductService {
         }
 
         Product product = productDao.findByCode(code)
-        .orElseThrow(() -> new BusinessException("Produto não encontrado"));
-        //o que estava antes: .orElseThrown(() -> new EntityNotFoundException("Produto não encontrado"));
+                .orElseThrow(() -> new BusinessException("Produto não encontrado"));
 
         return ProductMapper.toTableDto(product);
     }
 
     /**
      * Método responsável por realizar a busca do produso na vase de dados.
+     * TODO: Alterar para paginação
      * 
      * @return retorna uma lista contendo produtoTableDto
      */
@@ -62,7 +62,11 @@ public class ProductService {
         Product product = productDao.findById(id)
                 .orElseThrow(() -> new BusinessException("Produto não encontrado"));
 
-        validateProductUpdatePrice(productUpdateDto);
+        Category categoryFinal = productUpdateDto.getCategoria() != null
+                ? productUpdateDto.getCategoria()
+                : product.getCategoria();
+
+        validateProductUpdatePrice(productUpdateDto, categoryFinal);
 
         // updates
         product.setNome(productUpdateDto.getNome());
@@ -77,17 +81,6 @@ public class ProductService {
         //
         if (productUpdateDto.getCategoria() != null) {
 
-            product.setCategoria(productUpdateDto.getCategoria());
-            if (productUpdateDto.getCategoria() == Category.PESO) {
-                product.setPrecoPorKg(productUpdateDto.getPrecoPorKg());
-                product.setPrecoUnitario(null);
-            } else {
-                product.setPrecoUnitario(productUpdateDto.getPrecoUnitario());
-                product.setPrecoPorKg(null);
-            }
-        }
-
-        if (productUpdateDto.getCategoria() != null) {
             product.setCategoria(productUpdateDto.getCategoria());
             if (productUpdateDto.getCategoria() == Category.PESO) {
                 product.setPrecoPorKg(productUpdateDto.getPrecoPorKg());
@@ -132,11 +125,11 @@ public class ProductService {
         Product product = productDao.findById(id)
                 .orElseThrow(() -> new BusinessException("Produto não encontrado"));
 
-        if (Boolean.TRUE.equals(product.getAtivo())) {
+        if (Boolean.TRUE.equals(product.getActive())) {
             throw new BusinessException("Produto já está ativo");
         }
 
-        product.setAtivo(true);
+        product.setActive(true);
         productDao.save(product);
     }
 
@@ -166,7 +159,7 @@ public class ProductService {
                 throw new BusinessException("Produto por unidade precisa de preço unitário");
             }
 
-            validatePrice(product.getPrecoPorKg(), "Preço por Kg deve ser maior que zero");
+            validatePrice(product.getPrecoUnitario(), "Preço unitário deve ser maior que zero");
 
         }
 
@@ -195,16 +188,41 @@ public class ProductService {
     }
 
     /**
+     * Método responsável por validar o produto preço
      * 
      * @param productUpdateDto
      */
-    private void validateProductUpdatePrice(ProductUpdateDto productUpdateDto) {
-        validatePrice(productUpdateDto.getPrecoPorKg(), "Preço por Kg deve ser maior que zero");
-        validatePrice(productUpdateDto.getPrecoUnitario(), "Preço unitário deve ser maior que zero");
+    private void validateProductUpdatePrice(ProductUpdateDto productUpdateDto, Category categoryFinal) {
         validateProductUpdate(productUpdateDto);
+
+        if (categoryFinal == Category.UNIDADE) {
+
+            // Se o DTO está alterando a categoria para UNIDADE, ou se já era UNIDADE e ele
+            // enviou o preço unitário para atualizar
+            if (productUpdateDto.getCategoria() != null || productUpdateDto.getPrecoUnitario() != null) {
+                if (productUpdateDto.getPrecoUnitario() == null) {
+                    throw new BusinessException("Produto por unidade precisa de preço unitário válido.");
+                }
+                validatePrice(productUpdateDto.getPrecoUnitario(), "Preço unitário deve ser maior que zero");
+            }
+
+        } else if (categoryFinal == Category.PESO) {
+
+            // Se o DTO está alterando a categoria para PESO, ou se já era PESO e ele enviou
+            // o preço por kg para atualizar
+            if (productUpdateDto.getCategoria() != null || productUpdateDto.getPrecoPorKg() != null) {
+                if (productUpdateDto.getPrecoPorKg() == null) {
+                    throw new BusinessException("Produto por peso precisa de preço por Kg válido.");
+                }
+                validatePrice(productUpdateDto.getPrecoPorKg(), "Preço por Kg deve ser maior que zero");
+            }
+
+        }
     }
 
     /**
+     * Método responsável por realizar a validação dos dados informados inseridas
+     * para atualização do produto
      * 
      * @param productUpdateDto
      */
@@ -227,14 +245,16 @@ public class ProductService {
             throw new BusinessException("A categoria informada não é válida.");
         }
     }
-    
-    public void updateStatus(Integer id, boolean active) {
-        if (active) {
-            activateProduct(id);
-        } else {
-            deactivateProduct(id);
-        }
 
-    }
+
+    // Rever esse método 
+    // /**
+    //  * 
+    //  * @param id
+    //  * @param active
+    //  */
+    // public void updateStatus(Integer id, boolean active) {
+    //     if (active) activateProduct(id); else deactivateProduct(id);
+    // }
 
 }
