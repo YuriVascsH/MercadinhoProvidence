@@ -12,8 +12,8 @@ public class LoginController {
     private final LoginService loginService;
     private Funcionario funcionarioLoginParcial;
 
-    public LoginController() {
-        this.loginService = new LoginService();
+    public LoginController(LoginService loginService) {
+        this.loginService = loginService;
         this.funcionarioLoginParcial = null;
     }
 
