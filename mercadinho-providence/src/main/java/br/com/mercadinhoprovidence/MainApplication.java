@@ -1,177 +1,70 @@
 package br.com.mercadinhoprovidence;
 
+import java.awt.CardLayout;
 
-import java.util.HashSet;
-import java.util.Set;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
-import br.com.mercadinhoprovidence.controller.LoginController;
-import br.com.mercadinhoprovidence.dto.login.LoginResponseDto;
-import br.com.mercadinhoprovidence.model.enums.Cargo;
-import br.com.mercadinhoprovidence.view.TelaCodigoVerificador;
-import br.com.mercadinhoprovidence.view.TelaInicialView;
+import com.formdev.flatlaf.FlatLightLaf;
+
+import br.com.mercadinhoprovidence.config.AppContainer;
 import br.com.mercadinhoprovidence.view.TelaLogin;
-import javafx.application.Application;
-import javafx.geometry.Rectangle2D;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
-import lombok.Getter;
 
-public class MainApplication extends Application {
+public class MainApplication {
 
-    //
-    //    /**
-    //     * Fecha a aplicação
-    //     */
-    //    public void fecharAplicacao() {
-    //        primaryStage.close();
-    //    }
-    //
-    @Getter
-    private Stage primaryStage;
+    private JFrame janelaPrincipal; 
+    
+    private CardLayout cardLayout;   
+    
+    private JPanel containerDasTelas;
+    
+    private AppContainer container;
 
-    private LoginResponseDto funcionarioLogadoNaSessao;
+    public void iniciarSistema() {
+        FlatLightLaf.setup();
 
-    @Override
-    public void start(Stage stage) {
-        this.primaryStage = stage;
+        this.container = new AppContainer();
 
-        // Teste para sabino
-        // Produto produtoTeste = new Produto();
-        // produtoTeste.setIdProduto(1);
-        // produtoTeste.setNome("Arroz Agulhinha Tipo 1 - 5kg");
-        // produtoTeste.setPrecoVenda(25.99);
+        janelaPrincipal = new JFrame("Mercadinho Providence");
+        janelaPrincipal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // ItemVenda item = new ItemVenda(produtoTeste, 1);
+        cardLayout = new CardLayout();
+        containerDasTelas = new JPanel(cardLayout);
+        janelaPrincipal.add(containerDasTelas);
 
-        // Venda vendaTeste = new Venda(
-        //     999,
-        //     LocalDateTime.now(),
-        //     25.99,
-        //     0.0,
-        //     25.99,
-        //     1000
-        // );
-
-        // Pagamento pagamentoTeste = new Pagamento();
-        // pagamentoTeste.setForma(Forma.CARTAO_DEBITO);
-        // pagamentoTeste.setValorPago(25.99);
-        // pagamentoTeste.setTroco(0.0);
-        // vendaTeste.setPagamento(pagamentoTeste);
-        // vendaTeste.getItensVenda().add(item);
-        // Impressora.imprimirCupom(vendaTeste);
-
-        // // Print do tamanho da tela
-        // Rectangle2D totalScreenBounds = Screen.getPrimary().getBounds();
-        // double totalScreenWidth = totalScreenBounds.getWidth();
-        // double totalScreenHeight = totalScreenBounds.getHeight();
-
-        // System.out.println("------------------------------------");
-        // System.out.println("Tamanho tt do monitor");
-        // System.out.println("Largura Total: " + totalScreenWidth + " pixels");
-        // System.out.println("Altura Total: " + totalScreenHeight + " pixels");
-        // System.out.println("------------------------------------");
-
-        // System.out.println("------------------------------------");
-        // System.out.println("Tamanho visivel");
-        // Rectangle2D visualScreenBounds = Screen.getPrimary().getVisualBounds();
-        // System.out.println("Largura Visível: " + visualScreenBounds.getWidth() + "
-        // pixels");
-        // System.out.println("Altura Visível: " + visualScreenBounds.getHeight() + "
-        // pixels");
-        // System.out.println("------------------------------------");
-
+        TelaLogin telaLogin = new TelaLogin(this, container.getLoginController());
+        
+        containerDasTelas.add(telaLogin, "TELA_LOGIN");
+        
         mostrarTelaLogin();
     }
 
-    /**
-     * Exibe a Tela de Login.
-     */
     public void mostrarTelaLogin() {
-        TelaLogin telaLogin = new TelaLogin(this);
-        primaryStage.setTitle("Mercadinho Providence - Login");
-        primaryStage.setScene(telaLogin.getScene());
-        primaryStage.setFullScreen(false);
-        primaryStage.sizeToScene();
-        primaryStage.centerOnScreen();
-        primaryStage.show();
+        janelaPrincipal.setResizable(false); // Bloqueia o tamanho para o login não esticar
+        cardLayout.show(containerDasTelas, "TELA_LOGIN"); // Exibe a carta do login
+        
+        janelaPrincipal.pack(); // Faz a janela encolher até o tamanho exato do card de login
+        janelaPrincipal.setLocationRelativeTo(null); // Centraliza no meio do monitor
+        janelaPrincipal.setVisible(true);
     }
 
-    /**
-     * Exibe a Tela de Código Verificador para a segunda etapa do login.
-     *
-     * @param loginController O LoginController com o estado da primeira etapa.
-     */
-    public void mostrarTelaCodigoVerificador(LoginController loginController) {
-        TelaCodigoVerificador telaCodigoVerificador = new TelaCodigoVerificador(this, loginController);
-        primaryStage.setTitle("Mercadinho Providence - Verificação de Código");
-        primaryStage.setScene(telaCodigoVerificador.getScene());
-        primaryStage.setFullScreen(false);
-        primaryStage.sizeToScene();
-        primaryStage.centerOnScreen();
-        primaryStage.show();
+    public void mostrarTelaPrincipalPDV() {
+        janelaPrincipal.setResizable(true); // Permite redimensionar o PDV
+        cardLayout.show(containerDasTelas, "TELA_PDV"); // Exibe a carta do PDV
+        
+        janelaPrincipal.setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximiza em tela cheia
     }
 
-    /**
-     * Exibe a Tela Inicial após o login.
-     *
-     * @param funcionarioLogado O funcionário que realizou o login.
-     */
+    public void mostrarTelaCodigoVerificador(Object loginController) {
 
-    public void mostrarTelaInicial(LoginResponseDto funcionarioLogado) {
-        Set<String> botoesDesabilitados = new HashSet<>();
-        if (funcionarioLogado != null && funcionarioLogado.getCargo() == Cargo.OPERADOR) {
-            botoesDesabilitados.add("Relatorio");
-            botoesDesabilitados.add("Funcionarios");
-        }
-
-        this.funcionarioLogadoNaSessao = funcionarioLogado;
-
-        TelaInicialView telaInicialView = new TelaInicialView(
-                this, funcionarioLogado, botoesDesabilitados, this::mostrarTelaVenda);
-
-        primaryStage.setTitle("Mercadinho Providence PDV");
-        primaryStage.setScene(telaInicialView.getScene());
-
-        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-
-        primaryStage.setX(screenBounds.getMinX());
-        primaryStage.setY(screenBounds.getMinY());
-        primaryStage.setWidth(screenBounds.getWidth());
-        primaryStage.setHeight(screenBounds.getHeight());
-
-        // Impede redimensionamento se quiser
-        primaryStage.setResizable(false);
-
-        primaryStage.show();
-    }
-
-    /**
-     * Exibe a Tela de Venda (PDV) em tela cheia.
-     */
-    public void mostrarTelaVenda(LoginResponseDto funcionarioParaVenda) {
-//        VendaController vendaController = new VendaController();
-//
-//        vendaController.iniciarNovaVenda(funcionarioParaVenda.getIdFuncionario());
-//
-//        TelaVendaView telaVendaView = new TelaVendaView(
-//                this.primaryStage,
-//                (f) -> this.mostrarTelaInicial(f),
-//                funcionarioParaVenda,
-//                vendaController
-//        );
-//
-//        Scene pdvScene = new Scene(telaVendaView, 1000, 700);
-//        pdvScene.getStylesheets().add(getClass().getResource("/styles/pdvStyle.css").toExternalForm());
-//
-//        primaryStage.setTitle("Mercadinho Providence PDV - Venda");
-//        primaryStage.setScene(pdvScene);
-//        primaryStage.setFullScreen(true);
-//        primaryStage.show();
-//        System.out.println(funcionarioParaVenda);
     }
 
     public static void main(String[] args) {
-       launch(args);
-
-   }
+        // O ponto de entrada do Java que inicia tudo
+        SwingUtilities.invokeLater(() -> {
+            MainApplication app = new MainApplication();
+            app.iniciarSistema();
+        });
+    }
 }
