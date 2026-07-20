@@ -1,11 +1,11 @@
 package br.com.mercadinhoprovidence.controller;
 
-import br.com.mercadinhoprovidence.Service.LoginService;
 import br.com.mercadinhoprovidence.dto.login.LoginRequestDto;
 import br.com.mercadinhoprovidence.dto.login.LoginResponseDto;
 import br.com.mercadinhoprovidence.dto.login.LoginVerificationRequestDto;
 import br.com.mercadinhoprovidence.exceptions.LoginFluxoIncorretoException;
 import br.com.mercadinhoprovidence.model.Funcionario;
+import br.com.mercadinhoprovidence.service.LoginService;
 
 public class LoginController {
 

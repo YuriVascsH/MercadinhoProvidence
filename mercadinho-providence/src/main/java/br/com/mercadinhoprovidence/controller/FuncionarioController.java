@@ -1,11 +1,12 @@
 package br.com.mercadinhoprovidence.controller;
 
-import br.com.mercadinhoprovidence.Service.FuncionarioService;
 import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioCreateDto;
 import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioResponseDto;
 import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioTableDto;
 import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioUpdateDto;
 import br.com.mercadinhoprovidence.model.Funcionario;
+import br.com.mercadinhoprovidence.service.FuncionarioService;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@NoArgsConstructor
 public class FuncionarioController {
 
     private FuncionarioService funcionarioService;
