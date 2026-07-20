@@ -9,7 +9,13 @@ import java.sql.*;
 import java.sql.Date;
 import java.util.*;
 
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.BeanHandler;
+
 public class FuncionarioDao {
+
+    public FuncionarioDao() {
+    }
 
     /**
      * Insere um novo funcionário (seja gerente ou operador)
@@ -220,28 +226,22 @@ public class FuncionarioDao {
     }
 
     /**
-     * Busca funcionário por ID e senha (para login, por exemplo)
+     * Busca funcionário por ID e senha (para o login da primeira etapa)
      */
     public Funcionario buscarPorIdSenha(Integer id, String senha) {
-        String sql = "SELECT * FROM funcionario WHERE id_funcionario = ? AND senha = ?";
 
-        try (Connection conn = ConexaoMySQL.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "SELECT id_funcionario AS id, ativo, codigo_verificador AS codigoVerificador " +
+                "* FROM funcionario WHERE id_funcionario = ? AND senha = ?";
 
-            stmt.setInt(1, id);
-            stmt.setString(2, senha);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return mapearFuncionario(rs);
-                }
-            }
+        QueryRunner run = new QueryRunner();
+        try (Connection conn = ConexaoMySQL.getConnection()) {
+            // O BeanHandler substitui o seu antigo 'mapearFuncionario(rs)'
+            return run.query(conn, sql, new BeanHandler<>(Funcionario.class), id, senha);
 
         } catch (SQLException e) {
             System.err.println("Erro ao buscar funcionário por ID e senha: " + e.getMessage());
+            return null;
         }
-
-        return null;
     }
 
     /**
@@ -308,7 +308,8 @@ public class FuncionarioDao {
     /**
      * Busca apenas o nome de um funcionário
      *
-     * @param idFuncionario fornecido pelo funcionario na sessão de gerenciamento de funcionários
+     * @param idFuncionario fornecido pelo funcionario na sessão de gerenciamento de
+     *                      funcionários
      */
     public String buscarNomePorId(Integer idFuncionario) {
         String sql = "SELECT nome FROM funcionario WHERE id_funcionario = ?";
