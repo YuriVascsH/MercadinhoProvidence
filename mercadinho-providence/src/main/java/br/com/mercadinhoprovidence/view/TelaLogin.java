@@ -5,165 +5,158 @@ import br.com.mercadinhoprovidence.controller.LoginController;
 import br.com.mercadinhoprovidence.dto.login.LoginRequestDto;
 import br.com.mercadinhoprovidence.util.AlertUtils;
 import br.com.mercadinhoprovidence.util.InputUtils;
-import br.com.mercadinhoprovidence.view.component.TitleComponents;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 
-public class TelaLogin {
+import com.formdev.flatlaf.FlatClientProperties;
+import net.miginfocom.swing.MigLayout;
 
-    private TextField userField;
-    private PasswordField passwordField;
-    private LoginController loginController;
-    private Button button;
+import javax.swing.*;
+import java.awt.event.ActionListener;
 
-    private Scene scene;
-    private MainApplication mainApplication;
+public class TelaLogin extends JPanel {
 
-    public TelaLogin(MainApplication mainApplication) {
-        this.mainApplication = mainApplication;
-        this.loginController = new LoginController();
-        setupUI();
-    }
+        private JTextField userField;
+        private JPasswordField passwordField;
+        private final LoginController loginController;
+        private JButton button;
+        private MainApplication mainApplication;
 
-    public Scene getScene() {
-        return scene;
-    }
-
-    /**
-     * Este método é responsável por montar a interface gráfica
-     * e criar a Scene para esta view.
-     * ** Conteúdo do antigo start() deve vir para cá, exceto a manipulação do Stage **
-     */
-    private void setupUI() {
-        // Layout da tela
-        BorderPane root = new BorderPane();
-        root.getStyleClass().add("root");
-
-        // Adição do conteúdo
-        root.setTop(TitleComponents.createHeaderBox());
-        root.setCenter(createLoginContent());
-        root.setBottom(createButtonBox());
-
-        this.scene = new Scene(root, 500, 480);
-        this.scene.getStylesheets().add(getClass().getResource("/styles/LoginStyles.css").toExternalForm());
-
-    }
-
-    /**
-     * Cria e retorna um VBox (contendo o formulário da aplicação) que servirá como o contêiner para os elementos
-     * @return VBox contendo o placeholder para o conteúdo de login.
-     */
-    private VBox createLoginContent() {
-        VBox contentBox = new VBox(30);
-        contentBox.setId("login-content-box");
-        contentBox.setAlignment(Pos.CENTER);
-
-        // Campo id do funcionário
-        this.userField = new TextField();
-        this.userField.setPromptText("ID do funcionário");
-        InputUtils.limitDigits(this.userField, 30);
-        this.userField.getStyleClass().add("text-field");
-
-        // Campo Senha do funcionário
-        this.passwordField = new PasswordField();
-        this.passwordField.setPromptText("Senha do funcionário");
-        this.passwordField.getStyleClass().add("password-field");
-
-        userField.setOnKeyPressed(this::handleEnterKey);
-        passwordField.setOnKeyPressed(this::handleEnterKey);
-        contentBox.getChildren().addAll(this.userField, this.passwordField);
-        return contentBox;
-    }
-
-    /**
-     * Cria e retorna um VBox (contendo o botão de logar) que serve para verificar os dados inseridos e chamar a TelaCodigoVerificador
-     * @return VBox contendo o botão de login
-     */
-    private VBox createButtonBox() {
-        VBox buttonBox = new VBox();
-        buttonBox.setId("button-box");
-        this.button = new Button("Acessar");
-        button.getStyleClass().add("login-button");
-
-        // Chamada da função de tentativa de login
-        button.setOnAction(e -> handleLoginAttempt());
-
-        buttonBox.setAlignment(Pos.CENTER);
-        buttonBox.getChildren().add(button);
-        return buttonBox;
-    }
-
-
-    public void handleLoginAttempt() {
-        String idString = userField.getText().trim();
-        String passwordString = passwordField.getText().trim();
-        System.out.println("DEBUG UI: Senha digitada (trim): '" + passwordString + "'");
-
-        // Verifica se os campos de id e senha estão vazios
-        if (idString.isEmpty() || passwordString.isEmpty()){
-            AlertUtils.showWarning("Campos faltando","Por favor, preencha todos os campos.");
-            userField.requestFocus();
-            return;
+        public TelaLogin(MainApplication mainApplication, LoginController loginController) {
+                this.mainApplication = mainApplication;
+                this.loginController = loginController;
+                setupUI();
         }
 
-        int idInt;
-        // Conversão e validação do ID numérico
-        try {
-            idInt = Integer.parseInt(idString);
-        } catch (NumberFormatException ex) {
-            AlertUtils.showError("Erro no ID.", "O ID do funcionário deve ser um número válido.");
-            userField.clear();
-            passwordField.clear();
-            userField.requestFocus();
-            return;
+        // Não mexer aqui
+        /**
+         * Este método é responsável por montar a interface gráfica
+         * usando MigLayout e FlatLaf.
+         */
+        private void setupUI() {
+                // Centraliza o card perfeitamente na tela
+                setLayout(new MigLayout("fill, insets 20", "[center]", "[center]"));
+
+                // Inicializa os componentes de entrada
+                userField = new JTextField();
+                InputUtils.limitDigitsNumber(userField, 30);
+                passwordField = new JPasswordField();
+                button = new JButton("Acessar");
+
+                // Aplica os placeholders modernos e o botão de "olhinho" na senha
+                userField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Ex: 1023");
+                passwordField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Digite sua senha");
+                passwordField.putClientProperty(FlatClientProperties.STYLE, "showRevealButton:true");
+
+                // Cria o "Card" centralizado com bordas arredondadas e leve fundo customizado
+                JPanel cardPanel = new JPanel(new MigLayout("wrap, fillx, insets 35 45 40 45", "fill, 280:320"));
+                cardPanel.putClientProperty(FlatClientProperties.STYLE, "" +
+                                "arc:20;" +
+                                "[light]background:darken(@background,2%);" +
+                                "[dark]background:lighten(@background,3%)");
+
+                // Títulos do Card
+                JLabel lbTitle = new JLabel("Mercadinho Providence");
+                lbTitle.putClientProperty(FlatClientProperties.STYLE, "font:bold +10");
+
+                JLabel lbDescription = new JLabel("Por favor, faça login para acessar o caixa");
+                lbDescription.putClientProperty(FlatClientProperties.STYLE, "" +
+                                "[light]foreground:lighten(@foreground,30%);" +
+                                "[dark]foreground:darken(@foreground,30%)");
+
+                // Estilização do Botão de Ação com Verde Moderno e Cantos Arredondados
+                button.putClientProperty(FlatClientProperties.STYLE, "" +
+                                "background:#2ecc71;" +             // Cor de fundo verde
+                                "foreground:#ffffff;" +             // Texto branco
+                                "hoverBackground:darken(#2ecc71,10%);" + // Escurece 10% no hover
+                                "pressedBackground:darken(#2ecc71,20%);" + // Escurece 20% ao clicar
+                                "arc:10;" +                         // Arredondamento suave dos cantos
+                                "borderWidth:0;" +
+                                "focusWidth:0;" +
+                                "innerFocusWidth:0;" +
+                                "font:bold +1");                    // Texto em negrito e ligeiramente maior
+
+                // Eventos de clique e atalho de ENTER
+                ActionListener loginAction = e -> handleLoginAttempt();
+                button.addActionListener(loginAction);
+
+                // No Swing, dar um addActionListener no JTextField faz ele disparar a ação ao apertar ENTER automaticamente!
+                userField.addActionListener(loginAction);
+                passwordField.addActionListener(loginAction);
+
+                // Montagem do Layout dentro do Card
+                cardPanel.add(lbTitle);
+                cardPanel.add(lbDescription, "gapbottom 15");
+
+                cardPanel.add(new JLabel("ID do Funcionário"), "gapy 6");
+                cardPanel.add(userField, "h 38!"); // Um pouco mais alto para melhor ergonomia de toque/clique
+
+                cardPanel.add(new JLabel("Senha"), "gapy 6");
+                cardPanel.add(passwordField, "h 38!");
+
+                cardPanel.add(button, "gapy 25, h 42!"); // Destaca o botão com espaçamento superior maior
+
+                // Adiciona o card ao container principal
+                add(cardPanel);
         }
 
-        try {
-            LoginRequestDto loginRequestDto = new LoginRequestDto();
-            loginRequestDto.setId(idInt);
-            loginRequestDto.setSenha(passwordString);
-            // Chamada do primeira etapa de logar usando o loginController
-            this.loginController.primeiraEtapa(loginRequestDto);
+        /**
+         * Lógica
+         * 
+         */
+        public void handleLoginAttempt() {
+                String idString = userField.getText().trim();
+                String passwordString = new String(passwordField.getPassword()).trim();
+              
+                if (idString.isEmpty() || passwordString.isEmpty()) {
+                        AlertUtils.showWarning("Campos faltando", "Por favor, preencha todos os campos.");
+                        if (idString.isEmpty()) {
+                                userField.requestFocus();
+                        } else {
+                                passwordField.requestFocus();
+                        }
+                        return;
+                }
 
-            // Se autenticarPrimeiraEtapa for bem-sucedido:
-            mainApplication.mostrarTelaCodigoVerificador(this.loginController);
+                int idInt;
+                try {
+                        idInt = Integer.parseInt(idString);
+                } catch (NumberFormatException ex) {
+                        AlertUtils.showError("Erro no ID", "O ID do funcionário deve conter apenas números válidos.");
+                        limparCamposeFocar();
+                        return;
+                }
 
-        } catch (IllegalArgumentException ex) {
-            // Captura exceções específicas de Login/Regra de Negócio
-            AlertUtils.showError("Erro de Login", ex.getMessage());
-            userField.clear();
-            passwordField.clear();
-            userField.requestFocus();
-        } catch (IllegalStateException ex) {
-            AlertUtils.showError("Erro de Estado", "Ocorreu um erro na ordem de login. Detalhes: " + ex.getMessage());
-            userField.clear();
-            passwordField.clear();
-            userField.requestFocus();
-        } catch (Exception ex) {
-            AlertUtils.showError("Erro Inesperado", "Ocorreu um problema ao tentar fazer login.","Detalhes: " + ex.getMessage() + "\nPor favor, tente novamente mais tarde ou contate o suporte.");
-            ex.printStackTrace();
-            userField.clear();
-            passwordField.clear();
-            userField.requestFocus();
+                try {
+                        // Passo 1 - Criação do Objeto e colocando suas informações. Ok!
+                        LoginRequestDto loginRequestDto = new LoginRequestDto();
+                        loginRequestDto.setId(idInt);
+                        loginRequestDto.setSenha(passwordString);
+
+                        // Passo 2 - Passando o meu objeto do controller para a primeira etapa
+                        // Login requestDto está correto, 
+                        this.loginController.primeiraEtapa(loginRequestDto);
+
+                        if (mainApplication != null) {
+                                System.out.println("GG filha da puta");
+                                mainApplication.mostrarTelaCodigoVerificador(this.loginController);
+                        }
+
+                } catch (IllegalArgumentException ex) {
+                        AlertUtils.showError("Erro de Login", ex.getMessage());
+                        limparCamposeFocar();
+                } catch (IllegalStateException ex) {
+                        AlertUtils.showError("Erro de Estado", "Ocorreu um erro na ordem de login. Detalhes: " + ex.getMessage());
+                        limparCamposeFocar();
+                } catch (Exception ex) {
+                        AlertUtils.showError("Erro Inesperado", "Ocorreu um problema ao tentar fazer login.",
+                                        "Detalhes: " + ex.getMessage() + "\nPor favor, contate o suporte.");
+                        ex.printStackTrace();
+                        limparCamposeFocar();
+                }
         }
-    }
 
-    /**
-     * Lida com o evento de pressionar a tecla ENTER, aciona o botão de login
-     *
-     * @param event O evento do teclado
-     */
-    public void handleEnterKey(KeyEvent event) {
-        if(event.getCode() == KeyCode.ENTER) {
-            button.fire();
-            event.consume();
+        private void limparCamposeFocar() {
+                userField.setText("");
+                passwordField.setText("");
+                userField.requestFocus();
         }
-    }
 }
