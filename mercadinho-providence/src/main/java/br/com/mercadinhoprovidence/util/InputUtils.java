@@ -17,25 +17,52 @@ import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.JTextField;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+
 public class InputUtils {
+
+    public InputUtils(){}
 
     // Formatter para datas no formato dd/MM/yyyy
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    /**
-     * Aplica um TextFormatter a um TextField para limitar o número de caracteres e permitir apenas dígitos.
-     * @param textField O TextField a ser limitado.
+  /**
+     * Aplica um DocumentFilter a um JTextField para limitar o número de caracteres e permitir apenas dígitos.
+     * @param textField O JTextField a ser limitado.
      * @param maxLength O número máximo de caracteres permitidos.
      */
-    public static void limitDigitsNumber(TextField textField, int maxLength){
-        UnaryOperator<TextFormatter.Change> filter = change -> {
-            String newText = change.getControlNewText();
-            if (newText.matches("\\d*") && newText.length() <= maxLength) {
-                return change;
+    public static void limitDigitsNumber(JTextField textField, int maxLength) {
+        ((AbstractDocument) textField.getDocument()).setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+                if (string == null) return;
+                
+                // Junta o texto atual com o que está sendo inserido para checar o resultado
+                String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
+                String nextText = currentText.substring(0, offset) + string + currentText.substring(offset);
+                
+                if (nextText.matches("\\d*") && nextText.length() <= maxLength) {
+                    super.insertString(fb, offset, string, attr);
+                }
             }
-            return null;
-        };
-        textField.setTextFormatter(new TextFormatter<>(filter));
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                if (text == null) text = "";
+                
+                // Mesma lógica de validação para quando o usuário substitui um texto ou digita normalmente
+                String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
+                String nextText = currentText.substring(0, offset) + text + currentText.substring(offset + length);
+                
+                if (nextText.matches("\\d*") && nextText.length() <= maxLength) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
     }
 
     /**
