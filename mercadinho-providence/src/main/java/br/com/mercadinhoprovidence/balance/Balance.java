@@ -1,13 +1,33 @@
 package br.com.mercadinhoprovidence.balance;
 
+package br.com.mercadinhoprovidence.balanca;
+
 public interface Balance {
 
-    void conectar();
+    /**
+     * Abre a comunicação com a balança.
+     *
+     * @throws Exception caso a conexão não possa ser estabelecida.
+     */
+    void connect() throws Exception;
 
-    void desconectar();
+    /**
+     * Encerra a comunicação com a balança.
+     */
+    void disconnect();
 
-    boolean estaConectada();
+    /**
+     * Verifica se a balança está conectada.
+     *
+     * @return true caso esteja conectada.
+     */
+    boolean isConnected();
 
-    Peso lerPeso();
+    /**
+     * Obtém o último peso lido pela balança.
+     *
+     * @return objeto Weight contendo as informações do peso.
+     */
+    Weight getWeight();
 
 }
