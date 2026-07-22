@@ -24,6 +24,14 @@
 //import java.util.Optional;
 //import java.util.function.Consumer;
 //
+
+/* 🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃 Adição de importações da balança 🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃
+import br.com.mercadinhoprovidence.balanca.Balance;
+import br.com.mercadinhoprovidence.balanca.BalanceRamuza;
+import br.com.mercadinhoprovidence.balanca.BalanceConfig;
+import br.com.mercadinhoprovidence.balanca.Weight;
+*/
+
 //public class TelaVenda extends VBox {
 //
 //	private Label quantidadeValorLabel;
@@ -46,6 +54,10 @@
 //	private Funcionario funcionarioLogado;
 //	private FuncionarioController funcionarioController;
 //	private VendaController vendaController;
+
+/*	🢃🢃🢃🢃🢃🢃🢃🢃 Adição de atributo da balança 🢃🢃🢃🢃🢃🢃🢃🢃
+	private Balance balanca;
+ */
 //
 //	/**
 //	 * Construtor da tela venda. Inicializa os controladores e configura a
@@ -68,6 +80,11 @@
 //		if (this.funcionarioLogado != null && this.vendaController.getVendaAtual() == null) {
 //			this.vendaController.iniciarNovaVenda(this.funcionarioLogado.getIdFuncionario());
 //		}
+
+/* 🢃🢃🢃🢃🢃🢃🢃🢃🢃 Adição de elementos da balança ao construtor 🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃
+	 	BalanceConfig config = new BalanceConfig();
+		this.balanca = new BalanceRamuza(config);
+*/
 //
 //		initializeUI();
 //		setupListeners();
@@ -257,53 +274,81 @@
 //		tfQuantidade.setStyle("-fx-font-size: 14px;");
 //		tfQuantidade.setMaxWidth(80);
 //
-//		tfCodigoProduto.setOnAction(event -> {
-//			String codigoBarras = tfCodigoProduto.getText().trim();
-//			int quantidade = 1;
-//			try {
-//				quantidade = Integer.parseInt(tfQuantidade.getText().trim());
-//				if (quantidade <= 0)
-//					quantidade = 1;
-//			} catch (NumberFormatException e) {
-//				quantidade = 1;
-//			}
-//
-//			if (codigoBarras.isEmpty()) {
-//				limparCamposProdutoAtual("NENHUM PRODUTO SELECIONADO");
-//				tfCodigoProduto.clear();
-//				return;
-//			}
-//
-//			Produto produto = produtoController.buscarPorCodigo(codigoBarras);
-//
-//			if (produto != null) {
-//				if (modoRemocaoAtivo) {
-//					removerItemDaVenda(codigoBarras, quantidade);
-//				} else {
-//					Double estoqueAtual = produto.getQuantidadeOuPesoEmEstoque();
-//					if (quantidade > estoqueAtual) {
-//						nomeProdutoLabel.setText("ESTOQUE INSUFICIENTE!");
-//						return;
-//					}
-//					double precoOriginal = produto.getPrecoVenda();
-//					double desconto = produto.getDesconto();
-//					double precoComDesconto = precoOriginal * (1 - desconto);
-//
-//					precoUnitarioLabel.setText(String.format("R$ %.2f", precoComDesconto));
-//					unidadePrecoLabel.setText(quantidade + "X");
-//					totalItemAtualLabel.setText(String.format("R$ %.2f", precoComDesconto * quantidade));
-//
-//					for (int i = 0; i < quantidade; i++) {
-//						processarProdutoEscaneado(produto);
-//					}
-//				}
-//			} else {
-//				limparCamposProdutoAtual("PRODUTO NÃO ENCONTRADO");
-//			}
-//
-//			tfCodigoProduto.clear();
-//			tfQuantidade.setText("1");
-//		});
+/*		🢃🢃🢃🢃 OnAction alterado para suporte à lógica de leitura de PESO do produto (anteriormente apenas QUANTIDADE) 🢃🢃🢃🢃
+		tfCodigoProduto.setOnAction(event -> {
+		    String codigoBarras = tfCodigoProduto.getText().trim();
+		
+		    if (codigoBarras.isEmpty()) {
+		        limparCamposProdutoAtual("NENHUM PRODUTO SELECIONADO");
+		        return;
+		    }
+		
+		    Produto produto = produtoController.buscarPorCodigo(codigoBarras);
+		
+		    if (produto == null) {
+		        limparCamposProdutoAtual("PRODUTO NÃO ENCONTRADO");
+		        return;
+		    }
+		
+		    double quantidadeOuPeso;
+		
+		    // Verifica se o produto é vendido por peso
+		    if (produto.isVendidoPorPeso()) {
+		
+		        try {
+		            Weight weight = balanca.getWeight();
+		            quantidadeOuPeso = weight.getValue().doubleValue();
+		
+		            // Preenche automaticamente o campo
+		            tfQuantidade.setText(String.format("%.3f", quantidadeOuPeso));
+		
+		        } catch (Exception e) {
+		            AlertUtils.showError("Erro na Balança",
+		                    "Não foi possível obter o peso da balança.");
+		            return;
+		        }
+		
+		    } else {
+		
+		        // Produto por unidade
+		        try {
+		            quantidadeOuPeso = Double.parseDouble(tfQuantidade.getText().trim());
+		            if (quantidadeOuPeso <= 0) {
+		                quantidadeOuPeso = 1;
+		            }
+		        } catch (NumberFormatException e) {
+		            quantidadeOuPeso = 1;
+		        }
+		    }
+		
+		    // Verifica estoque
+		    if (quantidadeOuPeso > produto.getQuantidadeOuPesoEmEstoque()) {
+		        nomeProdutoLabel.setText("ESTOQUE INSUFICIENTE!");
+		        return;
+		    }
+		
+		    // ===== LÓGICA DE DESCONTO MANTIDA =====
+		    double precoOriginal = produto.getPrecoVenda();
+		    double desconto = produto.getDesconto();
+		    double precoComDesconto = precoOriginal * (1 - desconto);
+		
+		    precoUnitarioLabel.setText(String.format("R$ %.2f", precoComDesconto));
+		
+		    if (produto.isVendidoPorPeso()) {
+		        unidadePrecoLabel.setText(String.format("%.3f kg", quantidadeOuPeso));
+		    } else {
+		        unidadePrecoLabel.setText(String.format("%.0fX", quantidadeOuPeso));
+		    }
+		
+		    totalItemAtualLabel.setText(
+		            String.format("R$ %.2f", precoComDesconto * quantidadeOuPeso));
+		
+		    processarProdutoEscaneado(produto, quantidadeOuPeso);
+		
+		    tfCodigoProduto.clear();
+		    tfQuantidade.setText("1");
+		});
+		*/
 //
 //		inputCodigoBarrasBox.getChildren().addAll(quantidadeLabelAdd, tfQuantidade, codigoBarrasLabel, tfCodigoProduto);
 //		VBox.setMargin(inputCodigoBarrasBox, new Insets(0, 0, 10, 0));
@@ -499,7 +544,7 @@
 //		return parteEsquerdaBox;
 //	}
 //
-//	private void processarProdutoEscaneado(Produto produto) {
+//	private void processarProdutoEscaneado(Produto produto, double quantidadeOuPeso) { // Adição de parâmetro e lógica subsequente para suporte à lógica da balança
 //		Venda vendaAtual = this.vendaController.getVendaAtual();
 //
 //		Optional<ItemVenda> itemVendaExistenteOptional = vendaAtual.getItensVenda().stream()
@@ -509,8 +554,8 @@
 //
 //		ItemVenda itemExistente = itemVendaExistenteOptional.orElse(null);
 //		Double quantidadeAtualNoCarrinho = (itemExistente != null) ? itemExistente.getQuantidadeOuPeso() : 0;
-//		Double quantidadeAdicionar = 1.0;
-//		Double proximaQuantidadeNoCarrinho = quantidadeAtualNoCarrinho + quantidadeAdicionar;
+//		Double quantidadeAdicionar = quantidadeOuPeso; //alterado para a nova lógica
+//		Double proximaQuantidadeNoCarrinho = quantidadeAtualNoCarrinho + quantidadeAdicionar; //alterado para a nova lógica
 //		Double estoqueDisponivel = produto.getQuantidadeOuPesoEmEstoque();
 //
 //		if (proximaQuantidadeNoCarrinho > estoqueDisponivel) {
@@ -530,6 +575,11 @@
 //						itemExistente.setQuantidadeOuPeso(itemExistente.getQuantidadeOuPeso() + quantidadeParaAddComAutorizacao);
 //					} else {
 //						ItemVenda novoItem = new ItemVenda(produto, quantidadeParaAddComAutorizacao);
+
+						// Aplica o desconto ao preço unitário do item (nova lógica)
+//						double precoComDesconto = produto.getPrecoVenda() * (1 - produto.getDesconto());
+//						novoItem.setPrecoUnitarioVenda(precoComDesconto);
+						
 //						this.vendaController.adicionarItemAVenda(novoItem);
 //					}
 //
@@ -538,10 +588,19 @@
 //
 //					nomeProdutoLabel.setText(produto.getNome().toUpperCase());
 //					quantidadeValorLabel.setText(String.valueOf(quantidadeParaAddComAutorizacao));
-//					precoUnitarioLabel.setText(String.format("R$ %.2f", produto.getPrecoVenda()));
-//					unidadePrecoLabel.setText(String.format("%dX", quantidadeParaAddComAutorizacao));
-//					totalItemAtualLabel.setText(String.format("R$ %.2f",
-//							(double) quantidadeParaAddComAutorizacao * produto.getPrecoVenda()));
+//					double precoComDesconto = produto.getPrecoVenda() * (1 - produto.getDesconto());
+
+//					🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃Nova lógica adicionada🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃
+
+//					precoUnitarioLabel.setText(String.format("R$ %.2f", precoComDesconto));
+//					
+//					if (produto.isVendidoPorPeso()) {
+//					    unidadePrecoLabel.setText(String.format("%.3f kg", quantidadeParaAddComAutorizacao));
+//					} else {
+//					    unidadePrecoLabel.setText(String.format("%.0fX", quantidadeParaAddComAutorizacao));
+//					}
+//					
+//					totalItemAtualLabel.setText(String.format("R$ %.2f", quantidadeParaAddComAutorizacao * precoComDesconto));
 //					return;
 //				} else {
 //					AlertUtils.showInfo("Operação Cancelada", "Adição de produto cancelada.");
@@ -554,12 +613,17 @@
 //				return;
 //			}
 //		}
-//
+//		🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃  Nova lógica adicionada 🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃
 //		if (itemExistente != null) {
-//			itemExistente.setQuantidadeOuPeso(itemExistente.getQuantidadeOuPeso() + 1);
+//		    itemExistente.setQuantidadeOuPeso(
+//		            itemExistente.getQuantidadeOuPeso() + quantidadeAdicionar);
 //		} else {
-//			ItemVenda novoItem = new ItemVenda(produto, quantidadeAdicionar);
-//			this.vendaController.adicionarItemAVenda(novoItem);
+//		    ItemVenda novoItem = new ItemVenda(produto, quantidadeAdicionar);
+//		    // Aplica o desconto ao preço unitário do item
+//		    double precoComDesconto = produto.getPrecoVenda() * (1 - produto.getDesconto());
+//		    novoItem.setPrecoUnitarioVenda(precoComDesconto);
+//		
+//		    this.vendaController.adicionarItemAVenda(novoItem);
 //		}
 //
 //		atualizarTotalCompra();
@@ -574,8 +638,15 @@
 //			ItemVenda item = itemAtualizadoNoCarrinho.get();
 //			nomeProdutoLabel.setText(item.getProduto().getNome().toUpperCase());
 //			quantidadeValorLabel.setText(String.valueOf(item.getQuantidadeOuPeso()));
-//			precoUnitarioLabel.setText(String.format("R$ %.2f", item.getProduto().getPrecoVenda()));
-//			unidadePrecoLabel.setText(String.format("R$ %.2f", item.getQuantidadeOuPeso()));
+
+//			🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃  Nova lógica adicionada 🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃🢃
+//			double precoComDesconto = item.getProduto().getPrecoVenda() * (1 - item.getProduto().getDesconto());
+//			precoUnitarioLabel.setText(String.format("R$ %.2f", precoComDesconto));
+//			if (item.getProduto().isVendidoPorPeso()) {
+//			    unidadePrecoLabel.setText(String.format("%.3f kg", item.getQuantidadeOuPeso()));
+//			} else {
+//			    unidadePrecoLabel.setText(String.format("%.0fX", item.getQuantidadeOuPeso()));
+//			}
 //			totalItemAtualLabel.setText(String.format("R$ %.2f", item.getTotalItem()));
 //		}
 //	}
