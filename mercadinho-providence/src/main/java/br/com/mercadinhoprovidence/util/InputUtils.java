@@ -17,7 +17,9 @@ import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.JComponent;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -319,6 +321,20 @@ public class InputUtils {
             return true;
         } catch (NumberFormatException e) {
             return false;
+        }
+    }
+
+    /**
+     * Limpa os campos informados e coloca o foco no componente especificado.
+     */
+    public static void limparEFocar(JComponent campoComFoco, JTextField... camposParaLimpar) {
+        for(JTextField campo : camposParaLimpar) {
+            if (campo != null) {
+                campo.setText("");
+            }
+        }
+        if (campoComFoco != null) {
+            SwingUtilities.invokeLater(campoComFoco::requestFocusInWindow);
         }
     }
 

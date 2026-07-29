@@ -64,21 +64,22 @@ public class TelaLogin extends JPanel {
 
                 // Estilização do Botão de Ação com Verde Moderno e Cantos Arredondados
                 button.putClientProperty(FlatClientProperties.STYLE, "" +
-                                "background:#2ecc71;" +             // Cor de fundo verde
-                                "foreground:#ffffff;" +             // Texto branco
+                                "background:#2ecc71;" + // Cor de fundo verde
+                                "foreground:#ffffff;" + // Texto branco
                                 "hoverBackground:darken(#2ecc71,10%);" + // Escurece 10% no hover
                                 "pressedBackground:darken(#2ecc71,20%);" + // Escurece 20% ao clicar
-                                "arc:10;" +                         // Arredondamento suave dos cantos
+                                "arc:10;" + // Arredondamento suave dos cantos
                                 "borderWidth:0;" +
                                 "focusWidth:0;" +
                                 "innerFocusWidth:0;" +
-                                "font:bold +1");                    // Texto em negrito e ligeiramente maior
+                                "font:bold +1"); // Texto em negrito e ligeiramente maior
 
                 // Eventos de clique e atalho de ENTER
                 ActionListener loginAction = e -> handleLoginAttempt();
                 button.addActionListener(loginAction);
 
-                // No Swing, dar um addActionListener no JTextField faz ele disparar a ação ao apertar ENTER automaticamente!
+                // No Swing, dar um addActionListener no JTextField faz ele disparar a ação ao
+                // apertar ENTER automaticamente!
                 userField.addActionListener(loginAction);
                 passwordField.addActionListener(loginAction);
 
@@ -105,7 +106,7 @@ public class TelaLogin extends JPanel {
         public void handleLoginAttempt() {
                 String idString = userField.getText().trim();
                 String passwordString = new String(passwordField.getPassword()).trim();
-              
+
                 if (idString.isEmpty() || passwordString.isEmpty()) {
                         AlertUtils.showWarning("Campos faltando", "Por favor, preencha todos os campos.");
                         if (idString.isEmpty()) {
@@ -121,7 +122,7 @@ public class TelaLogin extends JPanel {
                         idInt = Integer.parseInt(idString);
                 } catch (NumberFormatException ex) {
                         AlertUtils.showError("Erro no ID", "O ID do funcionário deve conter apenas números válidos.");
-                        limparCamposeFocar();
+                        InputUtils.limparEFocar(userField, passwordField, userField);
                         return;
                 }
 
@@ -132,31 +133,26 @@ public class TelaLogin extends JPanel {
                         loginRequestDto.setSenha(passwordString);
 
                         // Passo 2 - Passando o meu objeto do controller para a primeira etapa
-                        // Login requestDto está correto, 
+                        // Login requestDto está correto,
                         this.loginController.primeiraEtapa(loginRequestDto);
 
                         if (mainApplication != null) {
-                                System.out.println("GG filha da puta");
                                 mainApplication.mostrarTelaCodigoVerificador(this.loginController);
                         }
 
                 } catch (IllegalArgumentException ex) {
                         AlertUtils.showError("Erro de Login", ex.getMessage());
-                        limparCamposeFocar();
+                        InputUtils.limparEFocar(userField, passwordField, userField);
                 } catch (IllegalStateException ex) {
-                        AlertUtils.showError("Erro de Estado", "Ocorreu um erro na ordem de login. Detalhes: " + ex.getMessage());
-                        limparCamposeFocar();
+                        AlertUtils.showError("Erro de Estado",
+                                        "Ocorreu um erro na ordem de login. Detalhes: " + ex.getMessage());
+                        InputUtils.limparEFocar(userField, passwordField, userField);
                 } catch (Exception ex) {
                         AlertUtils.showError("Erro Inesperado", "Ocorreu um problema ao tentar fazer login.",
                                         "Detalhes: " + ex.getMessage() + "\nPor favor, contate o suporte.");
                         ex.printStackTrace();
-                        limparCamposeFocar();
+                        InputUtils.limparEFocar(userField, passwordField, userField);
                 }
         }
 
-        private void limparCamposeFocar() {
-                userField.setText("");
-                passwordField.setText("");
-                userField.requestFocus();
-        }
 }

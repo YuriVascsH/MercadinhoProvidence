@@ -22,8 +22,8 @@ public final class ProductMapper {
                 product.getCodigoDeBarras(),
                 product.getCategoria(),
                 product.getControlaEstoque(),
-                product.getPrecoUnitario(),
-                product.getPrecoPorKg());
+                product.getPrecoVenda()
+            );
     }
 
     /**
@@ -39,8 +39,7 @@ public final class ProductMapper {
         .descricao(productCreateDto.getDescricao())
         .categoria(productCreateDto.getCategoria())
         .controlaEstoque(productCreateDto.getControlaEstoque())
-        .precoUnitario(productCreateDto.getPrecoUnitario())
-        .precoPorKg(productCreateDto.getPrecoPorKg())
+        .precoVenda(productCreateDto.getPrecoVenda())
         .build();
     }
 

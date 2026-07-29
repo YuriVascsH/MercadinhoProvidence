@@ -18,8 +18,7 @@ public class ProductUpdateDto {
     private String nome;
     private Category categoria;
     private String descricao;
-    private BigDecimal precoUnitario;
-    private BigDecimal precoPorKg;
+    private BigDecimal preco;
     private Boolean controlaEstoque;
 
 }

@@ -2,9 +2,9 @@ package br.com.mercadinhoprovidence.controller;
 
 import java.util.List;
 
-import br.com.mercadinhoprovidence.Service.ProductService;
 import br.com.mercadinhoprovidence.dto.produto.ProductTableDto;
 import br.com.mercadinhoprovidence.dto.produto.ProductUpdateDto;
+import br.com.mercadinhoprovidence.service.ProductService;
 
 public class ProductController {
     
@@ -14,25 +14,25 @@ public class ProductController {
         this.productService = produtoService;
     }
 
-    /**
-     *  Método responável por realizar a consulta de um produto pelo código de barras. 
-     *  
-     * @param code Código de barras fornecido pelo funcionário.
-     * @return retorna um produto na tabela.
-     */
-    public ProductTableDto findByCode(String code) {
-        if (code == null || code.isBlank()) {
-            throw new IllegalArgumentException("Código do produto não informado");
-        }
+    // /**
+    //  *  Método responável por realizar a consulta de um produto pelo código de barras. 
+    //  *  
+    //  * @param code Código de barras fornecido pelo funcionário.
+    //  * @return retorna um produto na tabela.
+    //  */
+    // public ProductTableDto findByCode(String code) {
+    //     if (code == null || code.isBlank()) {
+    //         throw new IllegalArgumentException("Código do produto não informado");
+    //     }
 
-        if(!code.matches("\\d+")) {
-            throw new IllegalArgumentException("Código de barras deve conter apenas números."); 
-        }
+    //     if(!code.matches("\\d+")) {
+    //         throw new IllegalArgumentException("Código de barras deve conter apenas números."); 
+    //     }
             
-        Long codeLong = Long.parseLong(code.trim());
-        return productService.findByCode(codeLong);
+    //     Long codeLong = Long.parseLong(code.trim());
+    //     return productService.findByCode(codeLong);
         
-    }
+    // }
 
     /**
      * Método responsável por relaizar a busca de todos os produtos cadastrados
