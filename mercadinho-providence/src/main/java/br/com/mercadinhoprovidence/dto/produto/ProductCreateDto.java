@@ -18,6 +18,7 @@ public class ProductCreateDto {
     private String descricao;
     private Category categoria;
     private Boolean controlaEstoque;
-    private BigDecimal precoVenda;
+    private BigDecimal precoUnitario;
+    private BigDecimal precoPorKg;
     private BigDecimal quantidadeInicial;
 }

@@ -20,7 +20,8 @@ public class Product {
     private String descricao;
     private Category categoria;
     private Boolean controlaEstoque;
-    private BigDecimal precoVenda;
+    private BigDecimal precoUnitario;
+    private BigDecimal precoPorKg;
     private Boolean active;
 
 }

@@ -2,75 +2,56 @@ package br.com.mercadinhoprovidence.view;
 
 import br.com.mercadinhoprovidence.MainApplication;
 import br.com.mercadinhoprovidence.dto.login.LoginResponseDto;
-import br.com.mercadinhoprovidence.util.Timeutils;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
-import lombok.Getter;
+import br.com.mercadinhoprovidence.util.ImagemUtil;
+import br.com.mercadinhoprovidence.view.component.DangerSideBarButton;
+import br.com.mercadinhoprovidence.view.component.HeaderBar;
+import br.com.mercadinhoprovidence.view.component.LogoLabel;
+import br.com.mercadinhoprovidence.view.component.SideBarButton;
 
+import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.FlatDarkLaf;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class TelaInicialView {
+public class TelaInicialView extends JPanel {
 
     private final MainApplication mainApplication;
     private final LoginResponseDto funcionarioLogado;
-    /**
-     * -- GETTER --
-     *  Retorna a Scene encapsulada por esta view
-     *
-     */
-    @Getter
-    private Scene scene;
 
     private final Map<String, String> botoesConfig = new LinkedHashMap<>();
-    private final Map<String, Supplier<StackPane>> telasConfig = new LinkedHashMap<>();
+    private final Map<String, Supplier<JPanel>> telasConfig = new LinkedHashMap<>();
     private final Set<String> botoesDesabilitados;
+    private final Map<String, JButton> botoesInstanciados = new HashMap<>();
 
-    private StackPane centerPane;
-    private Label userInfo;
+    private JPanel centerPane;
+    private CardLayout cardLayoutCenter;
 
-    private Consumer<LoginResponseDto> onOpenPdvScreen;
+    private final Consumer<LoginResponseDto> onOpenPdvScreen;
 
-    /**
-     * COnstrutor para a tela inicial View.
-     *
-     * @param mainApplication     A instância da aplicação principal para navegação.
-     * @param funcionarioLogado   O funcionário que realizou o login.
-     * @param botoesDesabilitados Conjunto de textos e botões que devem ser
-     *                            desabilitados.
-     */
     public TelaInicialView(MainApplication mainApplication, LoginResponseDto funcionarioLogado,
-                           Set<String> botoesDesabilitados, Consumer<LoginResponseDto> onOpenPdvSceen) {
+            Set<String> botoesDesabilitados, Consumer<LoginResponseDto> onOpenPdvScreen) {
         if (mainApplication == null || funcionarioLogado == null) {
             throw new IllegalArgumentException("MainApplication e FuncionarioLogado não podem ser nulos.");
         }
         this.mainApplication = mainApplication;
         this.funcionarioLogado = funcionarioLogado;
         this.botoesDesabilitados = botoesDesabilitados != null ? botoesDesabilitados : new HashSet<>();
-        this.onOpenPdvScreen = onOpenPdvSceen;
+        this.onOpenPdvScreen = onOpenPdvScreen;
+
         initializeViewData();
         setupUI();
     }
 
     /**
-     * Inicializa os maps de configurações de botões e telas.
+     * Método para inicializar os botões com seus respectivos nomes e icones 
      */
     private void initializeViewData() {
-        // Adicionando as telas nos botões
-        //telasConfig.put("Estoque", () -> new EstoqueView(mainApplication, funcionarioLogado).getView());
-        telasConfig.put("Relatorio", RelatorioView::getView);
-        telasConfig.put("Funcionarios", () -> new FuncionariosView(mainApplication, funcionarioLogado).getView());
-        //telasConfig.put("Ajuda", () -> new EstoqueView(mainApplication, funcionarioLogado).getView());
-
-        // Adicionando btns (caminhos dos ícones)
+        // Ícones e Botões
         botoesConfig.put("PDV", "/images/carinho.png");
         botoesConfig.put("Estoque", "/images/estoque.png");
         botoesConfig.put("Relatorio", "/images/grafico.png");
@@ -79,207 +60,155 @@ public class TelaInicialView {
         botoesConfig.put("Sair", "/images/sair.png");
     }
 
-    /***/
+    /**
+     * 
+     */
     private void setupUI() {
-        BorderPane root = new BorderPane();
-        root.setTop(createHeader());
-        root.setLeft(createSidebar());
+        setLayout(new BorderLayout());
 
-        centerPane = new StackPane();
-        centerPane.getStyleClass().add("center-pane");
-        centerPane.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        // Adiciona Top Bar e Sidebar
+        add(new HeaderBar(funcionarioLogado), BorderLayout.NORTH);
+        add(createSidebar(), BorderLayout.WEST);
 
-        Label welcomeContentLabel = new Label(
-                "Bem-vindo ao Mercadinho Providence, " + funcionarioLogado.getName() + "!");
-        welcomeContentLabel.getStyleClass().add("welcome-label");
+        // Painel Central usando CardLayout
+        cardLayoutCenter = new CardLayout();
+        centerPane = new JPanel(cardLayoutCenter);
 
-        centerPane.getChildren().add(welcomeContentLabel);
-        root.setCenter(centerPane);
+        // Painel padrão de Boas-Vindas
+        JPanel welcomePanel = new JPanel(new GridBagLayout());
+        JLabel welcomeLabel = new JLabel("Bem-vindo ao Mercadinho Providence, " + funcionarioLogado.getName() + "!");
+        welcomeLabel.putClientProperty(FlatClientProperties.STYLE, "font: bold +6");
+        welcomePanel.add(welcomeLabel);
 
-        this.scene = new Scene(root);
+        centerPane.add(welcomePanel, "HOME");
+        add(centerPane, BorderLayout.CENTER);
+
         configurarAtalhosDeTeclado();
-        this.scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/TelaInicial.css")).toExternalForm());    }
-
-    /**
-     * Cria e retorna o painel do cabeçalho superior.
-     * Agora retorna um BorderPane diretamente para ocupar a largura total.
-     *
-     * @return BorderPane que representa o cabeçalho.
-     */
-    private BorderPane createHeader() {
-
-        BorderPane topPane = new BorderPane();
-        topPane.getStyleClass().add("header-pane");
-
-        Label titleLabel = new Label("Mercadinho Providence");
-        titleLabel.getStyleClass().add("header-title");
-
-        userInfo = new Label("Funcionário logado: " + this.funcionarioLogado.getName().toUpperCase());
-        userInfo.getStyleClass().add("user-info-label");
-
-        Label hourLabel = new Label();
-        hourLabel.getStyleClass().add("hour-label");
-        Timeutils.updateDateTime(hourLabel);
-
-        // HBOx para armazenar usuário e hora
-        HBox userInfoAndHourBox = new HBox(20);
-        userInfoAndHourBox.setAlignment(Pos.CENTER_RIGHT);
-        userInfoAndHourBox.getChildren().addAll(userInfo, hourLabel);
-
-        topPane.setLeft(titleLabel);
-        topPane.setRight(userInfoAndHourBox);
-
-        return topPane;
     }
 
     /**
-     * Cria um botão de menu com ícone e texto para a sidebar.
-     *
-     * @param texto        O texto a ser exibido no botão.
-     * @param caminhoIcone O caminho relativo para o arquivo de imagem do ícone.
-     * @return O botão configurado.
+     * Barra Lateral com Logo no Topo (Borda a Borda) e Conteúdo dos Botões
      */
-    private Button createSidebarButton(String texto, String caminhoIcone) {
-        Button btn = new Button(texto);
-        btn.getStyleClass().add("sidebar-button");
-        if (caminhoIcone != null && !caminhoIcone.trim().isEmpty()) {
-            try {
-                java.net.URL resourceUrl = getClass().getResource(caminhoIcone);
+    private JPanel createSidebar() {
+        JPanel sidebar = new JPanel();
+        sidebar.setLayout(new BorderLayout()); // Alterado para BorderLayout para facilitar o topo
+        sidebar.setPreferredSize(new Dimension(240, 0));
+        sidebar.putClientProperty(FlatClientProperties.STYLE, "background: #f27a1f  ");
 
-                if (resourceUrl != null) {
-                    ImageView icon = new ImageView(new Image(resourceUrl.toExternalForm()));
-                    icon.setFitHeight(24);
-                    icon.setFitWidth(24);
-                    icon.setPreserveRatio(true);
-                    btn.setGraphic(icon);
-                } else {
-                    System.err.println("Aviso: Ícone não encontrado em '" + caminhoIcone + "' para o botão '" + texto + "'.");
-                }
-            } catch (IllegalArgumentException e) {
-                System.err.println("Erro ao carregar ícone para '" + texto + "': " + caminhoIcone + " - " + e.getMessage());
-            }
-        }
-        handleButtonClick(texto, btn);
-        return btn;
-    }
+        // --- 1. Cabeçalho da Sidebar (Logo ocupando 100% da largura/topo) ---
+        JLabel logoLabel = new LogoLabel(ImagemUtil.loadImage(getClass(),"/images/logoMercado.png", 240, 160));
+        sidebar.add(logoLabel, BorderLayout.NORTH);
 
-    /**
-     * Configura a ação a ser executada quando um botão da sidebar é clicado.
-     *
-     * @param texto O texto do botão para identificar a ação.
-     * @param btn   O botão a ser configurado.
-     */
-    private void handleButtonClick(String texto, Button btn) {
-        if (texto.equalsIgnoreCase("PDV")) {
-            btn.setOnAction(e -> {
-                if (onOpenPdvScreen != null) {
-                    onOpenPdvScreen.accept(this.funcionarioLogado);
-                } else {
-                    System.err.println("Erro: Callback onOpenPdvScreen não definido para PDV.");
+        // --- 2. Painel dos Botões do Menu ---
+        JPanel menuPanel = new JPanel();
+        menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
+        // Adiciona o espaçamento interno (padding) APENAS para os botões: 20px no topo,
+        // 15px nas laterais e fundo
+        menuPanel.setBorder(BorderFactory.createEmptyBorder(20, 15, 15, 15));
+        menuPanel.setOpaque(false);
 
-                }
-            });
-            return;
-        }
-        if (texto.equalsIgnoreCase("Sair")) {
-            // btn.setOnAction(e -> mainApplication.fecharAplicacao());
-            return;
-        }
-        Supplier<StackPane> view = telasConfig.get(texto);
-        if (view != null) {
-            btn.setOnAction(e -> {
-                StackPane novaTela = view.get();
-                centerPane.getChildren().clear();
-                centerPane.getChildren().add(novaTela);
-            });
-        } else {
-            System.out.println("DEBUG: Nenhuma view mapeada para: " + texto);
-        }
-    }
-
-    /**
-     * Cria e retorna o painel da barra lateral (menu).
-     *
-     * @return VBox que representa a barra lateral.
-     */
-    private VBox createSidebar() {
-        VBox sidebarVBox = new VBox(20);
-        sidebarVBox.getStyleClass().add("sidebar-pane");
-        sidebarVBox.setPrefWidth(250);
-        // --- Logo do Mercadinho ---
-        try {
-            String logoResourcePath = "images/logoMercado.png";
-
-            // Tenta carregar o recurso
-            java.net.URL imageUrl = ClassLoader.getSystemResource(logoResourcePath);
-            if (imageUrl != null) {
-                Image logoImage = new Image(imageUrl.toExternalForm());
-                ImageView imageLogoView = new ImageView(logoImage);
-                imageLogoView.setFitWidth(250);
-                imageLogoView.setPreserveRatio(true);
-                VBox.setMargin(imageLogoView, new Insets(0, 0, 0, 0));
-                sidebarVBox.getChildren().add(imageLogoView);
-            } else {
-                throw new IllegalArgumentException("Recurso não encontrado: " + logoResourcePath);
-            }
-        } catch (IllegalArgumentException e) {
-            System.err.println("Erro ao carregar a imagem do logo: " + e.getMessage());
-            Label logoPlaceholder = new Label("Logo Aqui");
-            logoPlaceholder.getStyleClass().add("logo-placeholder");
-            VBox.setMargin(logoPlaceholder, new Insets(0, 0, 20, 0));
-            sidebarVBox.getChildren().add(logoPlaceholder);
-        }
-        // --- Botões do Menu ---
         botoesConfig.forEach((texto, caminhoIcone) -> {
             if (!texto.equalsIgnoreCase("Sair")) {
-                Button btn = createSidebarButton(texto, caminhoIcone);
+                SideBarButton btn = new SideBarButton(texto, ImagemUtil.loadImage(getClass(),caminhoIcone, 22, 22));
+                btn.setAlignmentX(Component.CENTER_ALIGNMENT);
+                
                 if (botoesDesabilitados.contains(texto)) {
-                    btn.setDisable(true);
+                    btn.setEnabled(false);
                 }
-                sidebarVBox.getChildren().add(btn);
+                handleButtonClick(texto, btn);
+                botoesInstanciados.put(texto, btn);
+                menuPanel.add(btn);
+
+                // Espaçamento entre os botões (16px)
+                menuPanel.add(Box.createRigidArea(new Dimension(0, 30)));
             }
         });
-        // Espaçador para empurrar o botão "Sair" para o final da sidebar
-        Region spacer = new Region();
-        VBox.setVgrow(spacer, Priority.ALWAYS);
-        sidebarVBox.getChildren().add(spacer);
 
-        Button btnSair = createSidebarButton("Sair", botoesConfig.get("Sair"));
-        sidebarVBox.getChildren().add(btnSair);
+        // Empurra o botão Sair para o final da tela
+        menuPanel.add(Box.createVerticalGlue());
 
-        return sidebarVBox;
+        JButton btnSair = new DangerSideBarButton("Sair", ImagemUtil.loadImage(getClass(),botoesConfig.get("Sair"), 22, 22));
+        btnSair.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        botoesInstanciados.put("Sair", btnSair);
+
+        handleButtonClick("Sair", btnSair);
+        menuPanel.add(btnSair);
+
+        sidebar.add(menuPanel, BorderLayout.CENTER);
+
+        return sidebar;
     }
 
-    /**
-     *
-     * */
-    private void configurarAtalhosDeTeclado() {
-        scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            switch (event.getCode()) {
-                case F1 -> carregarTela("Estoque");
-                case F2 -> carregarTela("Relatorio");
-                case F3 -> carregarTela("Funcionarios");
-                case F4 -> carregarTela("Ajuda");
-                case F5 -> {
-                    if (onOpenPdvScreen != null) {
-                        onOpenPdvScreen.accept(funcionarioLogado);
-                    }
+    private void handleButtonClick(String texto, JButton btn) {
+        if (texto.equalsIgnoreCase("PDV")) {
+            btn.addActionListener(e -> {
+                if (onOpenPdvScreen != null) {
+                    onOpenPdvScreen.accept(funcionarioLogado);
                 }
-                // case ESCAPE -> mainApplication.fecharAplicacao();
-            }
-        });
+            });
+            return;
+        }
+
+        if (texto.equalsIgnoreCase("Sair")) {
+            btn.addActionListener(e -> System.out.println("Ação de Sair disparada."));
+            return;
+        }
+
+        btn.addActionListener(e -> carregarTela(texto));
     }
 
-    /**
-     * */
     private void carregarTela(String nomeTela) {
-        Supplier<StackPane> view = telasConfig.get(nomeTela);
-        if (view != null) {
-            StackPane novaTela = view.get();
-            centerPane.getChildren().setAll(novaTela);
+        Supplier<JPanel> viewSupplier = telasConfig.get(nomeTela);
+        if (viewSupplier != null) {
+            JPanel novaTela = viewSupplier.get();
+            centerPane.add(novaTela, nomeTela);
+            cardLayoutCenter.show(centerPane, nomeTela);
         } else {
             System.out.println("DEBUG: Nenhuma tela mapeada para: " + nomeTela);
         }
     }
 
+    private void configurarAtalhosDeTeclado() {
+        InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = getActionMap();
+
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0), "PDV_ACTION");
+        actionMap.put("PDV_ACTION", new AbstractAction() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                if (onOpenPdvScreen != null) {
+                    onOpenPdvScreen.accept(funcionarioLogado);
+                }
+            }
+        });
+    }
+
+    // =========================================================================
+    // MÉTODO MAIN
+    // =========================================================================
+    public static void main(String[] args) {
+        FlatDarkLaf.setup();
+
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Mercadinho Providence - Tela Inicial");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+            // Tela Cheia / Maximizado
+            frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            frame.setMinimumSize(new Dimension(1024, 600));
+
+            LoginResponseDto mockUser = new LoginResponseDto();
+            mockUser.setName("Carlos Silva");
+
+            TelaInicialView view = new TelaInicialView(
+                    new MainApplication(),
+                    mockUser,
+                    Set.of("Ajuda"),
+                    user -> JOptionPane.showMessageDialog(frame, "Abrindo PDV para: " + user.getName()));
+
+            frame.setContentPane(view);
+            frame.setVisible(true);
+        });
+    }
 }

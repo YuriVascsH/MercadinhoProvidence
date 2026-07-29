@@ -231,7 +231,7 @@ public class FuncionarioDao {
     public Funcionario buscarPorIdSenha(Integer id, String senha) {
 
         String sql = "SELECT id_funcionario AS id, ativo, codigo_verificador AS codigoVerificador " +
-                "FROM funcionario WHERE id_funcionario = ? AND senha = ?";
+                "* FROM funcionario WHERE id_funcionario = ? AND senha = ?";
 
         QueryRunner run = new QueryRunner();
         try (Connection conn = ConexaoMySQL.getConnection()) {

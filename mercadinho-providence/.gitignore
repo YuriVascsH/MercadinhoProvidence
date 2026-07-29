@@ -29,7 +29,8 @@ local.properties
 out/
 
 # ====================================================================
-# VS Code 
+
+# VS Code (Configurações locais e temporários)
 # ====================================================================
 .vscode/
 !.vscode/settings.json

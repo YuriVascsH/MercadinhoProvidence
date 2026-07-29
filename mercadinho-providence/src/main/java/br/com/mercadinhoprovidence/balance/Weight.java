@@ -1,22 +1,22 @@
 package br.com.mercadinhoprovidence.balance;
 
-package br.com.mercadinhoprovidence.balanca;
-
-import java.math.BigDecimal;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Weight {
 
-    private BigDecimal value;
+    private BigDecimal valor;
 
-    private boolean stabilized;
+    private boolean estabilizado;
+
+    public Peso(BigDecimal valor, boolean estabilizado) {
+        this.valor = valor;
+        this.estabilizado = estabilizado;
+    }
+
+    public BigDecimal getValor() {
+        return valor;
+    }
+
+    public boolean isEstabilizado() {
+        return estabilizado;
+    }
 
 }

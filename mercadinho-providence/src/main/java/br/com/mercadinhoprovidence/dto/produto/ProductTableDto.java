@@ -19,8 +19,8 @@ public class ProductTableDto {
     private String codigoDeBarras;
     private Category categoria;
     private Boolean controlaEsoque;
-    private BigDecimal preco;
-
+    private BigDecimal precoUnitario;
+    private BigDecimal precoPorKg;
     
 
 }

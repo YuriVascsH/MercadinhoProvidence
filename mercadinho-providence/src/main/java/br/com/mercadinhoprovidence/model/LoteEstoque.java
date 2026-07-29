@@ -19,7 +19,7 @@ public class LoteEstoque {
     private Integer idProduto;
     private BigDecimal precoCusto;
     private LocalDate validade;
-    private BigDecimal quantidadeAtual;
+    private Double quantidadeAtual;
     private LocalDateTime dataEntrada;
     private Boolean ativo;
 

@@ -1,5 +1,5 @@
-// package br.com.mercadinhoprovidence.balance;
+package br.com.mercadinhoprovidence.balance;
 
-// public class BalanceReader {
+public class BalanceReader {
 
-// }
+}
