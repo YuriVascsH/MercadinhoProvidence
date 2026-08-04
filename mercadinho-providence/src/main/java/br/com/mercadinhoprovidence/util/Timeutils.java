@@ -1,31 +1,42 @@
 package br.com.mercadinhoprovidence.util;
 
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.scene.control.Label;
-import javafx.util.Duration;
-
+import javax.swing.JLabel;
+import javax.swing.Timer;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class Timeutils {
+public final class TimeUtils {
+
+    private static final DateTimeFormatter DEFAULT_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
+    private TimeUtils() {
+        throw new UnsupportedOperationException("Classe utilitária não deve ser instanciada");
+    }
 
     /**
-         * Atualiza o Label com a data e hora atuais a cada segundo.
-         * @param label O Label a ser atualizado.
-         */
-    public static void updateDateTime(Label label) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+     * Atualiza um JLabel do Swing com a data e hora atuais a cada segundo.
+     *
+     * @param label O JLabel do Swing a ser atualizado.
+     */
+    public static void startClock(JLabel label) {
+        startClock(label, DEFAULT_FORMATTER);
+    }
 
-            Timeline timeline = new Timeline(
-                    new KeyFrame(Duration.seconds(1), event ->{
-                        String currentDateTime = LocalDateTime.now().format(formatter);
-                        label.setText(currentDateTime);
-                    })
-            );
-            timeline.setCycleCount(Animation.INDEFINITE);
-            timeline.play();
-
+    /**
+     * Atualiza um JLabel do Swing com a data e hora atuais em um formato customizado.
+     *
+     * @param label O JLabel do Swing a ser atualizado.
+     * @param formatter Formato customizado para a data/hora.
+     */
+    public static void startClock(JLabel label, DateTimeFormatter formatter) {
+        if (label == null || formatter == null) {
+            return;
         }
+
+        // Atualiza imediatamente antes de iniciar o timer
+        label.setText(LocalDateTime.now().format(formatter));
+
+        Timer timer = new Timer(1000, e -> label.setText(LocalDateTime.now().format(formatter)));
+        timer.start();
+    }
 }

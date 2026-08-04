@@ -2,12 +2,12 @@ package br.com.mercadinhoprovidence.balance;
 
 public interface Balance {
 
-    void conectar();
+    void connect();
 
-    void desconectar();
+    void disconnect();
 
-    boolean estaConectada();
+    boolean isConnected();
 
-    Peso lerPeso();
+    Weight readWeight();
 
 }
