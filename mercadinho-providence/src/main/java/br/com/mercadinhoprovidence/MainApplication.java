@@ -9,62 +9,65 @@ import javax.swing.SwingUtilities;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import br.com.mercadinhoprovidence.config.AppContainer;
+import br.com.mercadinhoprovidence.dto.login.LoginResponseDto;
 import br.com.mercadinhoprovidence.view.TelaLogin;
 
 public class MainApplication {
 
-    private JFrame janelaPrincipal; 
-    
-    private CardLayout cardLayout;   
-    
-    private JPanel containerDasTelas;
-    
-    private AppContainer container;
+	private JFrame janelaPrincipal;
 
-    public void iniciarSistema() {
-        FlatLightLaf.setup();
+	private CardLayout cardLayout;
 
-        this.container = new AppContainer();
+	private JPanel containerDasTelas;
 
-        janelaPrincipal = new JFrame("Mercadinho Providence");
-        janelaPrincipal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	private AppContainer container;
 
-        cardLayout = new CardLayout();
-        containerDasTelas = new JPanel(cardLayout);
-        janelaPrincipal.add(containerDasTelas);
+	public void iniciarSistema() {
+		FlatLightLaf.setup();
 
-        TelaLogin telaLogin = new TelaLogin(this, container.getLoginController());
-        
-        containerDasTelas.add(telaLogin, "TELA_LOGIN");
-        
-        mostrarTelaLogin();
-    }
+		this.container = new AppContainer();
 
-    public void mostrarTelaLogin() {
-        janelaPrincipal.setResizable(false); // Bloqueia o tamanho para o login não esticar
-        cardLayout.show(containerDasTelas, "TELA_LOGIN"); // Exibe a carta do login
-        
-        janelaPrincipal.pack(); // Faz a janela encolher até o tamanho exato do card de login
-        janelaPrincipal.setLocationRelativeTo(null); // Centraliza no meio do monitor
-        janelaPrincipal.setVisible(true);
-    }
+		janelaPrincipal = new JFrame("Mercadinho Providence");
+		janelaPrincipal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    public void mostrarTelaPrincipalPDV() {
-        janelaPrincipal.setResizable(true); // Permite redimensionar o PDV
-        cardLayout.show(containerDasTelas, "TELA_PDV"); // Exibe a carta do PDV
-        
-        janelaPrincipal.setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximiza em tela cheia
-    }
+		cardLayout = new CardLayout();
+		containerDasTelas = new JPanel(cardLayout);
+		janelaPrincipal.add(containerDasTelas);
 
-    public void mostrarTelaCodigoVerificador(Object loginController) {
+		TelaLogin telaLogin = new TelaLogin(this, container.getLoginController());
 
-    }
+		containerDasTelas.add(telaLogin, "TELA_LOGIN");
 
-    public static void main(String[] args) {
-        // O ponto de entrada do Java que inicia tudo
-        SwingUtilities.invokeLater(() -> {
-            MainApplication app = new MainApplication();
-            app.iniciarSistema();
-        });
-    }
+		mostrarTelaLogin();
+	}
+
+	public void mostrarTelaLogin() {
+		janelaPrincipal.setResizable(false); // Bloqueia o tamanho para o login não esticar
+		cardLayout.show(containerDasTelas, "TELA_LOGIN"); // Exibe a carta do login
+
+		janelaPrincipal.pack(); // Faz a janela encolher até o tamanho exato do card de login
+		janelaPrincipal.setLocationRelativeTo(null); // Centraliza no meio do monitor
+		janelaPrincipal.setVisible(true);
+	}
+
+	public void mostrarTelaPrincipalPDV(LoginResponseDto LoggedEmployee) { // Recém adicionado o parâmetro
+		janelaPrincipal.setResizable(true); // Permite redimensionar o PDV
+		cardLayout.show(containerDasTelas, "TELA_PDV"); // Exibe a carta do PDV
+
+		// TODO: verificar se o DTO será utilizado para
+		// identificação do operador, permissões ou auditoria.
+		janelaPrincipal.setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximiza em tela cheia
+	}
+
+	public void mostrarTelaCodigoVerificador(Object loginController) {
+
+	}
+
+	public static void main(String[] args) {
+		// O ponto de entrada do Java que inicia tudo
+		SwingUtilities.invokeLater(() -> {
+			MainApplication app = new MainApplication();
+			app.iniciarSistema();
+		});
+	}
 }
