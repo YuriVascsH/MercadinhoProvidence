@@ -1,6 +1,7 @@
 package br.com.mercadinhoprovidence.model;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import br.com.mercadinhoprovidence.model.enums.Category;
 import lombok.AllArgsConstructor;
@@ -20,7 +21,11 @@ public class Product {
     private String descricao;
     private Category categoria;
     private Boolean controlaEstoque;
+    private BigDecimal precoCusto;
     private BigDecimal precoVenda;
+    private Date validade;
+    private BigDecimal quantOuPesoEmEstoque;
+    private BigDecimal desconto;
     private Boolean active;
 
 }
