@@ -1,6 +1,7 @@
 package br.com.mercadinhoprovidence.dto.produto;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import br.com.mercadinhoprovidence.model.enums.Category;
 import lombok.AllArgsConstructor;
@@ -18,9 +19,9 @@ public class ProductTableDto {
     private String nome;
     private String codigoDeBarras;
     private Category categoria;
-    private Boolean controlaEsoque;
-    private BigDecimal precoUnitario;
-    private BigDecimal precoPorKg;
-    
+    private Boolean controlaEstoque;
+    private BigDecimal precoVenda;
+    private Date validade;
+    private BigDecimal quantOuPesoEmEstoque;    
 
 }
