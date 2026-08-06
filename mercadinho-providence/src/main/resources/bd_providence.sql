@@ -39,16 +39,17 @@ CREATE TABLE Estoque ( # Model finalizado!!!
 CREATE TABLE Produto ( # Model finalizado!!!
     idProduto 	   		INT AUTO_INCREMENT PRIMARY KEY,
     idEstoque 	   		INT 		  DEFAULT '1',
-    codigoDeBarras 		VARCHAR(100)  NOT NULL,
+    codigo_de_barras 	VARCHAR(100)  NOT NULL,
     nome 		   		VARCHAR(75)   NOT NULL,
     ativo 		   		BOOLEAN 	  DEFAULT TRUE,
+    controla_estoque	BOOLEAN		  DEFAULT TRUE,
     descricao 	   		VARCHAR(100)  DEFAULT 'Não informado',
-    precoCusto 	   		DECIMAL(10,2) NULL,
-    precoVenda 	   		DECIMAL(10,2) NOT NULL,
-    validade 			DATETIME 	  NULL,
-    quantidadeOuPesoEmEstoque DECIMAL(10,2) NOT NULL,
+    preco_custo	   		DECIMAL(10,2) NULL,
+    preco_venda	   		DECIMAL(10,2) NOT NULL,
+    validade			DATETIME 	  NULL,
+    quant_ou_peso_em_estoque DECIMAL(10,2) NOT NULL,
     desconto			DECIMAL(10,2) NULL,
-    categoria ENUM('GERAL','AVULSOS','HORTI') NOT NULL DEFAULT 'GERAL',
+    categoria ENUM('UN', 'Kg') NOT NULL DEFAULT 'UN',
     FOREIGN KEY (idEstoque) REFERENCES Estoque(idEstoque) ON DELETE CASCADE
 );
 
