@@ -1,18 +1,18 @@
 CREATE DATABASE mercadinho_providence;
 USE mercadinho_providence;
-DROP DATABASE mercadinho_providence;
+# DROP DATABASE mercadinho_providence;
 
 
 CREATE TABLE Funcionario (
     idFuncionario     INT AUTO_INCREMENT PRIMARY KEY,
-    codigoVerificador INT		 		 NOT NULL UNIQUE,
+    codigo_verificador INT		 		 NOT NULL UNIQUE,
     cpf 			  VARCHAR(11)   	 NOT NULL UNIQUE,
     nome 			  VARCHAR(50)   	 NOT NULL,
     data_nascimento    DATE 			 DEFAULT '0001-01-01 00:00:00',
     telefone 		  VARCHAR(11)   	 NOT NULL,
     email 			  VARCHAR(100)  	 DEFAULT '',
     endereco 		  VARCHAR(200)  	 DEFAULT '',
-    dataAdmissao 	  DATE 	  		     DEFAULT(CURRENT_DATE()),
+    data_admissao 	  DATE 	  		     DEFAULT(CURRENT_DATE()),
     cargo 			  ENUM('Gerente', 'Operador')   NOT NULL,
     salario 		  DECIMAL(10,2) 	 NOT NULL,
     senha 			  VARCHAR(50)   	 NOT NULL,
@@ -58,8 +58,8 @@ CREATE TABLE TotalProdutosCadastrados (
     id INT PRIMARY KEY DEFAULT 1,
     total INT DEFAULT 0
 );
--- Inicializa com 0
-INSERT INTO TotalProdutosCadastrados (id, total) VALUES (1, 0);
+INSERT INTO TotalProdutosCadastrados (total) VALUES (0);
+# -- Inicializa com 0
 #--------------------------------------------------------------------------------------
 CREATE TABLE VENDAS ( 
     idVenda            INT AUTO_INCREMENT PRIMARY KEY,
@@ -124,7 +124,7 @@ AFTER INSERT ON ITENS_VENDA
 FOR EACH ROW
 BEGIN
     UPDATE Produto
-    SET quant_ou_peso_em_estoque = quant_ou_peso_em_estoque - NEW.quant_ou_peso_em_estoque
+    SET quant_ou_peso_em_estoque = quant_ou_peso_em_estoque - NEW.quantidade_ou_peso
     WHERE idProduto = NEW.idProduto;
 END$$
 DELIMITER ;
@@ -199,11 +199,11 @@ DELIMITER ;
 
 INSERT INTO Estoque (idEstoque) VALUES (1);
 
-INSERT INTO Funcionario (codigoVerificador, cpf, nome, data_nascimento, telefone, email, endereco, cargo, salario, senha, ativo)
+INSERT INTO Funcionario (codigo_verificador, cpf, nome, data_nascimento, telefone, email, endereco, cargo, salario, senha, ativo)
 VALUES (12345, '11122233344', 'Amanda Gerente', '1985-05-20 00:00:00', '81987654321', 'amanda.g@mercadinho.com', 'Rua Principal, 100, Centro', 'Gerente', 4500.00, '123456', TRUE);
-INSERT INTO Funcionario (codigoVerificador, cpf, nome, data_nascimento, telefone, email, endereco, cargo, salario, senha, ativo)
+INSERT INTO Funcionario (codigo_verificador, cpf, nome, data_nascimento, telefone, email, endereco, cargo, salario, senha, ativo)
 VALUES (54321, '22233344455', 'Bruno Operador', '1990-10-15 00:00:00', '81998765432', 'bruno.o@mercadinho.com', 'Av. Secundária, 200, Bairro Novo', 'Operador', 2200.00, '123456', TRUE);
-INSERT INTO Funcionario (codigoVerificador, cpf, nome, data_nascimento, telefone, email, endereco, cargo, salario, senha, ativo)
+INSERT INTO Funcionario (codigo_verificador, cpf, nome, data_nascimento, telefone, email, endereco, cargo, salario, senha, ativo)
 VALUES (98765, '33344455566', 'Carla Operadora', '1995-03-25 00:00:00', '81976543210', 'carla.o@mercadinho.com', 'Rua dos Mercados, 30, Bairro Antigo', 'Operador', 2100.00, '123456', TRUE);
 
 INSERT INTO Gerente (idFuncionario) VALUES (1000);
