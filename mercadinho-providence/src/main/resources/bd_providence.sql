@@ -49,7 +49,7 @@ CREATE TABLE Produto ( # Model finalizado!!!
     validade			DATETIME 	  NULL,
     quant_ou_peso_em_estoque DECIMAL(10,2) NOT NULL,
     desconto			DECIMAL(10,2) NULL,
-    categoria ENUM('UN', 'Kg') NOT NULL DEFAULT 'UN',
+    categoria ENUM('UN', 'KG', 'HORTI', 'AVULSO') NOT NULL DEFAULT 'UN',
     FOREIGN KEY (idEstoque) REFERENCES Estoque(idEstoque) ON DELETE CASCADE
 );
 
@@ -212,15 +212,15 @@ INSERT INTO Operador (idFuncionario, ultima_venda) VALUES (1001, '2025-10-20 10:
 INSERT INTO Operador (idFuncionario, ultima_venda) VALUES (1002, '2025-10-20 11:45:00');
 
 INSERT INTO Produto (idEstoque, codigo_de_barras, nome, descricao, preco_custo, preco_venda, validade, quant_ou_peso_em_estoque, desconto, categoria)
-VALUES (1, '7891000000010', 'Arroz Agulhinha 5kg', 'Arroz Tipo 1', 18.00, 25.00, '2026-12-31 00:00:00', 50.00, 0.00, 'GERAL');
+VALUES (1, '7891000000010', 'Arroz Agulhinha 5kg', 'Arroz Tipo 1', 18.00, 25.00, '2026-12-31 00:00:00', 50.00, 0.00, 'UN');
 INSERT INTO Produto (idEstoque, codigo_de_barras, nome, descricao, preco_custo, preco_venda, validade, quant_ou_peso_em_estoque, desconto, categoria)
-VALUES (1, '7891000000027', 'Café Tradicional 500g', 'Torrado e Moído', 9.50, 14.99, '2026-06-30 00:00:00', 80.00, 0.00, 'AVULSOS');
+VALUES (1, '7891000000027', 'Café Tradicional 500g', 'Torrado e Moído', 9.50, 14.99, '2026-06-30 00:00:00', 80.00, 0.00, 'AVULSO');
 INSERT INTO Produto (idEstoque, codigo_de_barras, nome, descricao, preco_custo, preco_venda, validade, quant_ou_peso_em_estoque, desconto, categoria)
 VALUES (1, '9991000000034', 'Maçã Fuji', 'Fruta Fresca por KG', 3.50, 6.99, '2025-10-25 00:00:00', 30.00, 0.50, 'HORTI');
 INSERT INTO Produto (idEstoque, codigo_de_barras, nome, descricao, preco_custo, preco_venda, validade, quant_ou_peso_em_estoque, desconto, categoria)
-VALUES (1, '7891000000041', 'Sabonete Glicerina', 'Unidade 90g', 2.00, 3.50, '2027-01-01 00:00:00', 120.00, 0.00, 'GERAL');
+VALUES (1, '7891000000041', 'Sabonete Glicerina', 'Unidade 90g', 2.00, 3.50, '2027-01-01 00:00:00', 120.00, 0.00, 'UN');
 INSERT INTO Produto (idEstoque, codigo_de_barras, nome, descricao, preco_custo, preco_venda, validade, quant_ou_peso_em_estoque, desconto, categoria)
-VALUES (1, '7891000000058', 'Refrigerante Cola 2L', 'Garrafa PET', 6.00, 10.00, '2026-03-01 00:00:00', 60.00, 1.00, 'GERAL');
+VALUES (1, '7891000000058', 'Refrigerante Cola 2L', 'Garrafa PET', 6.00, 10.00, '2026-03-01 00:00:00', 60.00, 1.00, 'UN');
 UPDATE TotalProdutosCadastrados SET total = 5 WHERE id = 1;
 
 INSERT INTO VENDAS (data_hora, valor_subtotal, valor_desconto, valor_total, idFuncionario)
