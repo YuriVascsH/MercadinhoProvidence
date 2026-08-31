@@ -1,16 +1,25 @@
 package br.com.mercadinhoprovidence.dao;
 
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.BeanHandler;
+
 import br.com.mercadinhoprovidence.config.ConexaoMySQL;
 import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioResponseDto;
 import br.com.mercadinhoprovidence.model.Funcionario;
 import br.com.mercadinhoprovidence.model.enums.Cargo;
-
-import java.sql.*;
-import java.sql.Date;
-import java.util.*;
-
-import org.apache.commons.dbutils.QueryRunner;
-import org.apache.commons.dbutils.handlers.BeanHandler;
 
 public class FuncionarioDao {
 
@@ -231,7 +240,7 @@ public class FuncionarioDao {
     public Funcionario buscarPorIdSenha(Integer id, String senha) {
 
         String sql = "SELECT id_funcionario AS id, ativo, codigo_verificador AS codigoVerificador " +
-                "* FROM funcionario WHERE id_funcionario = ? AND senha = ?";
+                "FROM funcionario WHERE id_funcionario = ? AND senha = ?";
 
         QueryRunner run = new QueryRunner();
         try (Connection conn = ConexaoMySQL.getConnection()) {
