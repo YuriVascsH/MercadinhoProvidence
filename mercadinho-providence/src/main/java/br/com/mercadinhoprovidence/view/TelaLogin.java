@@ -1,16 +1,21 @@
 package br.com.mercadinhoprovidence.view;
 
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
+import com.formdev.flatlaf.FlatClientProperties;
+
 import br.com.mercadinhoprovidence.MainApplication;
 import br.com.mercadinhoprovidence.controller.LoginController;
 import br.com.mercadinhoprovidence.dto.login.LoginRequestDto;
 import br.com.mercadinhoprovidence.util.AlertUtils;
 import br.com.mercadinhoprovidence.util.InputUtils;
-
-import com.formdev.flatlaf.FlatClientProperties;
 import net.miginfocom.swing.MigLayout;
-
-import javax.swing.*;
-import java.awt.event.ActionListener;
 
 public class TelaLogin extends JPanel {
 
@@ -136,7 +141,7 @@ public class TelaLogin extends JPanel {
                         this.loginController.primeiraEtapa(loginRequestDto);
 
                         if (mainApplication != null) {
-                                System.out.println("GG filha da puta");
+                                System.out.println("Credenciais válidas. Redirecionando para a 2ª tela de autenticação...");
                                 mainApplication.mostrarTelaCodigoVerificador(this.loginController);
                         }
 
