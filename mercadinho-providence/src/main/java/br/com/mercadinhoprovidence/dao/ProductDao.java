@@ -1,6 +1,8 @@
 package br.com.mercadinhoprovidence.dao;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,6 +12,7 @@ import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 
 import br.com.mercadinhoprovidence.config.ConexaoMySQL;
+import br.com.mercadinhoprovidence.model.ItemVenda;
 import br.com.mercadinhoprovidence.model.Product;
 
 public class ProductDao {
@@ -27,7 +30,7 @@ public class ProductDao {
 	 */
 	public void save(Product p) {
 		if (p.getIdProduto() == null) {
-			String sql = "INSERT INTO produtos (nome, codigo_de_barras, descricao, categoria, controla_estoque, preco_venda, preco_custo, quant_ou_peso_em_estoque, desconto, validade, ativo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			String sql = "INSERT INTO Produto (nome, codigo_de_barras, descricao, categoria, controla_estoque, preco_venda, preco_custo, quant_ou_peso_em_estoque, desconto, validade, ativo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			try (Connection conn = ConexaoMySQL.getConnection()) {
 				// ScalarHandler captura o ID gerado automaticamente
 				Long id = run.insert(conn, sql, new ScalarHandler<Long>(), p.getNome(), p.getCodigoDeBarras(),
@@ -63,7 +66,7 @@ public class ProductDao {
 				    desconto = ?,
 				    validade = ?,
 				    ativo = ?
-				WHERE idProduto = ?
+				WHERE id_produto = ?
 				""";
 
 		try (Connection conn = ConexaoMySQL.getConnection()) {
@@ -73,7 +76,7 @@ public class ProductDao {
 					p.getDesconto(), p.getValidade(), p.getActive(), p.getIdProduto());
 
 		} catch (Exception e) {
-			throw new RuntimeException("Erro ao atualizar", e);
+			throw new RuntimeException("Erro ao atualizar produto", e);
 		}
 	}
 
@@ -87,7 +90,7 @@ public class ProductDao {
 
 		String sql = """
 				SELECT
-				    idProduto,
+				    id_produto,
 				    nome,
 				    codigo_de_barras AS codigoDeBarras,
 				    descricao,
@@ -100,7 +103,7 @@ public class ProductDao {
 				    validade,
 				    ativo AS active
 				FROM Produto
-				WHERE idProduto = ?
+				WHERE id_produto = ?
 				""";
 
 		try (Connection conn = ConexaoMySQL.getConnection()) {
@@ -123,7 +126,7 @@ public class ProductDao {
 
 		String sql = """
 				SELECT
-				    idProduto,
+				    id_produto,
 				    nome,
 				    codigo_de_barras AS codigoDeBarras,
 				    descricao,
@@ -177,7 +180,7 @@ public class ProductDao {
 
 		String sql = """
 				SELECT
-				    idProduto,
+				    id_produto,
 				    nome,
 				    codigo_de_barras AS codigoDeBarras,
 				    descricao,
@@ -203,4 +206,54 @@ public class ProductDao {
 			throw new RuntimeException("Erro ao buscar produto pelo código de barras", e);
 		}
 	}
+
+	/**
+	 * Atualiza o estoque utilizando uma conexão já existente.
+	 * Esse método é utilizado dentro da transação de uma venda.
+	 *
+	 * @param item Item vendido
+	 * @param conn Conexão da transação
+	 * @throws SQLException caso ocorra algum erro na atualização
+	 */
+	public void updateStockWithConnection(ItemVenda item, Connection conn) throws SQLException {
+
+		Product produto = item.getProduto();
+
+		if (produto == null || produto.getIdProduto() == null) {
+			throw new SQLException("Item da venda não possui um produto válido.");
+		}
+
+		// Se o produto não controla estoque, nenhuma baixa deve ser realizada
+		if (!Boolean.TRUE.equals(produto.getControlaEstoque())) {
+			return;
+		}
+
+		if (item.getQuantidadeOuPeso() == null || item.getQuantidadeOuPeso() <= 0) {
+			throw new SQLException("Quantidade ou peso inválido para atualização do estoque.");
+		}
+
+		BigDecimal quantidadeVendida = BigDecimal.valueOf(item.getQuantidadeOuPeso());
+
+		String sql = """
+				UPDATE Produto
+				SET quant_ou_peso_em_estoque =
+				    quant_ou_peso_em_estoque - ?
+				WHERE id_produto = ?
+				  AND quant_ou_peso_em_estoque >= ?
+				""";
+
+		int affectedRows = run.update(
+				conn,
+				sql,
+				quantidadeVendida,
+				produto.getIdProduto(),
+				quantidadeVendida);
+
+		if (affectedRows == 0) {
+			throw new SQLException(
+					"Estoque insuficiente ou produto não encontrado. Produto ID: "
+							+ produto.getIdProduto());
+		}
+	}
+
 }
