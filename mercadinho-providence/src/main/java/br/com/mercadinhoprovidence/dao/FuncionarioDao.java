@@ -239,7 +239,7 @@ public class FuncionarioDao {
      */
     public Funcionario buscarPorIdSenha(Integer id, String senha) {
 
-        String sql = "SELECT id_funcionario AS id, ativo, codigo_verificador AS codigoVerificador " +
+        String sql = "SELECT id_funcionario AS id, codigo_verificador AS codigoVerificador, cpf, nome, data_nascimento, telefone, email, endereco, data_admissao, cargo, salario, senha, ativo " +
                 "FROM funcionario WHERE id_funcionario = ? AND senha = ?";
 
         QueryRunner run = new QueryRunner();
