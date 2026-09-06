@@ -15,11 +15,10 @@ import lombok.Setter;
 public class ProductFormDto {
     
     private Integer id;
-    public String nome;
-    public String codigoBarras;
-    public String descricao;
-    public Category categoria;
-    public boolean controlaEstoque;
-    public BigDecimal precoUnitario;
-    public BigDecimal precoPorKg;
+    private String nome;
+    private String codigoBarras;
+    private String descricao;
+    private Category categoria;
+    private boolean controlaEstoque;
+    private BigDecimal precoVenda;
 }
