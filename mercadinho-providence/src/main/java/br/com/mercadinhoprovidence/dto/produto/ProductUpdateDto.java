@@ -15,7 +15,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProductUpdateDto {
 
-    private Integer id;
     private String nome;
     private String codigoBarras;
     private String descricao;
