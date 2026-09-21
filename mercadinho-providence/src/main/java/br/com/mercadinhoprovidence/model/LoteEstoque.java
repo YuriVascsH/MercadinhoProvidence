@@ -1,13 +1,13 @@
 package br.com.mercadinhoprovidence.model;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
 @SuperBuilder 
@@ -23,7 +23,7 @@ public class LoteEstoque {
     private LocalDateTime dataEntrada;
     private Boolean ativo;
 
-    LoteEstoque(Integer idLote) {
+    public LoteEstoque(Integer idLote) {
         this.idLote = idLote;
     }
 }
