@@ -55,6 +55,15 @@ public class ProductController {
     }
 
     /**
+     * Método responsável por excluir permanentemente um produto.
+     *
+     * @param id identificador do produto.
+     */
+    public void delete(Integer id) {
+        productService.delete(id);
+    }
+
+    /**
      * Método responsável por ativat/desativar um produto
      * 
      * @param id     do produto cadastrado no sistema

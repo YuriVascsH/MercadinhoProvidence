@@ -33,7 +33,7 @@ public class ProductDao {
 			String sql = "INSERT INTO Produto (nome, codigo_de_barras, descricao, categoria, controla_estoque, preco_venda, preco_custo, quant_ou_peso_em_estoque, desconto, validade, ativo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			try (Connection conn = ConexaoMySQL.getConnection()) {
 				// ScalarHandler captura o ID gerado automaticamente
-				Long id = run.insert(conn, sql, new ScalarHandler<Long>(), p.getNome(), p.getCodigoDeBarras(),
+				Long id = run.insert(conn, sql, new ScalarHandler<>(), p.getNome(), p.getCodigoDeBarras(),
 						p.getDescricao(), p.getCategoria().name(), p.getControlaEstoque(), p.getPrecoVenda(),
 						p.getPrecoCusto(), p.getQuantOuPesoEmEstoque(), p.getDesconto(), p.getValidade(),
 						p.getActive());
@@ -77,6 +77,30 @@ public class ProductDao {
 
 		} catch (Exception e) {
 			throw new RuntimeException("Erro ao atualizar produto", e);
+		}
+	}
+
+	// 3. Excluir produto
+	/**
+	 * Remove fisicamente um produto do banco de dados.
+	 *
+	 * @param id identificador do produto
+	 */
+	public void delete(Integer id) {
+
+		String sql = "DELETE FROM Produto WHERE id_produto = ?";
+
+		try (Connection conn = ConexaoMySQL.getConnection()) {
+
+			int affectedRows = run.update(conn, sql, id);
+
+			if (affectedRows == 0) {
+				throw new RuntimeException("Produto não encontrado para exclusão.");
+
+			}
+
+		} catch (Exception e) {
+			throw new RuntimeException("Erro ao excluir produto", e);
 		}
 	}
 
@@ -162,7 +186,7 @@ public class ProductDao {
 
 		try (Connection conn = ConexaoMySQL.getConnection()) {
 
-			Long count = run.query(conn, sql, new ScalarHandler<Long>(), code);
+			Long count = run.query(conn, sql, new ScalarHandler<>(), code);
 
 			return count != null && count > 0;
 

@@ -93,14 +93,31 @@ public class ProductService {
             product.setCategoria(productUpdateDto.getCategoria());
         }
 
-        if (productUpdateDto.getPreco() != null) {
-            validatePrice(productUpdateDto.getPreco());
-            product.setPrecoVenda(productUpdateDto.getPreco());
+        if (productUpdateDto.getPrecoVenda() != null) {
+            validatePrice(productUpdateDto.getPrecoVenda());
+            product.setPrecoVenda(productUpdateDto.getPrecoVenda());
         }
 
         productDao.save(product);
 
         return ProductMapper.toTableDto(product);
+    }
+
+    /**
+     * Método responsável por excluir permanentemente um produto.
+     *
+     * @param id identificador do produto.
+     */
+    public void delete(Integer id) {
+
+        if (id == null || id <= 0) {
+            throw new BusinessException("ID do produto inválido.");
+        }
+
+        productDao.findById(id)
+                .orElseThrow(() -> new BusinessException("Produto não encontrado"));
+
+        productDao.delete(id);
     }
 
     /**
@@ -110,9 +127,8 @@ public class ProductService {
      * @param productCreateDto Informações do produto.
      */
     public void createProduct(ProductCreateDto productCreateDto) {
-        if (productDao.existsByCode(productCreateDto.getCodigoBarras())) 
+        if (productDao.existsByCode(productCreateDto.getCodigoBarras()))
             throw new BusinessException("Produto já cadastrado.");
-        
 
         Product product = ProductMapper.toProduct(productCreateDto);
 
