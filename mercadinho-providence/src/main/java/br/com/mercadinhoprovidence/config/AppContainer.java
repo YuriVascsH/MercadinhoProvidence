@@ -3,6 +3,8 @@ package br.com.mercadinhoprovidence.config;
 import br.com.mercadinhoprovidence.controller.LoginController;
 import br.com.mercadinhoprovidence.dao.FuncionarioDao;
 import br.com.mercadinhoprovidence.service.LoginService;
+import br.com.mercadinhoprovidence.view.ScreenCodeVerify;
+import br.com.mercadinhoprovidence.view.ScreenLogin;
 
 public class AppContainer {
 
@@ -31,5 +33,18 @@ public class AppContainer {
         }
         return loginController;
     }
+
+
+    public ScreenLogin createScreenLogin(ScreenNavigator navigator) {
+        return new ScreenLogin(navigator, getLoginController()); 
+    }
+
+    public ScreenCodeVerify createScreenCodeVerify(ScreenNavigator navigator) {
+        return new ScreenCodeVerify(navigator, getLoginController());
+    }
+
+    // public ScreenPdv createScreenPdv(ScreenNavigator navigator) {
+    //     return new ScreenPdv(navigator);
+    // }
 
 }

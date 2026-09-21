@@ -9,65 +9,32 @@ import javax.swing.SwingUtilities;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import br.com.mercadinhoprovidence.config.AppContainer;
-import br.com.mercadinhoprovidence.dto.login.LoginResponseDto;
-import br.com.mercadinhoprovidence.view.TelaLogin;
+import br.com.mercadinhoprovidence.config.ScreenNavigator;
 
 public class MainApplication {
 
-	private JFrame janelaPrincipal;
-
-	private CardLayout cardLayout;
-
-	private JPanel containerDasTelas;
-
-	private AppContainer container;
-
-	public void iniciarSistema() {
-		FlatLightLaf.setup();
-
-		this.container = new AppContainer();
-
-		janelaPrincipal = new JFrame("Mercadinho Providence");
-		janelaPrincipal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		cardLayout = new CardLayout();
-		containerDasTelas = new JPanel(cardLayout);
-		janelaPrincipal.add(containerDasTelas);
-
-		TelaLogin telaLogin = new TelaLogin(this, container.getLoginController());
-
-		containerDasTelas.add(telaLogin, "TELA_LOGIN");
-
-		mostrarTelaLogin();
-	}
-
-	public void mostrarTelaLogin() {
-		janelaPrincipal.setResizable(false); // Bloqueia o tamanho para o login não esticar
-		cardLayout.show(containerDasTelas, "TELA_LOGIN"); // Exibe a carta do login
-
-		janelaPrincipal.pack(); // Faz a janela encolher até o tamanho exato do card de login
-		janelaPrincipal.setLocationRelativeTo(null); // Centraliza no meio do monitor
-		janelaPrincipal.setVisible(true);
-	}
-
-	public void mostrarTelaPrincipalPDV(LoginResponseDto LoggedEmployee) { // Recém adicionado o parâmetro
-		janelaPrincipal.setResizable(true); // Permite redimensionar o PDV
-		cardLayout.show(containerDasTelas, "TELA_PDV"); // Exibe a carta do PDV
-
-		// TODO: verificar se o DTO será utilizado para
-		// identificação do operador, permissões ou auditoria.
-		janelaPrincipal.setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximiza em tela cheia
-	}
-
-	public void mostrarTelaCodigoVerificador(Object loginController) {
-
-	}
-
+	/**
+	 * Método principal da aplicação. 
+	 */
 	public static void main(String[] args) {
 		// O ponto de entrada do Java que inicia tudo
 		SwingUtilities.invokeLater(() -> {
-			MainApplication app = new MainApplication();
-			app.iniciarSistema();
+			FlatLightLaf.setup();
+			AppContainer container = new AppContainer();
+			JFrame screenPrimary = new JFrame("Mercadinho Providence");
+			screenPrimary.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+			CardLayout cardLayout = new CardLayout();
+			JPanel containerScreens = new JPanel(cardLayout);
+			screenPrimary.add(containerScreens);
+
+			ScreenNavigator navigator = new ScreenNavigator(screenPrimary, cardLayout, containerScreens);
+
+			navigator.registerScreen(container.createScreenLogin(navigator), ScreenNavigator.SCREEN_LOGIN);
+			navigator.registerScreen(container.createScreenCodeVerify(navigator), ScreenNavigator.SCREEN_CODE_VERIFY);
+			// navigator.registerScreen(container.createScreenPdv(navigator), ScreenNavigator.SCREEN_PDV);
+
+			navigator.login();
 		});
 	}
 }
