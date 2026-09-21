@@ -18,7 +18,7 @@ import org.apache.commons.dbutils.handlers.BeanHandler;
 
 import br.com.mercadinhoprovidence.config.ConexaoMySQL;
 import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioResponseDto;
-import br.com.mercadinhoprovidence.model.Funcionario;
+import br.com.mercadinhoprovidence.model.Employee;
 import br.com.mercadinhoprovidence.model.enums.Cargo;
 
 public class FuncionarioDao {
@@ -33,7 +33,7 @@ public class FuncionarioDao {
      *
      * @return Funcionario
      */
-    public Funcionario inserir(Funcionario f) {
+    public Employee inserir(Employee f) {
         String sql = """
                     INSERT INTO funcionario (
                         codigo_verificador, cpf, nome, data_nascimento, telefone, email, endereco,
@@ -83,8 +83,8 @@ public class FuncionarioDao {
      *
      *
      */
-    public List<Funcionario> listarTodos() {
-        List<Funcionario> lista = new ArrayList<>();
+    public List<Employee> listarTodos() {
+        List<Employee> lista = new ArrayList<>();
         String sql = "SELECT * FROM funcionario";
 
         try (Connection conn = ConexaoMySQL.getConnection();
@@ -105,8 +105,8 @@ public class FuncionarioDao {
     /**
      * Lista funcionários filtrando por cargo
      */
-    public List<Funcionario> listarPorCargo(Cargo cargo) {
-        List<Funcionario> lista = new ArrayList<>();
+    public List<Employee> listarPorCargo(Cargo cargo) {
+        List<Employee> lista = new ArrayList<>();
         String sql = "SELECT * FROM funcionario WHERE cargo = ?";
 
         try (Connection conn = ConexaoMySQL.getConnection();
@@ -132,7 +132,7 @@ public class FuncionarioDao {
      *
      * @return
      */
-    public Optional<FuncionarioResponseDto> atualizar(Funcionario f) throws SQLException {
+    public Optional<FuncionarioResponseDto> atualizar(Employee f) throws SQLException {
         String sql = """
                     UPDATE funcionario
                     SET nome=?, data_nascimento=?, telefone=?, email=?, endereco=?,
@@ -189,7 +189,7 @@ public class FuncionarioDao {
     /**
      * Busca funcionário por ID
      */
-    public Funcionario buscarPorId(Integer id) {
+    public Employee buscarPorId(Integer id) {
         String sql = "SELECT * FROM funcionario WHERE id_funcionario = ?";
 
         try (Connection conn = ConexaoMySQL.getConnection();
@@ -213,7 +213,7 @@ public class FuncionarioDao {
     /**
      * Busca funcionário por CPF
      */
-    public Funcionario buscarPorCpf(String cpf) {
+    public Employee buscarPorCpf(String cpf) {
         String sql = "SELECT * FROM funcionario WHERE cpf = ?";
 
         try (Connection conn = ConexaoMySQL.getConnection();
@@ -237,7 +237,7 @@ public class FuncionarioDao {
     /**
      * Busca funcionário por ID e senha (para o login da primeira etapa)
      */
-    public Funcionario buscarPorIdSenha(Integer id, String senha) {
+    public Employee buscarPorIdSenha(Integer id, String senha) {
 
         String sql = "SELECT id_funcionario AS id, codigo_verificador AS codigoVerificador, cpf, nome, data_nascimento, telefone, email, endereco, data_admissao, cargo, salario, senha, ativo " +
                 "FROM funcionario WHERE id_funcionario = ? AND senha = ?";
@@ -245,7 +245,7 @@ public class FuncionarioDao {
         QueryRunner run = new QueryRunner();
         try (Connection conn = ConexaoMySQL.getConnection()) {
             // O BeanHandler substitui o seu antigo 'mapearFuncionario(rs)'
-            return run.query(conn, sql, new BeanHandler<>(Funcionario.class), id, senha);
+            return run.query(conn, sql, new BeanHandler<>(Employee.class), id, senha);
 
         } catch (SQLException e) {
             System.err.println("Erro ao buscar funcionário por ID e senha: " + e.getMessage());
@@ -256,7 +256,7 @@ public class FuncionarioDao {
     /**
      * Busca funcionário por código verificador
      */
-    public Funcionario buscarPorCodigoVerificador(Integer codigoVerificador) {
+    public Employee buscarPorCodigoVerificador(Integer codigoVerificador) {
         String sql = "SELECT * FROM funcionario WHERE codigo_verificador = ?";
 
         try (Connection conn = ConexaoMySQL.getConnection();
@@ -308,7 +308,7 @@ public class FuncionarioDao {
      */
     public Map<Integer, String> buscarTodosComoMap() {
         Map<Integer, String> mapa = new HashMap<>();
-        for (Funcionario f : listarTodos()) {
+        for (Employee f : listarTodos()) {
             mapa.put(f.getIdFuncionario(), f.getNome());
         }
         return mapa;
@@ -342,8 +342,8 @@ public class FuncionarioDao {
     /**
      * Mapeia o resultado SQL em um objeto Funcionario
      */
-    private Funcionario mapearFuncionario(ResultSet rs) throws SQLException {
-        Funcionario funcionario = new Funcionario();
+    private Employee mapearFuncionario(ResultSet rs) throws SQLException {
+        Employee funcionario = new Employee();
 
         funcionario.setIdFuncionario(rs.getInt("id_funcionario"));
         funcionario.setCodigoVerificador(rs.getInt("codigo_verificador"));

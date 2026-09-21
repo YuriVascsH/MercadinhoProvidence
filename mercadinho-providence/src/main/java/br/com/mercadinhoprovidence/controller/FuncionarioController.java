@@ -4,7 +4,7 @@ import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioCreateDto;
 import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioResponseDto;
 import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioTableDto;
 import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioUpdateDto;
-import br.com.mercadinhoprovidence.model.Funcionario;
+import br.com.mercadinhoprovidence.model.Employee;
 import br.com.mercadinhoprovidence.service.FuncionarioService;
 import lombok.NoArgsConstructor;
 
@@ -92,7 +92,7 @@ public class FuncionarioController {
      * @param id informado pelo funcionario
      * @return funcionario correspondente da busca pelo id
      */
-    public Funcionario buscarPeloId(Integer id) {
+    public Employee buscarPeloId(Integer id) {
         return funcionarioService.buscarPeloId(id);
     }
 

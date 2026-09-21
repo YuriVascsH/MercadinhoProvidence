@@ -2,7 +2,7 @@ package br.com.mercadinhoprovidence.service;
 
 import br.com.mercadinhoprovidence.dao.FuncionarioDao;
 import br.com.mercadinhoprovidence.dto.login.LoginResponseDto;
-import br.com.mercadinhoprovidence.model.Funcionario;
+import br.com.mercadinhoprovidence.model.Employee;
 
 public class LoginService {
 
@@ -19,8 +19,8 @@ public class LoginService {
      * @param senha fornecido pelo usuário
      * @return uma exceção ou o funcionario
      */
-    public Funcionario validarCredenciais(int id, String senha) {
-        Funcionario funcionario = funcionarioDao.buscarPorIdSenha(id, senha.trim());
+    public Employee validarCredenciais(int id, String senha) {
+        Employee funcionario = funcionarioDao.buscarPorIdSenha(id, senha.trim());
         if (funcionario == null) {
             throw new IllegalArgumentException("ID e/ou senha inválidos.");
         }
@@ -37,21 +37,8 @@ public class LoginService {
      *
      * @return retorna um valor boolean
      */
-    public Boolean validarCodigoVerificador(Funcionario loginResponseDto, int codigoVerficador) {
+    public Boolean validarCodigoVerificador(Employee loginResponseDto, int codigoVerficador) {
        return loginResponseDto.getCodigoVerificador() == codigoVerficador;
    }
 
-   /**
-    * Converte a classe funcionario para LoginResponseDto
-    *
-    * @param funcionario que vem do metodo validarCredenciais
-    *
-    * */
-    public LoginResponseDto converterParaLoginResponseDto(Funcionario funcionario) {
-        LoginResponseDto loginResponseDto = new LoginResponseDto();
-        loginResponseDto.setName(funcionario.getNome());
-        loginResponseDto.setCodigoVerificador(funcionario.getCodigoVerificador());
-        loginResponseDto.setCargo(funcionario.getCargo());
-        return loginResponseDto;
-   }
 }

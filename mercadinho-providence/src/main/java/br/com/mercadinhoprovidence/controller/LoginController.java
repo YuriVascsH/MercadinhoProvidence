@@ -4,17 +4,18 @@ import br.com.mercadinhoprovidence.dto.login.LoginRequestDto;
 import br.com.mercadinhoprovidence.dto.login.LoginResponseDto;
 import br.com.mercadinhoprovidence.dto.login.LoginVerificationRequestDto;
 import br.com.mercadinhoprovidence.exceptions.LoginFluxoIncorretoException;
-import br.com.mercadinhoprovidence.model.Funcionario;
+import br.com.mercadinhoprovidence.mapper.LoginMapper;
+import br.com.mercadinhoprovidence.model.Employee;
 import br.com.mercadinhoprovidence.service.LoginService;
 
 public class LoginController {
 
     private final LoginService loginService;
-    private Funcionario funcionarioLoginParcial;
+    private Employee partialEmployeeLogin;
 
     public LoginController(LoginService loginService) {
         this.loginService = loginService;
-        this.funcionarioLoginParcial = null;
+        this.partialEmployeeLogin = null;
     }
 
     /**
@@ -22,8 +23,8 @@ public class LoginController {
      *
      * @param loginRequestDto fornecido pelo usuário contendo(Id e senha)
      */
-    public void primeiraEtapa(LoginRequestDto loginRequestDto) throws LoginFluxoIncorretoException {
-        this.funcionarioLoginParcial = loginService.validarCredenciais(loginRequestDto.getId(), loginRequestDto.getSenha());
+    public void firstStage(LoginRequestDto loginRequestDto) throws LoginFluxoIncorretoException {
+        this.partialEmployeeLogin = loginService.validarCredenciais(loginRequestDto.getId(), loginRequestDto.getSenha());
     }
 
     /**
@@ -32,17 +33,26 @@ public class LoginController {
      * @param loginVerificationRequestDto fornecido pelo usuário(Código verificador)
      * @return Retorna o loginResponseDto(nome, cargo e codigoVerificador)
      */
-    public LoginResponseDto segundaEtapa(LoginVerificationRequestDto loginVerificationRequestDto) {
-        if(this.funcionarioLoginParcial == null) {
+    public LoginResponseDto secondStage(LoginVerificationRequestDto loginVerificationRequestDto) {
+        if(this.partialEmployeeLogin == null) {
             throw new LoginFluxoIncorretoException("A primeira etapa não foi realizada.");
         }
 
-        if (loginService.validarCodigoVerificador(this.funcionarioLoginParcial, loginVerificationRequestDto.getCodigoVerificador())) {
-            return loginService.converterParaLoginResponseDto(funcionarioLoginParcial);
+        if (loginService.validarCodigoVerificador(this.partialEmployeeLogin, loginVerificationRequestDto.getCodigoVerificador())) {
+            LoginResponseDto response = LoginMapper.toLoginResponseDto(partialEmployeeLogin);
+            partialEmployeeLogin = null;
+            return response;
         } else {
             throw new LoginFluxoIncorretoException("O código verificador está incorreto");
         }
 
+    }
+
+    /**
+     * Cancela o fluxo atual e limpa a sessão parcial (ex: ao clicar em voltar/cancelar).
+     */
+    public void resetState() {
+        this.partialEmployeeLogin = null;
     }
 
 }

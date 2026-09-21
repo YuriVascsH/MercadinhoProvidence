@@ -1,6 +1,6 @@
 package br.com.mercadinhoprovidence.dto.funcionario;
 
-import br.com.mercadinhoprovidence.model.Funcionario;
+import br.com.mercadinhoprovidence.model.Employee;
 import br.com.mercadinhoprovidence.model.enums.Cargo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +25,7 @@ public class FuncionarioTableDto {
     private LocalDate dataAdmissao;
     private Boolean ativo;
 
-    public FuncionarioTableDto(Funcionario funcionario) {
+    public FuncionarioTableDto(Employee funcionario) {
         this.idFuncionario = funcionario.getIdFuncionario();
         this.codigoFuncionario = funcionario.getCodigoVerificador();
         this.nome = funcionario.getNome();
