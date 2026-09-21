@@ -2,9 +2,9 @@ package br.com.mercadinhoprovidence.controller;
 
 import java.util.List;
 
-import br.com.mercadinhoprovidence.Service.ProductService;
 import br.com.mercadinhoprovidence.dto.produto.ProductTableDto;
 import br.com.mercadinhoprovidence.dto.produto.ProductUpdateDto;
+import br.com.mercadinhoprovidence.service.ProductService;
 
 public class ProductController {
 
