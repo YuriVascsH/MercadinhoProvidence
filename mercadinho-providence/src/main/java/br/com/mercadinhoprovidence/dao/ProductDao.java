@@ -96,11 +96,13 @@ public class ProductDao {
 
 			if (affectedRows == 0) {
 				throw new RuntimeException("Produto não encontrado para exclusão.");
-
 			}
 
-		} catch (Exception e) {
-			throw new RuntimeException("Erro ao excluir produto", e);
+		} catch (SQLException e) {
+			throw new RuntimeException(
+					"Não foi possível excluir o produto. "
+							+ "Ele pode estar relacionado a outros registros.",
+					e);
 		}
 	}
 
