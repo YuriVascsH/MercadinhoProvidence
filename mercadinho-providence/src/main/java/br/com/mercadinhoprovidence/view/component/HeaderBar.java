@@ -32,7 +32,7 @@ public class HeaderBar extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(12, 20, 12, 20));
 
         putClientProperty(FlatClientProperties.STYLE,
-                "background: #ff2200; " +
+                "background: #ef401a; " +
                         "foreground: #ffffff");
 
     }

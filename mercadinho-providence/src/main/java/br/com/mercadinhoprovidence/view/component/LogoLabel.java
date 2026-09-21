@@ -3,7 +3,6 @@ package br.com.mercadinhoprovidence.view.component;
 import java.awt.Dimension;
 
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
