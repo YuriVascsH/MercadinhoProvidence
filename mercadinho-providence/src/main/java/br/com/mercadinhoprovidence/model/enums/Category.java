@@ -2,7 +2,10 @@ package br.com.mercadinhoprovidence.model.enums;
 
 public enum Category {
     UNIDADE("Unidade", "UN"),
-    PESO("Peso", "Kg");
+    PESO("Peso", "Kg"),
+    HORTI("Horti", "Kg"),
+    AVULSOS("Avulsos", "UN"),
+    OUTROS("Outros", "UN");
 
     private final String nameCategory;
     private final String unit;
