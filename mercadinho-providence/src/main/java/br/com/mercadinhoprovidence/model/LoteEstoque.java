@@ -23,4 +23,7 @@ public class LoteEstoque {
     private LocalDateTime dataEntrada;
     private Boolean ativo;
 
+    LoteEstoque(Integer idLote) {
+        this.idLote = idLote;
+    }
 }
