@@ -6,10 +6,12 @@ import javafx.scene.control.ButtonType;
 
 import java.util.Optional;
 
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
 /**
  * Classe utilitária para exibir diferentes tipos de alertas na interface
- * gráfica
- * da aplicação JavaFX. Simplifica a criação e exibição de mensagens
+ * gráfica do Swing. Simplifica a criação e exibição de mensagens
  * padronizadas.
  */
 public class AlertUtils {
@@ -24,127 +26,78 @@ public class AlertUtils {
      *                exibida)
      * @param message A mesnagem principal do alerta
      */
-    private static void showAlert(AlertType type, String title, String header, String message) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(message);
-        alert.showAndWait();
+    private static void showAlert(String title, String header, String message, int messageType) {
+        String fullMessage = formatMessage(header, message);
+
+        if (SwingUtilities.isEventDispatchThread()) {
+            JOptionPane.showMessageDialog(null, fullMessage, title, messageType);
+        } else {
+            SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null, fullMessage, title, messageType));
+        }
     }
 
     /**
-     * Exibe um alerta de ERRO.
-     *
-     * @param title   O título da janela do alerta.
-     * @param message A mensagem de erro.
+     * Formata mensagem para incluir cabeçalho, se existir.
      */
+    private static String formatMessage(String header, String message) {
+        if (header != null && !header.isBlank()) {
+            return header + "\n\n" + message;
+        }
+        return message;
+    }
+
     public static void showError(String title, String message) {
-        showAlert(AlertType.ERROR, title, null, message);
+        showAlert(title, null, message, JOptionPane.ERROR_MESSAGE);
     }
 
-    /**
-     * Exibe um alerta de ERRO com um cabeçalho personalizado.
-     * 
-     * @param title   O título do alerta.
-     * @param header  O cabeçalho do alerta
-     * @param message A mensagem de erro.
-     */
     public static void showError(String title, String header, String message) {
-        showAlert(AlertType.ERROR, title, header, message);
+        showAlert(title, header, message, JOptionPane.ERROR_MESSAGE);
     }
 
-    /**
-     * Exibe um alerta de AVISO.
-     * 
-     * @param title   O título da janela do alerta.
-     * @param message A mensagem do aviso.
-     */
+    // --- MÉTODOS DE AVISO ---
+
     public static void showWarning(String title, String message) {
-        showAlert(AlertType.WARNING, title, null, message);
-
+        showAlert(title, null, message, JOptionPane.WARNING_MESSAGE);
     }
 
-    /**
-     * Exibe um alerta de SUCESSO.
-     * 
-     * @param title   O título da janela aberta.
-     * @param message A mensagem do sucesso.
-     */
+    // --- MÉTODOS DE SUCESSO / INFORMAÇÃO ---
+
     public static void showSuccess(String title, String message) {
-        showAlert(AlertType.INFORMATION, title, null, message);
+        showAlert(title, null, message, JOptionPane.INFORMATION_MESSAGE);
     }
 
-    /**
-     * Exibre uma alerta de SUCESSO com um cabeçalho personalizado.
-     * 
-     * @param title   O título do janela do alerta.
-     * @param header  O cabeçalho do alerta.
-     * @param message A mensagem do sucesso.
-     */
     public static void showSuccess(String title, String header, String message) {
-        showAlert(AlertType.INFORMATION, title, header, message);
+        showAlert(title, header, message, JOptionPane.INFORMATION_MESSAGE);
     }
 
-    /**
-     * Exibe um alerta de INFORMÇÃO.
-     * 
-     * @param title   O título da janela do alerta.
-     * @param message A mensagem de informação.
-     */
     public static void showInfo(String title, String message) {
-        showAlert(AlertType.INFORMATION, title, null, message);
+        showAlert(title, null, message, JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
-     * Exibe um alerta de CONFIRMAÇÃO, que geralmente inclui botões como "OK" e
-     * "Cancelar".
-     *
-     * @param title   O título da janela do alerta.
-     * @param message A mensagem de confirmação.
-     * @return true se o usuário clicou em OK, false caso contrário (ou se fechou a
-     *         janela).
+     * Exibe um alerta de CONFIRMAÇÃO (Sim / Não).
+     * 
+     * @return true se o usuário clicou em SIM (OK), false caso contrário.
      */
     public static boolean showConfirmation(String title, String message) {
-        Alert alert = new Alert(AlertType.CONFIRMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        return alert.showAndWait().filter(response -> response == ButtonType.OK).isPresent();
+        return showConfirmation(title, null, message);
     }
 
     /**
-     * Exibe um alerta de CONFIRMAÇÃO com um cabeçalho personalizado.
-     *
-     * @param title   O título da janela do alerta.
-     * @param header  O cabeçalho do alerta.
-     * @param message A mensagem de confirmação.
-     * @return true se o usuário clicou em OK, false caso contrário (ou se fechou a
-     *         janela).
+     * Exibe um alerta de CONFIRMAÇÃO com cabeçalho.
+     * 
+     * @return true se o usuário clicou em SIM (OK), false caso contrário.
      */
     public static boolean showConfirmation(String title, String header, String message) {
-        Alert alert = new Alert(AlertType.CONFIRMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(message);
-        return alert.showAndWait().filter(response -> response == ButtonType.OK).isPresent();
+        String fullMessage = formatMessage(header, message);
+
+        int option = JOptionPane.showConfirmDialog(
+                null,
+                fullMessage,
+                title,
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+
+        return option == JOptionPane.YES_OPTION;
     }
-
-    /**
-     * Exibe um alerta de CONFIRMAÇÃO e retorna o resultado completo.
-     *
-     * @param title   O título da janela do alerta.
-     * @param header  O cabeçalho do alerta.
-     * @param message A mensagem de confirmação.
-     * @return Optional com o botão clicado pelo usuário.
-     */
-    public static Optional<ButtonType> showConfirmationAndGetResult(String title, String header, String message) {
-        Alert alert = new Alert(AlertType.CONFIRMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(message);
-        return alert.showAndWait();
-    }
-
-    
-
 }
