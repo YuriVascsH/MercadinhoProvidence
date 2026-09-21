@@ -2,14 +2,43 @@ package br.com.mercadinhoprovidence.balance.config;
 
 public class BalanceConfig {
 
-    private String porta; // COM4 (provavelmente)
+    private final String porta;
+    private final int baudRate;
+    private final int dataBits;
+    private final int stopBits;
+    private final int parity;
 
-    private int baudRate; // 9600
+    public BalanceConfig(
+            String porta,
+            int baudRate,
+            int dataBits,
+            int stopBits,
+            int parity) {
 
-    private int dataBits; // 8
+        this.porta = porta;
+        this.baudRate = baudRate;
+        this.dataBits = dataBits;
+        this.stopBits = stopBits;
+        this.parity = parity;
+    }
 
-    private int stopBits; // 1
+    public String getPorta() {
+        return porta;
+    }
 
-    private int parity; // NO_PARITY
+    public int getBaudRate() {
+        return baudRate;
+    }
 
+    public int getDataBits() {
+        return dataBits;
+    }
+
+    public int getStopBits() {
+        return stopBits;
+    }
+
+    public int getParity() {
+        return parity;
+    }
 }
