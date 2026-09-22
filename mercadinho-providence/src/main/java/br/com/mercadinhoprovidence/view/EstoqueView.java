@@ -2,15 +2,15 @@ package br.com.mercadinhoprovidence.view;
 
 import br.com.mercadinhoprovidence.MainApplication;
 import br.com.mercadinhoprovidence.controller.EstoqueController;
-import br.com.mercadinhoprovidence.controller.ProdutoController;
-import br.com.mercadinhoprovidence.model.Funcionario;
-import br.com.mercadinhoprovidence.model.Produto;
-import br.com.mercadinhoprovidence.model.enums.Categoria;
+import br.com.mercadinhoprovidence.controller.ProductController;
+import br.com.mercadinhoprovidence.model.Employee;
+import br.com.mercadinhoprovidence.model.Product;
+import br.com.mercadinhoprovidence.model.enums.Category;
 import br.com.mercadinhoprovidence.util.AlertUtils;
-import br.com.mercadinhoprovidence.view.components.ScreenTitle;
-import br.com.mercadinhoprovidence.view.dialogs.CadastroProdutosDialog;
-import br.com.mercadinhoprovidence.view.dialogs.ConfirmacaoDialog;
-import br.com.mercadinhoprovidence.view.dialogs.EditarProdutoDialog;
+import br.com.mercadinhoprovidence.view.component.ScreenTitle; // criado para sanar erros (precisa de verificação)
+import br.com.mercadinhoprovidence.view.dialogs.CadastroProdutosDialog; // criado para sanar erros (precisa de verificação)
+import br.com.mercadinhoprovidence.view.dialogs.ConfirmarDialog;
+import br.com.mercadinhoprovidence.view.dialogs.EditarProdutoDialog; // criado para sanar erros (precisa de verificação)
 import br.com.mercadinhoprovidence.dto.produto.ProductTableDto;
 
 import javafx.collections.FXCollections;
@@ -32,11 +32,12 @@ import java.util.Locale;
 
 public class EstoqueView {
 
-    private MainApplication mainApplication;
-    private Funcionario funcionarioLogado;
-    private StackPane viewPane;
-    private ProdutoController produtoController;
-    private EstoqueController estoqueController;
+    final private MainApplication mainApplication;
+    @SuppressWarnings("unused")
+    final private Employee funcionarioLogado;
+    final private StackPane viewPane;
+    final private ProductController produtoController;
+    final private EstoqueController estoqueController;
 
     private ObservableList<ProductTableDto> listaProdutosNaTabela;
     private TableView<ProductTableDto> tabelaProdutos;
@@ -45,11 +46,13 @@ public class EstoqueView {
     private static final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.of("pt", "BR"));
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    public EstoqueView(MainApplication mainApplication, Funcionario funcionarioLogado) {
+    @SuppressWarnings("OverridableMethodCallInConstructor")
+    public EstoqueView(MainApplication mainApplication, Employee funcionarioLogado, ProductController produtoController,
+            EstoqueController estoqueController) {
         this.mainApplication = mainApplication;
         this.funcionarioLogado = funcionarioLogado;
-        this.produtoController = new ProdutoController();
-        this.estoqueController = new EstoqueController();
+        this.produtoController = produtoController;
+        this.estoqueController = estoqueController;
         this.viewPane = initializeView();
     }
 
@@ -79,7 +82,7 @@ public class EstoqueView {
         Label qtdEstoque = new Label("Quantidade Estoque:");
         qtdEstoque.setStyle("-fx-font-size: 20px;");
 
-        this.bancoQtdEstoque = new Label(String.valueOf(estoqueController.contarProdutosNoEstoque(1)));
+        this.bancoQtdEstoque = new Label(String.valueOf(estoqueController.produtosCadastradosNoEstoque(1)));
         this.bancoQtdEstoque.setStyle("-fx-font-size: 20px;");
 
         HBox boxQtdEstoque = new HBox(5, qtdEstoque, this.bancoQtdEstoque);
@@ -143,18 +146,21 @@ public class EstoqueView {
                 return;
             }
 
-            Produto produtoEncontrado = this.produtoController.buscarPorCodigo(codigoInseridoPesquisa);
+            ProductTableDto produtoEncontrado = this.produtoController.findByCode(codigoInseridoPesquisa);
 
             if (produtoEncontrado != null) {
-                final Produto finalProduto = produtoEncontrado;
+                final ProductTableDto finalProduto = produtoEncontrado;
                 boolean foundInTable = false;
 
-                for (Produto p : this.listaProdutosNaTabela) {
-                    if (p.getIdProduto() == finalProduto.getIdProduto()) {
+                for (ProductTableDto p : this.listaProdutosNaTabela) {
+                    if (p.getIdProduto().equals(finalProduto.getIdProduto())) {
                         tabelaProdutos.getSelectionModel().select(p);
                         tabelaProdutos.scrollTo(p);
                         foundInTable = true;
-                        System.out.println("Produto encontrado e selecionado na tabela: " + p.getNome());
+
+                        System.out.println(
+                                "Produto encontrado e selecionado na tabela: " + p.getNome());
+
                         break;
                     }
                 }
@@ -163,8 +169,8 @@ public class EstoqueView {
                     System.out.println(
                             "Produto encontrado no BD, mas não visível na tabela. Recarregando e tentando novamente.");
                     atualizarTabelaCompleta();
-                    for (Produto p : this.listaProdutosNaTabela) {
-                        if (p.getIdProduto() == finalProduto.getIdProduto()) {
+                    for (ProductTableDto p : this.listaProdutosNaTabela) {
+                        if (p.getIdProduto().equals(finalProduto.getIdProduto())) {
                             tabelaProdutos.getSelectionModel().select(p);
                             tabelaProdutos.scrollTo(p);
                             break;
@@ -232,22 +238,22 @@ public class EstoqueView {
         this.tabelaProdutos = new TableView<>();
 
         // Colunas
-        TableColumn<Produto, Integer> colId = new TableColumn<>("ID");
+        TableColumn<Product, Integer> colId = new TableColumn<>("ID");
         colId.setCellValueFactory(new PropertyValueFactory<>("idProduto"));
         colId.setStyle("-fx-alignment: CENTER;");
         colId.setResizable(false);
 
-        TableColumn<Produto, String> colNome = new TableColumn<>("Nome");
+        TableColumn<Product, String> colNome = new TableColumn<>("Nome");
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colNome.setStyle("-fx-alignment: CENTER;");
 
-        TableColumn<Produto, String> colCodigoProduto = new TableColumn<>("Código de Barras");
+        TableColumn<Product, String> colCodigoProduto = new TableColumn<>("Código de Barras");
         colCodigoProduto.setCellValueFactory(new PropertyValueFactory<>("codigoDeBarras"));
         colCodigoProduto.setStyle("-fx-alignment: CENTER;");
 
-        TableColumn<Produto, Double> colPreco = new TableColumn<>("Preço (R$)");
+        TableColumn<Product, Double> colPreco = new TableColumn<>("Preço (R$)");
         colPreco.setCellValueFactory(new PropertyValueFactory<>("precoVenda"));
-        colPreco.setCellFactory(column -> new TableCell<Produto, Double>() {
+        colPreco.setCellFactory(column -> new TableCell<Product, Double>() {
             @Override
             protected void updateItem(Double preco, boolean empty) {
                 super.updateItem(preco, empty);
@@ -260,9 +266,9 @@ public class EstoqueView {
         });
         colPreco.setStyle("-fx-alignment: CENTER;");
 
-        TableColumn<Produto, Double> colDesconto = new TableColumn<>("Desconto");
+        TableColumn<Product, Double> colDesconto = new TableColumn<>("Desconto");
         colDesconto.setCellValueFactory(new PropertyValueFactory<>("desconto"));
-        colDesconto.setCellFactory(column -> new TableCell<Produto, Double>() {
+        colDesconto.setCellFactory(column -> new TableCell<Product, Double>() {
             @Override
             protected void updateItem(Double desconto, boolean empty) {
                 super.updateItem(desconto, empty);
@@ -279,9 +285,9 @@ public class EstoqueView {
         });
         colDesconto.setStyle("-fx-alignment: CENTER;");
 
-        TableColumn<Produto, LocalDateTime> colValidade = new TableColumn<>("Validade");
+        TableColumn<Product, LocalDateTime> colValidade = new TableColumn<>("Validade");
         colValidade.setCellValueFactory(new PropertyValueFactory<>("validade"));
-        colValidade.setCellFactory(column -> new TableCell<Produto, LocalDateTime>() {
+        colValidade.setCellFactory(column -> new TableCell<Product, LocalDateTime>() {
             @Override
             protected void updateItem(LocalDateTime validade, boolean empty) {
                 super.updateItem(validade, empty);
@@ -294,18 +300,18 @@ public class EstoqueView {
         });
         colValidade.setStyle("-fx-alignment: CENTER;");
 
-        TableColumn<Produto, Double> colQtdEstoqueOuPeso = new TableColumn<>("Estoque");
+        TableColumn<Product, Double> colQtdEstoqueOuPeso = new TableColumn<>("Estoque");
         colQtdEstoqueOuPeso.setCellValueFactory(new PropertyValueFactory<>("quantidadeOuPesoEmEstoque"));
 
-        colQtdEstoqueOuPeso.setCellFactory(new Callback<TableColumn<Produto, Double>, TableCell<Produto, Double>>() {
+        colQtdEstoqueOuPeso.setCellFactory(new Callback<TableColumn<Product, Double>, TableCell<Product, Double>>() {
 
             // Define os formatadores fora do método para melhor performance
             private final NumberFormat decimalFormat = new DecimalFormat("0.00"); // Para KG, L, G
             private final NumberFormat integerFormat = new DecimalFormat("0"); // Para UN, PCT
 
             @Override
-            public TableCell<Produto, Double> call(TableColumn<Produto, Double> param) {
-                return new TableCell<Produto, Double>() {
+            public TableCell<Product, Double> call(TableColumn<Product, Double> param) {
+                return new TableCell<Product, Double>() {
                     @Override
                     protected void updateItem(Double item, boolean empty) {
                         super.updateItem(item, empty);
@@ -313,10 +319,10 @@ public class EstoqueView {
                         if (empty || item == null) {
                             setText(null);
                         } else {
-                            Produto produto = getTableView().getItems().get(getIndex());
-                            String unidade = produto.getCategoria().getUnidadePadrao();
+                            Product produto = getTableView().getItems().get(getIndex());
+                            String unidade = produto.getCategoria().getUnit();
                             String quantidadeFormatada;
-                            if (produto.getCategoria() == Categoria.HORTI) {
+                            if (produto.getCategoria() == Category.HORTI) {
                                 quantidadeFormatada = decimalFormat.format(item);
                             } else {
                                 quantidadeFormatada = integerFormat.format(Math.round(item));
@@ -329,15 +335,15 @@ public class EstoqueView {
                 };
             }
         });
-        TableColumn<Produto, String> colCategoria = new TableColumn<>("Categoria");
+        TableColumn<Product, String> colCategoria = new TableColumn<>("Categoria");
         colCategoria.setCellValueFactory(new PropertyValueFactory<>("categoria"));
         colCategoria.setStyle("-fx-alignment: CENTER;");
 
-        TableColumn<Produto, Void> colAcoes = new TableColumn<>("Ações");
+        TableColumn<Product, Void> colAcoes = new TableColumn<>("Ações");
         colAcoes.setPrefWidth(150);
         colAcoes.setResizable(false);
 
-        EstoqueView self = this;
+        EstoqueView this = this;
 
         colAcoes.setCellFactory(coluna -> new TableCell<>() {
             private final Button btnEditar = new Button("Editar");
@@ -354,8 +360,8 @@ public class EstoqueView {
                     btnEditar.setCursor(Cursor.DEFAULT);
                 });
                 btnEditar.setOnAction(event -> {
-                    Produto produto = getTableView().getItems().get(getIndex());
-                    EditarProdutoDialog.show(mainApplication.getPrimaryStage(), produto, self::atualizarTabelaCompleta);
+                    Product produto = getTableView().getItems().get(getIndex());
+                    EditarProdutoDialog.show(mainApplication.getPrimaryStage(), produto, this::atualizarTabelaCompleta);
                 });
 
                 btnExcluir.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold;");
@@ -368,17 +374,18 @@ public class EstoqueView {
                     btnExcluir.setCursor(Cursor.DEFAULT);
                 });
                 btnExcluir.setOnAction(event -> {
-                    Produto produto = getTableView().getItems().get(getIndex());
-                    ConfirmacaoDialog.show(
+                    Product produto = getTableView().getItems().get(getIndex());
+                    ConfirmarDialog.show(
                             mainApplication.getPrimaryStage(),
                             "Tem certeza que deseja excluir este produto?",
                             produto.getNome(),
                             "Esta ação é irreversível!",
                             (itemExcluidoNome) -> {
-                                if (self.produtoController.deletar(produto.getIdProduto())) {
-                                    self.tabelaProdutos.getItems().remove(produto);
-                                    self.bancoQtdEstoque
-                                            .setText(String.valueOf(self.estoqueController.contarProdutosNoEstoque(1)));
+                                if (this.produtoController.delete(produto.getIdProduto())) {
+                                    this.tabelaProdutos.getItems().remove(produto);
+                                    this.bancoQtdEstoque
+                                            .setText(String
+                                                    .valueOf(this.estoqueController.produtosCadastradosNoEstoque(1)));
                                     AlertUtils.showSuccess("Sucesso", "Produto Excluído",
                                             "Produto" + itemExcluidoNome + " excluído com sucesso!");
                                 } else {
@@ -411,7 +418,7 @@ public class EstoqueView {
         /*** LAYOUT PRINCIPAL VERTICAL ***/
         VBox vboxConteudo = new VBox(10);
         vboxConteudo.setPadding(new Insets(20, 30, 20, 30));
-        vboxConteudo.getChildren().addAll(ScreenTitle.crateHeadBorderPane("Gestão de Estoque"), opcoesInferior,
+        vboxConteudo.getChildren().addAll(ScreenTitle.createHeadBorderPane("Gestão de Estoque"), opcoesInferior,
                 this.tabelaProdutos);
 
         VBox.setVgrow(this.tabelaProdutos, Priority.ALWAYS);
@@ -422,9 +429,9 @@ public class EstoqueView {
     }
 
     private void atualizarTabelaCompleta() {
-        List<ProductTableDto> produtosAtualizados = this.produtoController.listarTodos();
+        List<ProductTableDto> produtosAtualizados = this.produtoController.findAll();
         this.listaProdutosNaTabela = FXCollections.observableArrayList(produtosAtualizados);
         this.tabelaProdutos.setItems(this.listaProdutosNaTabela);
-        this.bancoQtdEstoque.setText(String.valueOf(this.estoqueController.contarProdutosNoEstoque(1)));
+        this.bancoQtdEstoque.setText(String.valueOf(this.estoqueController.produtosCadastradosNoEstoque(1)));
     }
 }
