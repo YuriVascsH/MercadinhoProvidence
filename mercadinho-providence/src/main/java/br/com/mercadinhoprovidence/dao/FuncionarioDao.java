@@ -19,7 +19,7 @@ import org.apache.commons.dbutils.handlers.BeanHandler;
 import br.com.mercadinhoprovidence.config.ConexaoMySQL;
 import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioResponseDto;
 import br.com.mercadinhoprovidence.model.Employee;
-import br.com.mercadinhoprovidence.model.enums.Cargo;
+import br.com.mercadinhoprovidence.model.enums.JobTitle;
 
 public class FuncionarioDao {
 
@@ -105,7 +105,7 @@ public class FuncionarioDao {
     /**
      * Lista funcionários filtrando por cargo
      */
-    public List<Employee> listarPorCargo(Cargo cargo) {
+    public List<Employee> listarPorCargo(JobTitle cargo) {
         List<Employee> lista = new ArrayList<>();
         String sql = "SELECT * FROM funcionario WHERE cargo = ?";
 
@@ -354,7 +354,7 @@ public class FuncionarioDao {
         funcionario.setEmail(rs.getString("email"));
         funcionario.setEndereco(rs.getString("endereco"));
         funcionario.setDataAdmissao(rs.getDate("data_admissao").toLocalDate());
-        funcionario.setCargo(Cargo.fromString(rs.getString("cargo")));
+        funcionario.setCargo(JobTitle.fromString(rs.getString("cargo")));
         funcionario.setSalario(rs.getBigDecimal("salario"));
         funcionario.setSenha(rs.getString("senha"));
         funcionario.setAtivo(rs.getBoolean("ativo"));

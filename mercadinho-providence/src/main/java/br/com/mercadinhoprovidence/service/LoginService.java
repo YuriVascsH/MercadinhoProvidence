@@ -1,7 +1,6 @@
 package br.com.mercadinhoprovidence.service;
 
 import br.com.mercadinhoprovidence.dao.FuncionarioDao;
-import br.com.mercadinhoprovidence.dto.login.LoginResponseDto;
 import br.com.mercadinhoprovidence.model.Employee;
 
 public class LoginService {

@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import br.com.mercadinhoprovidence.model.enums.Cargo;
+import br.com.mercadinhoprovidence.model.enums.JobTitle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,7 +25,7 @@ public class Employee {
 	private String email;
 	private String endereco;
 	private LocalDate dataAdmissao;
-	private Cargo cargo;
+	private JobTitle cargo;
 	private BigDecimal salario;
 	private String senha;
 	private Boolean ativo;

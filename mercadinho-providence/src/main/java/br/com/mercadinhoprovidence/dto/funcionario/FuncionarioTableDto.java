@@ -1,7 +1,7 @@
 package br.com.mercadinhoprovidence.dto.funcionario;
 
 import br.com.mercadinhoprovidence.model.Employee;
-import br.com.mercadinhoprovidence.model.enums.Cargo;
+import br.com.mercadinhoprovidence.model.enums.JobTitle;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +20,7 @@ public class FuncionarioTableDto {
     private Integer codigoFuncionario;
     private String nome;
     private String cpf;
-    private Cargo cargo;
+    private JobTitle cargo;
     private BigDecimal salario;
     private LocalDate dataAdmissao;
     private Boolean ativo;
