@@ -37,12 +37,11 @@ public class SideBarButton extends JButton {
                 "buttonType: toolbar; " +
                         "arc: 10; " +
                         "margin: 8,16,8,16; " +
-                        "font: bold +1; " + 
+                        "font: bold +1; " +
                         "borderWidth: 0; " +
                         "focusWidth: 0; " +
                         "background: null; " +
-                        "foreground: #111111; " + 
-                        "disabledForeground: #888888; " + 
+                        "disabledText: #888888;" +
                         "hoverBackground: #f0f0f0; " +
                         "pressedBackground: #e0e0e0");
     }

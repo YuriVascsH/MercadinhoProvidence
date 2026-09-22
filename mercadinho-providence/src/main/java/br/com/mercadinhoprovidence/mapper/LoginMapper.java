@@ -22,8 +22,8 @@ public class LoginMapper {
 
         LoginResponseDto loginResponseDto = new LoginResponseDto();
         loginResponseDto.setName(employee.getNome());
-        loginResponseDto.setCodigoVerificador(employee.getCodigoVerificador());
-        loginResponseDto.setCargo(employee.getCargo());
+        loginResponseDto.setCodeVerify(employee.getCodigoVerificador());
+        loginResponseDto.setPostion(employee.getCargo());
         return loginResponseDto;
 
     }
