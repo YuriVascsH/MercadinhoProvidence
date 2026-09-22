@@ -111,7 +111,7 @@ public class ScreenCodeVerify extends JPanel {
             AlertUtils.showSuccess("Login Bem-sucedido!", "Bem-vindo(a), " + currentUser.getName() + "!");
 
             // Redireciona para o PDV via Navigator
-            this.navigator.pdv(currentUser);
+            this.navigator.home(currentUser);
 
         } catch (NumberFormatException ex) {
             AlertUtils.showError("Erro de Entrada", "O código verificador deve conter apenas números válidos.");
