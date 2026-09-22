@@ -1,9 +1,12 @@
 package br.com.mercadinhoprovidence.config;
 
+import java.util.Set;
+
 import br.com.mercadinhoprovidence.controller.LoginController;
 import br.com.mercadinhoprovidence.dao.FuncionarioDao;
 import br.com.mercadinhoprovidence.service.LoginService;
 import br.com.mercadinhoprovidence.view.ScreenCodeVerify;
+import br.com.mercadinhoprovidence.view.ScreenHome;
 import br.com.mercadinhoprovidence.view.ScreenLogin;
 
 public class AppContainer {
@@ -41,6 +44,10 @@ public class AppContainer {
 
     public ScreenCodeVerify createScreenCodeVerify(ScreenNavigator navigator) {
         return new ScreenCodeVerify(navigator, getLoginController());
+    }
+
+    public ScreenHome createScreenHome(ScreenNavigator navigator) {
+        return new ScreenHome(navigator, Set.of("ajuda"));
     }
 
     // public ScreenPdv createScreenPdv(ScreenNavigator navigator) {

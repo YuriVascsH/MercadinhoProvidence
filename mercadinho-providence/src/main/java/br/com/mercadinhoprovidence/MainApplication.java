@@ -32,7 +32,8 @@ public class MainApplication {
 
 			navigator.registerScreen(container.createScreenLogin(navigator), ScreenNavigator.SCREEN_LOGIN);
 			navigator.registerScreen(container.createScreenCodeVerify(navigator), ScreenNavigator.SCREEN_CODE_VERIFY);
-			// navigator.registerScreen(container.createScreenPdv(navigator), ScreenNavigator.SCREEN_PDV);
+			navigator.registerScreen(container.createScreenHome(navigator), ScreenNavigator.SCREEN_HOME);
+			//navigator.registerScreen(container.createScreenPdv(navigator), ScreenNavigator.SCREEN_PDV);
 
 			navigator.login();
 		});
