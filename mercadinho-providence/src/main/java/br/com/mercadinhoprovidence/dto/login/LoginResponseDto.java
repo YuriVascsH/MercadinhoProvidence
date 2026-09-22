@@ -1,6 +1,6 @@
 package br.com.mercadinhoprovidence.dto.login;
 
-import br.com.mercadinhoprovidence.model.enums.Cargo;
+import br.com.mercadinhoprovidence.model.enums.JobTitle;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +10,7 @@ import lombok.Setter;
 public class LoginResponseDto {
 
     private String name;
-    private Integer codigoVerificador;
-    private Cargo cargo;
+    private Integer codeVerify;
+    private JobTitle postion;
 
 }

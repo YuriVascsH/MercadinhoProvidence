@@ -106,13 +106,12 @@ public class ScreenCodeVerify extends JPanel {
             dto.setCodigoVerificador(codeInt);
 
             // Chama a segunda etapa no controller
-            LoginResponseDto funcionarioLogado = this.loginController.secondStage(dto);
+            LoginResponseDto currentUser = this.loginController.secondStage(dto);
 
-            AlertUtils.showSuccess("Login Bem-sucedido!", "Bem-vindo(a), " + funcionarioLogado.getName() + "!");
+            AlertUtils.showSuccess("Login Bem-sucedido!", "Bem-vindo(a), " + currentUser.getName() + "!");
 
-            clearField();
             // Redireciona para o PDV via Navigator
-            this.navigator.pdv();
+            this.navigator.pdv(currentUser);
 
         } catch (NumberFormatException ex) {
             AlertUtils.showError("Erro de Entrada", "O código verificador deve conter apenas números válidos.");

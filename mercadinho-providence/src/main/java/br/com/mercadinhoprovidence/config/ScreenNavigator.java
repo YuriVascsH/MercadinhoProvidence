@@ -5,6 +5,8 @@ import java.awt.CardLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import br.com.mercadinhoprovidence.dto.login.LoginResponseDto;
+
 public class ScreenNavigator {
 
     public static final String SCREEN_LOGIN = "SCREEN_LOGIN";
@@ -41,7 +43,7 @@ public class ScreenNavigator {
         screenPrimary.setLocationRelativeTo(null);
     }
 
-    public void pdv() {
+    public void pdv(LoginResponseDto loginResponseDto) {
         screenPrimary.setResizable(false);
         cardLayout.show(containerScreens, SCREEN_PDV);
         screenPrimary.setExtendedState(JFrame.MAXIMIZED_BOTH);

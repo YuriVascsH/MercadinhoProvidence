@@ -1,23 +1,23 @@
 package br.com.mercadinhoprovidence.model.enums;
 
-public enum Cargo {
+public enum JobTitle {
 	
 	OPERADOR("Operador"),
 	GERENTE("Gerente");
 
-	private String cargo;
+	private String jobTitle;
 	
-	Cargo(String cargo) {
-		this.cargo = cargo;
+	JobTitle(String jobTitle) {
+		this.jobTitle = jobTitle;
 	}
 
 	@Override
 	public String toString() {
-		return cargo;
+		return jobTitle;
 	}
 
-	public static Cargo fromString(String text) {
-		for (Cargo c : Cargo.values()) {
+	public static JobTitle fromString(String text) {
+		for (JobTitle c : JobTitle.values()) {
 			if (c.toString().equalsIgnoreCase(text)) {
 				return c;
 			}
