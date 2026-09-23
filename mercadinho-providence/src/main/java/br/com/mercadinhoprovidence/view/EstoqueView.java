@@ -1,10 +1,11 @@
 package br.com.mercadinhoprovidence.view;
 
+import java.math.BigDecimal;
+
 import br.com.mercadinhoprovidence.MainApplication;
 import br.com.mercadinhoprovidence.controller.EstoqueController;
 import br.com.mercadinhoprovidence.controller.ProductController;
 import br.com.mercadinhoprovidence.model.Employee;
-import br.com.mercadinhoprovidence.model.Product;
 import br.com.mercadinhoprovidence.model.enums.Category;
 import br.com.mercadinhoprovidence.util.AlertUtils;
 import br.com.mercadinhoprovidence.view.component.ScreenTitle; // criado para sanar erros (precisa de verificação)
@@ -25,8 +26,8 @@ import javafx.util.Callback;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -44,7 +45,6 @@ public class EstoqueView {
     private Label bancoQtdEstoque;
 
     private static final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.of("pt", "BR"));
-    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     @SuppressWarnings("OverridableMethodCallInConstructor")
     public EstoqueView(MainApplication mainApplication, Employee funcionarioLogado, ProductController produtoController,
@@ -238,24 +238,24 @@ public class EstoqueView {
         this.tabelaProdutos = new TableView<>();
 
         // Colunas
-        TableColumn<Product, Integer> colId = new TableColumn<>("ID");
+        TableColumn<ProductTableDto, Integer> colId = new TableColumn<>("ID");
         colId.setCellValueFactory(new PropertyValueFactory<>("idProduto"));
         colId.setStyle("-fx-alignment: CENTER;");
         colId.setResizable(false);
 
-        TableColumn<Product, String> colNome = new TableColumn<>("Nome");
+        TableColumn<ProductTableDto, String> colNome = new TableColumn<>("Nome");
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colNome.setStyle("-fx-alignment: CENTER;");
 
-        TableColumn<Product, String> colCodigoProduto = new TableColumn<>("Código de Barras");
+        TableColumn<ProductTableDto, String> colCodigoProduto = new TableColumn<>("Código de Barras");
         colCodigoProduto.setCellValueFactory(new PropertyValueFactory<>("codigoDeBarras"));
         colCodigoProduto.setStyle("-fx-alignment: CENTER;");
 
-        TableColumn<Product, Double> colPreco = new TableColumn<>("Preço (R$)");
+        TableColumn<ProductTableDto, BigDecimal> colPreco = new TableColumn<>("Preço (R$)");
         colPreco.setCellValueFactory(new PropertyValueFactory<>("precoVenda"));
-        colPreco.setCellFactory(column -> new TableCell<Product, Double>() {
+        colPreco.setCellFactory(column -> new TableCell<ProductTableDto, BigDecimal>() {
             @Override
-            protected void updateItem(Double preco, boolean empty) {
+            protected void updateItem(BigDecimal preco, boolean empty) {
                 super.updateItem(preco, empty);
                 if (empty || preco == null) {
                     setText(null);
@@ -266,17 +266,19 @@ public class EstoqueView {
         });
         colPreco.setStyle("-fx-alignment: CENTER;");
 
-        TableColumn<Product, Double> colDesconto = new TableColumn<>("Desconto");
+        TableColumn<ProductTableDto, BigDecimal> colDesconto = new TableColumn<>("Desconto");
         colDesconto.setCellValueFactory(new PropertyValueFactory<>("desconto"));
-        colDesconto.setCellFactory(column -> new TableCell<Product, Double>() {
+        colDesconto.setCellFactory(column -> new TableCell<ProductTableDto, BigDecimal>() {
             @Override
-            protected void updateItem(Double desconto, boolean empty) {
+            protected void updateItem(BigDecimal desconto, boolean empty) {
                 super.updateItem(desconto, empty);
                 if (empty || desconto == null) {
                     setText(null);
                 } else {
-                    if (desconto >= 0.001 && desconto <= 1.0) {
-                        setText(String.format(Locale.of("pt", "BR"), "%.2f%%", desconto * 100));
+                        if (desconto.compareTo(BigDecimal.valueOf(0.001)) >= 0
+                            && desconto.compareTo(BigDecimal.ONE) <= 0) {
+                        setText(String.format(Locale.of("pt", "BR"), "%.2f%%",
+                            desconto.multiply(BigDecimal.valueOf(100))));
                     } else {
                         setText("0,00%");
                     }
@@ -285,47 +287,47 @@ public class EstoqueView {
         });
         colDesconto.setStyle("-fx-alignment: CENTER;");
 
-        TableColumn<Product, LocalDateTime> colValidade = new TableColumn<>("Validade");
+        TableColumn<ProductTableDto, Date> colValidade = new TableColumn<>("Validade");
         colValidade.setCellValueFactory(new PropertyValueFactory<>("validade"));
-        colValidade.setCellFactory(column -> new TableCell<Product, LocalDateTime>() {
+        colValidade.setCellFactory(column -> new TableCell<ProductTableDto, Date>() {
             @Override
-            protected void updateItem(LocalDateTime validade, boolean empty) {
+            protected void updateItem(Date validade, boolean empty) {
                 super.updateItem(validade, empty);
                 if (empty || validade == null) {
                     setText(null);
                 } else {
-                    setText(validade.format(dateFormatter));
+                    setText(new SimpleDateFormat("dd/MM/yyyy").format(validade));
                 }
             }
         });
         colValidade.setStyle("-fx-alignment: CENTER;");
 
-        TableColumn<Product, Double> colQtdEstoqueOuPeso = new TableColumn<>("Estoque");
+        TableColumn<ProductTableDto, BigDecimal> colQtdEstoqueOuPeso = new TableColumn<>("Estoque");
         colQtdEstoqueOuPeso.setCellValueFactory(new PropertyValueFactory<>("quantidadeOuPesoEmEstoque"));
 
-        colQtdEstoqueOuPeso.setCellFactory(new Callback<TableColumn<Product, Double>, TableCell<Product, Double>>() {
+        colQtdEstoqueOuPeso.setCellFactory(new Callback<TableColumn<ProductTableDto, BigDecimal>, TableCell<ProductTableDto, BigDecimal>>() {
 
             // Define os formatadores fora do método para melhor performance
             private final NumberFormat decimalFormat = new DecimalFormat("0.00"); // Para KG, L, G
             private final NumberFormat integerFormat = new DecimalFormat("0"); // Para UN, PCT
 
             @Override
-            public TableCell<Product, Double> call(TableColumn<Product, Double> param) {
-                return new TableCell<Product, Double>() {
+            public TableCell<ProductTableDto, BigDecimal> call(TableColumn<ProductTableDto, BigDecimal> param) {
+                return new TableCell<ProductTableDto, BigDecimal>() {
                     @Override
-                    protected void updateItem(Double item, boolean empty) {
+                    protected void updateItem(BigDecimal item, boolean empty) {
                         super.updateItem(item, empty);
 
                         if (empty || item == null) {
                             setText(null);
                         } else {
-                            Product produto = getTableView().getItems().get(getIndex());
+                            ProductTableDto produto = getTableView().getItems().get(getIndex());
                             String unidade = produto.getCategoria().getUnit();
                             String quantidadeFormatada;
                             if (produto.getCategoria() == Category.HORTI) {
                                 quantidadeFormatada = decimalFormat.format(item);
                             } else {
-                                quantidadeFormatada = integerFormat.format(Math.round(item));
+                                quantidadeFormatada = integerFormat.format(item.setScale(0, java.math.RoundingMode.HALF_UP));
                             }
                             setText(quantidadeFormatada + " " + unidade);
                         }
@@ -335,11 +337,11 @@ public class EstoqueView {
                 };
             }
         });
-        TableColumn<Product, String> colCategoria = new TableColumn<>("Categoria");
+        TableColumn<ProductTableDto, Category> colCategoria = new TableColumn<>("Categoria");
         colCategoria.setCellValueFactory(new PropertyValueFactory<>("categoria"));
         colCategoria.setStyle("-fx-alignment: CENTER;");
 
-        TableColumn<Product, Void> colAcoes = new TableColumn<>("Ações");
+        TableColumn<ProductTableDto, Void> colAcoes = new TableColumn<>("Ações");
         colAcoes.setPrefWidth(150);
         colAcoes.setResizable(false);
 
@@ -358,8 +360,8 @@ public class EstoqueView {
                     btnEditar.setCursor(Cursor.DEFAULT);
                 });
                 btnEditar.setOnAction(event -> {
-                    Product produto = getTableView().getItems().get(getIndex());
-                    EditarProdutoDialog.show(mainApplication.getPrimaryStage(), produto, this::atualizarTabelaCompleta);
+                    ProductTableDto produto = getTableView().getItems().get(getIndex());
+                    EditarProdutoDialog.show(mainApplication.getPrimaryStage(), produto, EstoqueView.this::atualizarTabelaCompleta);
                 });
 
                 btnExcluir.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold;");
@@ -372,18 +374,18 @@ public class EstoqueView {
                     btnExcluir.setCursor(Cursor.DEFAULT);
                 });
                 btnExcluir.setOnAction(event -> {
-                    Product produto = getTableView().getItems().get(getIndex());
+                    ProductTableDto produto = getTableView().getItems().get(getIndex());
                     ConfirmarDialog.show(
                             mainApplication.getPrimaryStage(),
                             "Tem certeza que deseja excluir este produto?",
                             produto.getNome(),
                             "Esta ação é irreversível!",
                             (itemExcluidoNome) -> {
-                                if (this.produtoController.delete(produto.getIdProduto())) {
-                                    this.tabelaProdutos.getItems().remove(produto);
-                                    this.bancoQtdEstoque
+                                if (EstoqueView.this.produtoController.delete(produto.getIdProduto())) {
+                                    EstoqueView.this.tabelaProdutos.getItems().remove(produto);
+                                    EstoqueView.this.bancoQtdEstoque
                                             .setText(String
-                                                    .valueOf(this.estoqueController.produtosCadastradosNoEstoque(1)));
+                                                    .valueOf(EstoqueView.this.estoqueController.produtosCadastradosNoEstoque(1)));
                                     AlertUtils.showSuccess("Sucesso", "Produto Excluído",
                                             "Produto" + itemExcluidoNome + " excluído com sucesso!");
                                 } else {
@@ -404,8 +406,7 @@ public class EstoqueView {
         });
 
         this.tabelaProdutos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        this.tabelaProdutos.getColumns().addAll(colId, colNome, colCodigoProduto, colPreco, colDesconto, colValidade,
-                colQtdEstoqueOuPeso, colCategoria, colAcoes);
+        this.tabelaProdutos.getColumns().addAll(colId, colNome, colCodigoProduto, colPreco, colDesconto, colValidade, colQtdEstoqueOuPeso, colCategoria, colAcoes);
 
         this.atualizarTabelaCompleta();
 
