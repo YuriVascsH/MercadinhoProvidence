@@ -23,5 +23,6 @@ public class ProductTableDto {
     private BigDecimal precoVenda;
     private Date validade;
     private BigDecimal quantOuPesoEmEstoque;    
+    private BigDecimal desconto;
 
 }
