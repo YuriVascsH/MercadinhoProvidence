@@ -343,8 +343,6 @@ public class EstoqueView {
         colAcoes.setPrefWidth(150);
         colAcoes.setResizable(false);
 
-        EstoqueView this = this;
-
         colAcoes.setCellFactory(coluna -> new TableCell<>() {
             private final Button btnEditar = new Button("Editar");
             private final Button btnExcluir = new Button("Excluir");
