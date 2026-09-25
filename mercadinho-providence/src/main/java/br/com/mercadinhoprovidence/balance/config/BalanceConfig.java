@@ -6,20 +6,15 @@ public class BalanceConfig {
     private final int baudRate;
     private final int dataBits;
     private final int stopBits;
-    private final int parity;
+    private final String parity;
 
-    public BalanceConfig(
-            String porta,
-            int baudRate,
-            int dataBits,
-            int stopBits,
-            int parity) {
-
+    public BalanceConfig(String porta) {
         this.porta = porta;
-        this.baudRate = baudRate;
-        this.dataBits = dataBits;
-        this.stopBits = stopBits;
-        this.parity = parity;
+        this.baudRate = 9600;
+        this.dataBits = 8;
+        this.stopBits = 1;
+        this.parity = "none";
+
     }
 
     public String getPorta() {
@@ -38,7 +33,7 @@ public class BalanceConfig {
         return stopBits;
     }
 
-    public int getParity() {
+    public String getParity() {
         return parity;
     }
 }
