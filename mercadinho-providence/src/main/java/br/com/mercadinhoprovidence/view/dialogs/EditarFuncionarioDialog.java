@@ -23,7 +23,7 @@ import java.util.Optional;
 import br.com.mercadinhoprovidence.controller.FuncionarioController;
 import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioResponseDto;
 import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioUpdateDto;
-import br.com.mercadinhoprovidence.model.enums.Cargo;
+import br.com.mercadinhoprovidence.model.enums.JobTitle;
 //import br.com.mercadinhoprovidence.printer.Impressora;
 import br.com.mercadinhoprovidence.util.AlertUtils;
 import br.com.mercadinhoprovidence.util.InputUtils;
@@ -90,9 +90,9 @@ public class EditarFuncionarioDialog {
         }
         dpDataNascimento.setStyle(editableStyle);
 
-        ComboBox<Cargo> cbCargo = new ComboBox<>();
-        cbCargo.getItems().addAll(Cargo.values());
-        cbCargo.setValue(funcionario.getCargo());
+        ComboBox<JobTitle> cbCargo = new ComboBox<>();
+        cbCargo.getItems().addAll(JobTitle.values());
+        cbCargo.setValue(funcionario.getJobTitle());
         cbCargo.setStyle(editableStyle);
         cbCargo.setPrefWidth(250);
 
@@ -200,7 +200,7 @@ public class EditarFuncionarioDialog {
                 dadosParaAtualizar.setEmail(email);
                 dadosParaAtualizar.setEndereco(endereco);
                 dadosParaAtualizar.setSalario(salario);
-                dadosParaAtualizar.setCargo(cbCargo.getValue());
+                dadosParaAtualizar.setJobTitle(cbCargo.getValue());
                 dadosParaAtualizar.setAtivo(cbAtivo.isSelected());
 
                 // Passar o id + os dados de atualização e retornar um optional
