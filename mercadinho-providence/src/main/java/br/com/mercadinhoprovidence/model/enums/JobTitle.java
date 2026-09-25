@@ -24,4 +24,13 @@ public enum JobTitle {
 		}
 		throw new IllegalArgumentException("Cargo inválido: " + text);
 	}
+
+    public String getJobTitle() {
+        return jobTitle;
+    }
+
+    public void setJobTitle(String jobTitle) {
+        this.jobTitle = jobTitle;
+    }
+
 }
