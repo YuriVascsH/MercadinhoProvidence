@@ -3,37 +3,86 @@ package br.com.mercadinhoprovidence.balance.serial;
 import br.com.mercadinhoprovidence.balance.config.BalanceConfig;
 import br.com.mercadinhoprovidence.balance.exception.BalanceException;
 
+import com.fazecast.jSerialComm.SerialPort;
+
 public class SerialConnection {
 
     private final BalanceConfig config;
 
-    private boolean connected;
+    private SerialPort serialPort;
 
     public SerialConnection(BalanceConfig config) {
         this.config = config;
     }
 
     public void connect() {
-        // Implementaremos a comunicação com jSerialComm aqui.
-        connected = true;
+
+        if (isConnected()) {
+            return;
+        }
+
+        serialPort = SerialPort.getCommPort(config.getPorta());
+
+        serialPort.setComPortParameters(
+                config.getBaudRate(),
+                config.getDataBits(),
+                config.getStopBits(),
+                SerialPort.NO_PARITY
+        );
+
+        serialPort.setComPortTimeouts(
+                SerialPort.TIMEOUT_READ_BLOCKING,
+                1000,
+                0
+        );
+
+        if (!serialPort.openPort()) {
+            serialPort = null;
+
+            throw new BalanceException(
+                    "Não foi possível abrir a porta " + config.getPorta()
+            );
+        }
     }
 
     public void disconnect() {
-        // Implementaremos o fechamento da porta aqui.
-        connected = false;
+
+        if (serialPort != null && serialPort.isOpen()) {
+            serialPort.closePort();
+        }
+
+        serialPort = null;
     }
 
     public boolean isConnected() {
-        return connected;
+
+        return serialPort != null && serialPort.isOpen();
     }
 
     public String read() {
-        if (!connected) {
-            throw new BalanceException("A balança não está conectada.");
+
+        if (!isConnected()) {
+            throw new BalanceException(
+                    "A balança não está conectada."
+            );
         }
 
-        // Implementaremos a leitura da porta serial aqui.
-        return "";
+        byte[] buffer = new byte[64];
+
+        int bytesRead = serialPort.readBytes(
+                buffer,
+                buffer.length
+        );
+
+        if (bytesRead <= 0) {
+            return "";
+        }
+
+        return new String(
+                buffer,
+                0,
+                bytesRead
+        ).trim();
     }
 
     public BalanceConfig getConfig() {
