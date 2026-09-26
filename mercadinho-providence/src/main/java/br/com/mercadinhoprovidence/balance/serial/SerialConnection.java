@@ -27,21 +27,19 @@ public class SerialConnection {
                 config.getBaudRate(),
                 config.getDataBits(),
                 config.getStopBits(),
-                SerialPort.NO_PARITY
-        );
+                SerialPort.NO_PARITY);
 
         serialPort.setComPortTimeouts(
                 SerialPort.TIMEOUT_READ_BLOCKING,
                 1000,
-                0
-        );
+                0);
 
         if (!serialPort.openPort()) {
             serialPort = null;
 
             throw new BalanceException(
-                    "Não foi possível abrir a porta " + config.getPorta()
-            );
+                    "Não foi possível abrir a porta "
+                            + config.getPorta());
         }
     }
 
@@ -56,33 +54,43 @@ public class SerialConnection {
 
     public boolean isConnected() {
 
-        return serialPort != null && serialPort.isOpen();
+        return serialPort != null
+                && serialPort.isOpen();
     }
 
-    public String read() {
+    public byte[] read() {
 
         if (!isConnected()) {
             throw new BalanceException(
-                    "A balança não está conectada."
-            );
+                    "A balança não está conectada.");
         }
 
-        byte[] buffer = new byte[64];
+        int available = serialPort.bytesAvailable();
+
+        if (available <= 0) {
+            return new byte[0];
+        }
+
+        byte[] buffer = new byte[available];
 
         int bytesRead = serialPort.readBytes(
                 buffer,
-                buffer.length
-        );
+                buffer.length);
 
         if (bytesRead <= 0) {
-            return "";
+            return new byte[0];
         }
 
-        return new String(
+        byte[] resultado = new byte[bytesRead];
+
+        System.arraycopy(
                 buffer,
                 0,
-                bytesRead
-        ).trim();
+                resultado,
+                0,
+                bytesRead);
+
+        return resultado;
     }
 
     public BalanceConfig getConfig() {

@@ -4,11 +4,14 @@ import java.math.BigDecimal;
 
 public class Weight {
 
-    private BigDecimal valor;
+    private final BigDecimal valor;
 
-    private boolean estabilizado;
+    private final boolean estabilizado;
 
-    public Weight(BigDecimal valor, boolean estabilizado) {
+    public Weight(
+            BigDecimal valor,
+            boolean estabilizado) {
+
         this.valor = valor;
         this.estabilizado = estabilizado;
     }
@@ -20,5 +23,4 @@ public class Weight {
     public boolean isEstabilizado() {
         return estabilizado;
     }
-
 }
