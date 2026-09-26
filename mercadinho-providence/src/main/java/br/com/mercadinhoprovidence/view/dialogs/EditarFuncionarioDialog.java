@@ -91,10 +91,10 @@ public class EditarFuncionarioDialog {
         dpDataNascimento.setStyle(editableStyle);
 
         ComboBox<JobTitle> cbCargo = new ComboBox<>();
-        cbCargo.getItems().addAll(JobTitle.values());
-        cbCargo.setValue(funcionario.getJobTitle());
-        cbCargo.setStyle(editableStyle);
-        cbCargo.setPrefWidth(250);
+        cbJobTitle.getItems().addAll(JobTitle.values());
+        cbJobTitle.setValue(funcionario.getJobTitle());
+        cbJobTitle.setStyle(editableStyle);
+        cbJobTitle.setPrefWidth(250);
 
         TextField tfSalario = customTextField(String.format(Locale.US, "%.2f", funcionario.getSalario()).replace('.', ','), true,"field-editable",250, "Salário(R$ 2.500,00)");
         InputUtils.setupNumericField(tfSalario, true, 20);
@@ -158,10 +158,10 @@ public class EditarFuncionarioDialog {
             // 1. Validação de campos OBRIGATÓRIOS (Nome, Telefone, Cargo)
             if (tfNome.getText().trim().isEmpty() ||
                     tfTelefone.getText().trim().isEmpty() ||
-                    cbCargo.getValue() == null) {
+                    cbJobTitle.getValue() == null) {
 
                 AlertUtils.showError("Campos Obrigatórios", "Erro de Preenchimento",
-                        "Por favor, preencha os campos obrigatórios: Nome, Telefone, Salário e Cargo.");
+                        "Por favor, preencha os campos obrigatórios: Nome, Telefone, Salário e JobTitle.");
                 return;
             }
 
@@ -200,7 +200,7 @@ public class EditarFuncionarioDialog {
                 dadosParaAtualizar.setEmail(email);
                 dadosParaAtualizar.setEndereco(endereco);
                 dadosParaAtualizar.setSalario(salario);
-                dadosParaAtualizar.setJobTitle(cbCargo.getValue());
+                dadosParaAtualizar.setJobTitle(cbJobTitle.getValue());
                 dadosParaAtualizar.setAtivo(cbAtivo.isSelected());
 
                 // Passar o id + os dados de atualização e retornar um optional

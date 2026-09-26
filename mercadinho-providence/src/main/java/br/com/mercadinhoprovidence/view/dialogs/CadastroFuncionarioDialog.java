@@ -3,7 +3,7 @@ package br.com.mercadinhoprovidence.view.dialogs;
 import br.com.mercadinhoprovidence.controller.FuncionarioController;
 import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioCreateDto;
 import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioResponseDto;
-import br.com.mercadinhoprovidence.model.enums.Cargo;
+import br.com.mercadinhoprovidence.model.enums.JobTitle;
 //import br.com.mercadinhoprovidence.printer.Impressora;
 import br.com.mercadinhoprovidence.util.AlertUtils;
 import br.com.mercadinhoprovidence.util.InputUtils;
@@ -295,9 +295,9 @@ public class CadastroFuncionarioDialog {
                     return;
                 }
 
-                Cargo cargoEnum;
+                JobTitle cargoEnum;
                 try {
-                    cargoEnum = Cargo.valueOf(cargoString.toUpperCase());
+                    cargoEnum = JobTitle.valueOf(cargoString.toUpperCase());
                 } catch (IllegalArgumentException ex) {
                     AlertUtils.showError("Erro de Cargo", "O cargo selecionado é inválido.");
                     return;

@@ -1,6 +1,6 @@
 package br.com.mercadinhoprovidence.dto.funcionario;
 
-import br.com.mercadinhoprovidence.model.enums.Cargo;
+import br.com.mercadinhoprovidence.model.enums.JobTitle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +17,7 @@ public class FuncionarioUpdateDto {
     private String telefone;
     private String email;
     private String endereco;
-    private Cargo cargo;
+    private JobTitle cargo;
     private BigDecimal salario;
     private Boolean ativo;
 

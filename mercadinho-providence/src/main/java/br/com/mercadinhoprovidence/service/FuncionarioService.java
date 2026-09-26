@@ -50,7 +50,7 @@ public class FuncionarioService {
         funcionario.setEmail(funcionarioCreateDto.getEmail());
         funcionario.setEndereco(funcionarioCreateDto.getEndereco());
         funcionario.setDataAdmissao(funcionarioCreateDto.getDataAdmissao());
-        funcionario.setCargo(funcionarioCreateDto.getCargo());
+        funcionario.setJobTitle(funcionarioCreateDto.getJobTitle());
         funcionario.setSalario(funcionarioCreateDto.getSalario());
         funcionario.setSenha(funcionarioCreateDto.getSenha());
         funcionario.setAtivo(funcionarioCreateDto.getAtivo());
@@ -75,7 +75,7 @@ public class FuncionarioService {
         funcionario.setTelefone(funcionarioUpdateDto.getTelefone());
         funcionario.setEmail(funcionarioUpdateDto.getEmail());
         funcionario.setEndereco(funcionarioUpdateDto.getEndereco());
-        funcionario.setCargo(funcionarioUpdateDto.getCargo());
+        funcionario.setJobTitle(funcionarioUpdateDto.getJobTitle());
         funcionario.setSalario(funcionarioUpdateDto.getSalario());
         funcionario.setAtivo(funcionarioUpdateDto.getAtivo());
 

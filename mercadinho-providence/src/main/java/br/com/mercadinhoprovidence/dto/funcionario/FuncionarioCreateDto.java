@@ -1,6 +1,6 @@
 package br.com.mercadinhoprovidence.dto.funcionario;
 
-import br.com.mercadinhoprovidence.model.enums.Cargo;
+import br.com.mercadinhoprovidence.model.enums.JobTitle;
 import br.com.mercadinhoprovidence.util.CodigoVerificadorUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,13 +23,13 @@ public class FuncionarioCreateDto {
     private String email;
     private String endereco;
     private LocalDate dataAdmissao;
-    private Cargo cargo;
+    private JobTitle cargo;
     private BigDecimal salario;
     private String senha;
     private Boolean ativo;
     private LocalDateTime ultimaVenda;
 
-    public FuncionarioCreateDto(String cpf, String nome, LocalDate dataNascimento, String telefone, String email, String endereco, LocalDate dataAdmissao, Cargo cargo, BigDecimal salario, String senha, Boolean ativo) {
+    public FuncionarioCreateDto(String cpf, String nome, LocalDate dataNascimento, String telefone, String email, String endereco, LocalDate dataAdmissao, JobTitle cargo, BigDecimal salario, String senha, Boolean ativo) {
         this.codigoVerificador = CodigoVerificadorUtil.gerarCodigoVerificador();
         this.cpf = cpf;
         this.nome = nome;

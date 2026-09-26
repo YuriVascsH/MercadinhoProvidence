@@ -30,7 +30,7 @@ public class FuncionarioTableDto {
         this.codigoFuncionario = funcionario.getCodigoVerificador();
         this.nome = funcionario.getNome();
         this.cpf = funcionario.getCpf();
-        this.cargo = funcionario.getCargo();
+        this.cargo = funcionario.getJobTitle();
         this.salario = funcionario.getSalario();
         this.dataAdmissao = funcionario.getDataAdmissao();
         this.ativo = funcionario.getAtivo();

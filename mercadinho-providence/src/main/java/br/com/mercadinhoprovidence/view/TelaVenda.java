@@ -7,7 +7,7 @@ import br.com.mercadinhoprovidence.model.Funcionario;
 import br.com.mercadinhoprovidence.model.ItemVenda;
 import br.com.mercadinhoprovidence.model.Product;
 import br.com.mercadinhoprovidence.model.Venda;
-import br.com.mercadinhoprovidence.model.enums.Cargo;
+import br.com.mercadinhoprovidence.model.enums.JobTitle;
 import br.com.mercadinhoprovidence.util.AlertUtils;
 import br.com.mercadinhoprovidence.util.TimeUtils;
 import br.com.mercadinhoprovidence.view.dialogs.TelaConfirmacaoVendaPagamentoView;
@@ -137,7 +137,7 @@ public class TelaVenda extends VBox {
             if (newScene != null) {
                 newScene.setOnKeyPressed(event -> {
                     if (event.getCode() == KeyCode.F3) {
-                        if (funcionarioLogado != null && funcionarioLogado.getCargo() == Cargo.GERENTE) {
+                        if (funcionarioLogado != null && funcionarioLogado.getJobTitle() == JobTitle.GERENTE) {
                             alternarModoRemocao();
                         } else {
                             solicitarAutorizacao();
@@ -845,7 +845,7 @@ public class TelaVenda extends VBox {
 
             Funcionario gerente = funcionarioController.buscarFuncionarioPorCodigo(codigoDigitado);
 
-            if (gerente != null && gerente.getCargo() == Cargo.GERENTE) {
+            if (gerente != null && gerente.getJobTitle() == JobTitle.GERENTE) {
                 // Código correto, permite a alteração do modo
                 alternarModoRemocao();
                 AlertUtils.showInfo("Autorizado", "Modo de remoção ativado com sucesso!");

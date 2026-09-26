@@ -52,7 +52,7 @@ public class FuncionarioDao {
             stmt.setString(6, f.getEmail());
             stmt.setString(7, f.getEndereco());
             stmt.setDate(8, Date.valueOf(f.getDataAdmissao()));
-            stmt.setString(9, f.getCargo().toString());
+            stmt.setString(9, f.getJobTitle().toString());
             stmt.setBigDecimal(10, f.getSalario());
             stmt.setString(11, f.getSenha());
             stmt.setBoolean(12, f.getAtivo());
@@ -150,7 +150,7 @@ public class FuncionarioDao {
             stmt.setString(5, f.getEndereco());
             stmt.setBigDecimal(6, f.getSalario());
             stmt.setBoolean(7, f.getAtivo());
-            stmt.setString(8, f.getCargo().name());
+            stmt.setString(8, f.getJobTitle().name());
             stmt.setInt(9, f.getIdFuncionario());
 
             int linhasAfetadas = stmt.executeUpdate();
@@ -354,7 +354,7 @@ public class FuncionarioDao {
         funcionario.setEmail(rs.getString("email"));
         funcionario.setEndereco(rs.getString("endereco"));
         funcionario.setDataAdmissao(rs.getDate("data_admissao").toLocalDate());
-        funcionario.setCargo(JobTitle.fromString(rs.getString("cargo")));
+        funcionario.setJobTitle(JobTitle.fromString(rs.getString("cargo")));
         funcionario.setSalario(rs.getBigDecimal("salario"));
         funcionario.setSenha(rs.getString("senha"));
         funcionario.setAtivo(rs.getBoolean("ativo"));
