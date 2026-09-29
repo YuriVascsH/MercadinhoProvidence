@@ -7,11 +7,14 @@ import javax.swing.ImageIcon;
 
 public final class ImagemUtil {
 
-    private ImagemUtil() {
-        throw new UnsupportedOperationException("Classe utilitária não deve ser instanciada");
+    public ImagemUtil() {
+        throw new UnsupportedOperationException("Classe utilitária, não deve ser instanciada");
     }
 
     /**
+     * 
+     * Método reponsável por realiazar o carregamento da imagem a partir do caminho informado.
+     * Define o tamanho da largura e altura.
      * 
      * @param clazz
      * @param path

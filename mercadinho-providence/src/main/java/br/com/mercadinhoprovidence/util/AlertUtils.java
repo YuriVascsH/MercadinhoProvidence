@@ -1,19 +1,8 @@
 package br.com.mercadinhoprovidence.util;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
-
-import java.util.Optional;
-
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-/**
- * Classe utilitária para exibir diferentes tipos de alertas na interface
- * gráfica do Swing. Simplifica a criação e exibição de mensagens
- * padronizadas.
- */
 public class AlertUtils {
 
     /**

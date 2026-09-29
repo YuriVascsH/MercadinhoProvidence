@@ -9,8 +9,8 @@ public final class TimeUtils {
 
     private static final DateTimeFormatter DEFAULT_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
-    private TimeUtils() {
-        throw new UnsupportedOperationException("Classe utilitária não deve ser instanciada");
+    public TimeUtils() {
+        throw new UnsupportedOperationException("Classe utilitária, não deve ser instanciada");
     }
 
     /**

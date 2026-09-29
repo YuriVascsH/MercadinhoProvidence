@@ -23,41 +23,50 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 
-public class InputUtils {
+public final class InputUtils {
 
-    public InputUtils(){}
+    public InputUtils() {
+        throw new UnsupportedOperationException("Classe utilitária, não deve ser instanciada.");
+    }
 
     // Formatter para datas no formato dd/MM/yyyy
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-  /**
-     * Aplica um DocumentFilter a um JTextField para limitar o número de caracteres e permitir apenas dígitos.
+    /**
+     * Aplica um DocumentFilter a um JTextField para limitar o número de caracteres
+     * e permitir apenas dígitos.
+     * 
      * @param textField O JTextField a ser limitado.
      * @param maxLength O número máximo de caracteres permitidos.
      */
     public static void limitDigitsNumber(JTextField textField, int maxLength) {
         ((AbstractDocument) textField.getDocument()).setDocumentFilter(new DocumentFilter() {
             @Override
-            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
-                if (string == null) return;
-                
+            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
+                    throws BadLocationException {
+                if (string == null)
+                    return;
+
                 // Junta o texto atual com o que está sendo inserido para checar o resultado
                 String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
                 String nextText = currentText.substring(0, offset) + string + currentText.substring(offset);
-                
+
                 if (nextText.matches("\\d*") && nextText.length() <= maxLength) {
                     super.insertString(fb, offset, string, attr);
                 }
             }
 
             @Override
-            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
-                if (text == null) text = "";
-                
-                // Mesma lógica de validação para quando o usuário substitui um texto ou digita normalmente
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
+                if (text == null)
+                    text = "";
+
+                // Mesma lógica de validação para quando o usuário substitui um texto ou digita
+                // normalmente
                 String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
                 String nextText = currentText.substring(0, offset) + text + currentText.substring(offset + length);
-                
+
                 if (nextText.matches("\\d*") && nextText.length() <= maxLength) {
                     super.replace(fb, offset, length, text, attrs);
                 }
@@ -69,7 +78,7 @@ public class InputUtils {
      * Valida se a senha tem o comprimento mínimo.
      *
      * @param minLength Tamnanho mínimo da senha.
-     * @param password A senha a ser validada.
+     * @param password  A senha a ser validada.
      * @return true se a senha é válida, false caso contrário.
      */
     public static boolean validatePassword(String password, int minLength) {
@@ -101,7 +110,8 @@ public class InputUtils {
     }
 
     /**
-     * Aplica um TextFormatter a um TextField para limitar o número de caracteres e permitir apenas dígitos.
+     * Aplica um TextFormatter a um TextField para limitar o número de caracteres e
+     * permitir apenas dígitos.
      *
      * @param textField O TextField ou PasswordField a ser limitado.
      * @param maxLength O número máximo de caracteres permitidos.
@@ -124,15 +134,11 @@ public class InputUtils {
      * @return true se o CPF é válido, false caso contrário.
      */
     public static boolean validateCPF(String cpf) {
-        // Remove caracteres não numéricos
         cpf = cpf.replaceAll("[^0-9]", "");
 
-        // Verifica se tem 11 dígitos e se não são todos iguais
-        if (cpf.length() != 11 || cpf.matches("(\\d)\\1{10}")) {
+        if (cpf.length() != 11 || cpf.matches("(\\d)\\1{10}"))
             return false;
-        }
 
-        // Calcula o primeiro dígito verificador
         int sum = 0;
         for (int i = 0; i < 9; i++) {
             sum += (cpf.charAt(i) - '0') * (10 - i);
@@ -140,10 +146,8 @@ public class InputUtils {
         int remainder = 11 - (sum % 11);
         int digit1 = (remainder == 10 || remainder == 11) ? 0 : remainder;
 
-        // Verifica o primeiro dígito
-        if (digit1 != (cpf.charAt(9) - '0')) {
+        if (digit1 != (cpf.charAt(9) - '0'))
             return false;
-        }
 
         // Calcula o segundo dígito verificador
         sum = 0;
@@ -166,9 +170,9 @@ public class InputUtils {
     public static void limitCharacters(TextField textField, int maxLength) {
         UnaryOperator<TextFormatter.Change> filter = change -> {
             String newText = change.getControlNewText();
-            if (newText.length() > maxLength) {
+            if (newText.length() > maxLength)
                 return null;
-            }
+
             return change;
         };
         textField.setTextFormatter(new TextFormatter<>(filter));
@@ -205,12 +209,14 @@ public class InputUtils {
                                 DateTimeFormatter tempFormatter = DateTimeFormatter.ofPattern("ddMMyyyy");
                                 return LocalDate.parse(cleanedString, tempFormatter);
                             } catch (DateTimeParseException e2) {
-                                System.err.println("Erro ao converter data '" + string + "' (formato ddmmyyyy): " + e2.getMessage());
+                                System.err.println("Erro ao converter data '" + string + "' (formato ddmmyyyy): "
+                                        + e2.getMessage());
                                 // Retorna null se falhar em ambos os formatos
                                 return null;
                             }
                         }
-                        System.err.println("Erro ao converter data '" + string + "' (formato dd/MM/yyyy): " + e1.getMessage());
+                        System.err.println(
+                                "Erro ao converter data '" + string + "' (formato dd/MM/yyyy): " + e1.getMessage());
                         return null; // Retorna nulo para indicar falha na conversão
                     }
                 }
@@ -220,15 +226,14 @@ public class InputUtils {
     }
 
     /**
-     * Configura um TextField para aceitar apenas valores numéricos (inteiros ou decimais com vírgula).
+     * Configura um TextField para aceitar apenas valores numéricos (inteiros ou
+     * decimais com vírgula).
      *
-     * @param textField O TextField a ser configurado.
+     * @param textField     O TextField a ser configurado.
      * @param allowDecimals Se true, permite decimais com vírgula.
-     * @param maxLength O número máximo de caracteres permitidos.
+     * @param maxLength     O número máximo de caracteres permitidos.
      */
     public static void setupNumericField(TextField textField, boolean allowDecimals, int maxLength) {
-        // Regex para validar a entrada numérica enquanto o usuário digita
-        // Permite números, e opcionalmente uma vírgula seguida de mais números se allowDecimals for true
         Pattern validPattern;
         if (allowDecimals) {
             // Permite dígitos, opcionalmente uma vírgula e dígitos após.
@@ -251,10 +256,11 @@ public class InputUtils {
             // 2. Valida o formato numérico
             if (newText.isEmpty() || validPattern.matcher(newText).matches()) {
                 // Impede múltiplos zeros à esquerda a menos que seja "0," ou "0"
-                if (!newText.equals("0") && !newText.equals("0,") && newText.startsWith("0") && newText.length() > 1 && !newText.contains(",")) {
+                if (!newText.equals("0") && !newText.equals("0,") && newText.startsWith("0") && newText.length() > 1
+                        && !newText.contains(",")) {
                     // Remove o zero inicial extra se não for 0. algo
                     change.setText(newText.substring(1));
-                    change.setCaretPosition(change.getControlCaretPosition() -1 ); // Ajusta o cursor
+                    change.setCaretPosition(change.getControlCaretPosition() - 1); // Ajusta o cursor
                     change.setAnchor(change.getControlAnchor() - 1); // Ajusta o âncora
                     return change;
                 }
@@ -265,7 +271,9 @@ public class InputUtils {
     }
 
     /**
-     * Converte uma String com vírgula para BigDecimal, utilizando o Locale brasileiro.
+     * Converte uma String com vírgula para BigDecimal, utilizando o Locale
+     * brasileiro.
+     * 
      * @param value A String a ser convertida (ex: "123,45").
      * @return O valor Double.
      * @throws NumberFormatException se a String não for um número válido.
@@ -287,6 +295,7 @@ public class InputUtils {
     /**
      * Converte um Double para String no formato brasileiro (vírgula como decimal),
      * com duas casas decimais.
+     * 
      * @param value O valor Double.
      * @return A String formatada (ex: "123,45").
      */
@@ -301,7 +310,8 @@ public class InputUtils {
 
     /**
      * Valida se uma string é um número válido (inteiro ou decimal).
-     * @param text A string a ser validada.
+     * 
+     * @param text          A string a ser validada.
      * @param allowDecimals Se true, permite números decimais.
      * @return True se a string é um número válido, false caso contrário.
      */
