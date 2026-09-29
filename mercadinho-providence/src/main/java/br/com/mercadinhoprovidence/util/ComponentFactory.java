@@ -13,12 +13,13 @@ import br.com.caelum.stella.validation.CPFValidator;
 
 public class ComponentFactory {
 
-    private ComponentFactory() {
+    public ComponentFactory() {
+        throw new UnsupportedOperationException("Classe utilitária, não deve ser instanciada.");
     }
 
     /**
-     * 
-     * @return
+     * Método reponsável por formatar os dados informados no campo.
+     * @return umc campo de texto formatado.
      */
     public static JFormattedTextField createTextFieldCpf() {
         JFormattedTextField txtCpf;
