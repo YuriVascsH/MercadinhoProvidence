@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter
 public class LoginResponseDto {
 
+    private Integer id;
     private String name;
     private Integer codeVerify;
     private JobTitle postion;
