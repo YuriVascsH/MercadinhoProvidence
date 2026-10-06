@@ -1,20 +1,22 @@
 package br.com.mercadinhoprovidence.printer;
 
 import br.com.mercadinhoprovidence.model.Venda;
-import br.com.mercadinhoprovidence.model.relatorio.ProdutosComEstoqueCritico;
-import br.com.mercadinhoprovidence.model.relatorio.ProdutosComValidadeProxima;
-import br.com.mercadinhoprovidence.model.relatorio.ProdutosMaisVendido;
-import br.com.mercadinhoprovidence.model.relatorio.RankDeOperadoresPorVendasTotais;
-import br.com.mercadinhoprovidence.model.relatorio.RelatorioVendasDiarias;
+import br.com.mercadinhoprovidence.model.report.CriticalStockProducts;
+import br.com.mercadinhoprovidence.model.report.NearingExpirationProducts;
+import br.com.mercadinhoprovidence.model.report.MostSoldProducts;
+import br.com.mercadinhoprovidence.model.report.TotalSalesRankOperators;
+import br.com.mercadinhoprovidence.model.report.DailySales;
+
 import javafx.scene.control.TableView;
 import br.com.mercadinhoprovidence.dao.FuncionarioDao;
 import br.com.mercadinhoprovidence.model.ItemVenda;
-import br.com.mercadinhoprovidence.model.Produto;
+import br.com.mercadinhoprovidence.model.Product;
 
 import com.fazecast.jSerialComm.SerialPort;
 
 import java.text.Normalizer;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -47,7 +49,7 @@ public class Impressora {
 		sb.append("-----------------------------\n");
 
 		for (ItemVenda item : venda.getItensVenda()) {
-			String nome = item.getNomeProduto();
+			String nome = item.getProduct().getNome();
 			double qtd = item.getQuantidadeOuPeso();
 			double unit = item.getPrecoUnitarioVenda();
 			double total = item.getTotalItem();
@@ -86,7 +88,7 @@ public class Impressora {
 		enviarParaImpressora(sb.toString());
 	}
 
-	public static void imprimirRelatorioVendasDiarias(TableView<RelatorioVendasDiarias> tabela) {
+	public static void imprimirDailySales(TableView<DailySales> tabela) {
 		if (tabela == null || tabela.getItems().isEmpty()) {
 			System.err.println("🚫 Nenhum dado para imprimir.");
 			return;
@@ -97,7 +99,7 @@ public class Impressora {
 		sb.append("RELATÓRIO DE VENDAS DIÁRIAS\n");
 		sb.append("-----------------------------\n");
 
-		for (RelatorioVendasDiarias r : tabela.getItems()) {
+		for (DailySales r : tabela.getItems()) {
 			sb.append("Data: ").append(r.getData().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))).append("\n");
 			sb.append("Operador: ").append(r.getOperador()).append("\n");
 			sb.append("Itens: ").append(r.getQuantidadeItens()).append("\n");
@@ -113,7 +115,7 @@ public class Impressora {
 		enviarParaImpressora(sb.toString());
 	}
 
-	public static void imprimirProdutosEstoqueCritico(TableView<ProdutosComEstoqueCritico> produtos) {
+	public static void imprimirProdutosEstoqueCritico(TableView<CriticalStockProducts> produtos) {
 		if (produtos == null || produtos.getItems().isEmpty()) {
 			System.err.println("🚫 Nenhum produto crítico para imprimir.");
 			return;
@@ -124,8 +126,8 @@ public class Impressora {
 		sb.append("PRODUTOS COM ESTOQUE CRÍTICO\n");
 		sb.append("-----------------------------\n");
 
-		for (ProdutosComEstoqueCritico p : produtos.getItems()) {
-			sb.append("Produto: ").append(p.getNomeProduto()).append("\n");
+		for (CriticalStockProducts p : produtos.getItems()) {
+			sb.append("Produto: ").append(p.getNome()).append("\n");
 			sb.append("Qtd: ").append(p.getQuantidadeEmEstoque()).append("\n");
 			sb.append("Validade: ")
 					.append(p.getValidade() != null
@@ -142,7 +144,7 @@ public class Impressora {
 		enviarParaImpressora(sb.toString());
 	}
 
-	public static void imprimirProdutosValidadeProxima(TableView<ProdutosComValidadeProxima> produtos) {
+	public static void imprimirProdutosValidadeProxima(TableView<NearingExpirationProducts> produtos) {
 		if (produtos == null || produtos.getItems().isEmpty()) {
 			System.err.println("🚫 Nenhum produto com validade próxima.");
 			return;
@@ -153,8 +155,8 @@ public class Impressora {
 		sb.append("VALIDADE PRÓXIMA\n");
 		sb.append("-----------------------------\n");
 
-		for (ProdutosComValidadeProxima p : produtos.getItems()) {
-			sb.append("Produto: ").append(p.getNomeProduto()).append("\n");
+		for (NearingExpirationProducts p : produtos.getItems()) {
+			sb.append("Produto: ").append(p.getNome()).append("\n");
 			sb.append("Qtd: ").append(p.getQuantidadeEmEstoque()).append("\n");
 			sb.append("Validade: ").append(p.getValidade().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
 					.append("\n");
@@ -167,7 +169,7 @@ public class Impressora {
 		enviarParaImpressora(sb.toString());
 	}
 
-	public static void imprimirProdutosMaisVendidos(TableView<ProdutosMaisVendido> produtos) {
+	public static void imprimirMostSoldProducts(TableView<MostSoldProducts> produtos) {
 		if (produtos == null || produtos.getItems().isEmpty()) {
 			System.err.println("🚫 Nenhum produto vendido para imprimir.");
 			return;
@@ -178,8 +180,8 @@ public class Impressora {
 		sb.append("PRODUTOS MAIS VENDIDOS\n");
 		sb.append("-----------------------------\n");
 
-		for (ProdutosMaisVendido p : produtos.getItems()) {
-			sb.append("Produto: ").append(p.getNomeProduto()).append("\n");
+		for (MostSoldProducts p : produtos.getItems()) {
+			sb.append("Produto: ").append(p.getNome()).append("\n");
 			sb.append("Qtd Vendida: ").append(p.getQuantidadeVendida()).append("\n");
 			sb.append(String.format("Faturamento: R$ %.2f\n", p.getFaturamentoTotal()));
 			sb.append("Código: ").append(p.getCodigoDeBarras()).append("\n");
@@ -192,7 +194,7 @@ public class Impressora {
 		enviarParaImpressora(sb.toString());
 	}
 
-	public static void imprimirRankingOperadores(TableView<RankDeOperadoresPorVendasTotais> ranking) {
+	public static void imprimirRankingOperadores(TableView<TotalSalesRankOperators> ranking) {
 		if (ranking == null || ranking.getItems().isEmpty()) {
 			System.err.println("🚫 Nenhum operador para imprimir.");
 			return;
@@ -203,7 +205,7 @@ public class Impressora {
 		sb.append("RANKING DE OPERADORES\n");
 		sb.append("-----------------------------\n");
 
-		for (RankDeOperadoresPorVendasTotais r : ranking.getItems()) {
+		for (TotalSalesRankOperators r : ranking.getItems()) {
 			sb.append("Operador: ").append(r.getNomeOperador()).append("\n");
 			sb.append("Vendas: ").append(r.getTotalVendas()).append("\n");
 			sb.append(String.format("Total: R$ %.2f\n", r.getValorTotalVendido()));
@@ -319,7 +321,7 @@ public class Impressora {
 		enviarParaImpressora(sb.toString());
 	}
 
-	public static void imprimirRelatorioEstoque(List<Produto> produtos) {
+	public static void imprimirRelatorioEstoque(List<Product> produtos) {
 		if (produtos == null || produtos.isEmpty()) {
 			System.err.println("🚫 Nenhum produto para imprimir.");
 			return;
@@ -333,15 +335,15 @@ public class Impressora {
 				"Código", "Produto", "Qtd", "Validade"));
 		sb.append("-----------------------------\n");
 
-		for (Produto p : produtos) {
+		for (Product p : produtos) {
 			String codigoBarras = p.getCodigoDeBarras();
 			String nomeProduto = p.getNome();
-			double quantidade = p.getQuantidadeOuPesoEmEstoque();
+			BigDecimal quantidade = p.getQuantOuPesoEmEstoque();
 			String validade = p.getValidade() != null
-					? p.getValidade().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+					? new java.text.SimpleDateFormat("dd/MM/yyyy").format(p.getValidade())
 					: "N/A";
 
-			sb.append(String.format("%-15s %-20s %-10d %-15s\n",
+			sb.append(String.format("%-15s %-20s %-10.2f %-15s\n",
 					codigoBarras, nomeProduto, quantidade, validade));
 		}
 
