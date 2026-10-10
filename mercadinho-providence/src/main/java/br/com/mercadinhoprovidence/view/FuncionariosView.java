@@ -4,7 +4,7 @@
 // import br.com.mercadinhoprovidence.controller.FuncionarioController;
 // import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioTableDto;
 // import br.com.mercadinhoprovidence.dto.login.LoginResponseDto;
-// import br.com.mercadinhoprovidence.model.Funcionario;
+// import br.com.mercadinhoprovidence.model.Employee;
 // import br.com.mercadinhoprovidence.util.AlertUtils;
 // import br.com.mercadinhoprovidence.util.FormatUtils;
 // import br.com.mercadinhoprovidence.view.component.TitleComponents;

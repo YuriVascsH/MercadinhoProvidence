@@ -3,7 +3,7 @@
 // import br.com.mercadinhoprovidence.Service.FuncionarioService;
 // import br.com.mercadinhoprovidence.dao.FuncionarioDao;
 // import br.com.mercadinhoprovidence.dto.FuncionarioTableDto;
-// import br.com.mercadinhoprovidence.model.Funcionario;
+// import br.com.mercadinhoprovidence.model.Employee;
 // import br.com.mercadinhoprovidence.model.enums.JobTitle;
 // import org.junit.jupiter.api.Test;
 // import org.junit.jupiter.api.extension.ExtendWith;

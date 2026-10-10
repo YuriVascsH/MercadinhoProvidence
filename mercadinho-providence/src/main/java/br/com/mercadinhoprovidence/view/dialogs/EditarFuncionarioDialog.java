@@ -1,6 +1,6 @@
 package br.com.mercadinhoprovidence.view.dialogs;
 
-import br.com.mercadinhoprovidence.model.Funcionario;
+import br.com.mercadinhoprovidence.model.Employee;
 import javafx.scene.Node;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;

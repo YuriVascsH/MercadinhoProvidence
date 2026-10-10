@@ -3,7 +3,7 @@ package br.com.mercadinhoprovidence.view;
 import br.com.mercadinhoprovidence.controller.FuncionarioController;
 import br.com.mercadinhoprovidence.controller.ProductController;
 import br.com.mercadinhoprovidence.controller.VendaController;
-import br.com.mercadinhoprovidence.model.Funcionario;
+import br.com.mercadinhoprovidence.model.Employee;
 import br.com.mercadinhoprovidence.model.ItemVenda;
 import br.com.mercadinhoprovidence.model.Product;
 import br.com.mercadinhoprovidence.model.Venda;
