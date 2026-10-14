@@ -46,7 +46,7 @@ public class TelaVenda extends VBox {
     private Stage primaryStage;
     private Consumer<Funcionario> onReturnToInitialScreen;
     private ProductController produtoController;
-    private Funcionario funcionarioLogado;
+    private Employee funcionarioLogado;
     private FuncionarioController funcionarioController;
     private VendaController vendaController;
 
@@ -63,7 +63,7 @@ public class TelaVenda extends VBox {
      *                                realização da venda.
      */
     public TelaVenda(Stage primaryStage, Consumer<Funcionario> onReturnToInitialScreen,
-            Funcionario funcionarioLogado, VendaController vendaController) {
+            Employee funcionarioLogado, VendaController vendaController) {
 
         this.primaryStage = primaryStage;
         this.onReturnToInitialScreen = onReturnToInitialScreen;
@@ -285,7 +285,7 @@ public class TelaVenda extends VBox {
                 return;
             }
 
-            Produto produto = produtoController.buscarPorCodigo(codigoBarras);
+            Product produto = produtoController.findByCode(codigoBarras);
 
             if (produto != null) {
                 if (modoRemocaoAtivo) {
@@ -843,7 +843,7 @@ public class TelaVenda extends VBox {
         if (result.isPresent()) {
             String codigoDigitado = result.get().trim();
 
-            Funcionario gerente = funcionarioController.buscarFuncionarioPorCodigo(codigoDigitado);
+            Employee gerente = funcionarioController.buscarFuncionarioPorCodigo(codigoDigitado);
 
             if (gerente != null && gerente.getJobTitle() == JobTitle.GERENTE) {
                 // Código correto, permite a alteração do modo
