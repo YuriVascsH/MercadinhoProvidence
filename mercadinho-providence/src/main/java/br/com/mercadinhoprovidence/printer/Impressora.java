@@ -13,6 +13,7 @@ import br.com.mercadinhoprovidence.model.ItemVenda;
 import br.com.mercadinhoprovidence.model.Product;
 
 import com.fazecast.jSerialComm.SerialPort;
+import br.com.mercadinhoprovidence.config.HardwareConfig;
 
 import java.text.Normalizer;
 import java.io.OutputStream;
@@ -34,7 +35,7 @@ public class Impressora {
 	}
 
 	public static void imprimirCupom(Venda venda) {
-		if (venda == null || venda.getItensVenda() == null || venda.getPagamento() == null) {
+		if (venda == null || venda.getItensVenda() == null || venda.getForma() == null) {
 			System.err.println("❌ Venda, itens ou pagamento estão nulos. Não é possível imprimir.");
 			return;
 		}
@@ -220,7 +221,7 @@ public class Impressora {
 	}
 
 	private static void enviarParaImpressora(String texto) {
-		String porta = "COM4";
+		String porta = HardwareConfig.getPortaBalanca();
 		SerialPort comPort = SerialPort.getCommPort(porta);
 		comPort.setComPortParameters(19200, 8, SerialPort.ONE_STOP_BIT, SerialPort.NO_PARITY);
 		comPort.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0, 0);
