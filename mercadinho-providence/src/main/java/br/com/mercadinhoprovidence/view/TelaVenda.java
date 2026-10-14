@@ -44,7 +44,7 @@ public class TelaVenda extends VBox {
     private TextField tfCodigoProduto;
     private TextField tfQuantidade;
     private Stage primaryStage;
-    private Consumer<Funcionario> onReturnToInitialScreen;
+    private Consumer<Employee> onReturnToInitialScreen;
     private ProductController produtoController;
     private Employee funcionarioLogado;
     private FuncionarioController funcionarioController;
@@ -62,7 +62,7 @@ public class TelaVenda extends VBox {
      * @param funcionarioLogado       Funcionário atualmente logado para a
      *                                realização da venda.
      */
-    public TelaVenda(Stage primaryStage, Consumer<Funcionario> onReturnToInitialScreen,
+    public TelaVenda(Stage primaryStage, Consumer<Employee> onReturnToInitialScreen,
             Employee funcionarioLogado, VendaController vendaController) {
 
         this.primaryStage = primaryStage;
@@ -71,7 +71,7 @@ public class TelaVenda extends VBox {
         this.vendaController = vendaController;
 
         this.funcionarioController = new FuncionarioController();
-        this.produtoController = new ProdutoController();
+        this.produtoController = new ProductController();
 
         this.balanceConfig = new BalanceConfig();
         this.balance = new BalanceRamuza(balanceConfig);
