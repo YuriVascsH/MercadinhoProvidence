@@ -10,7 +10,7 @@ import br.com.mercadinhoprovidence.model.Venda;
 import br.com.mercadinhoprovidence.model.enums.JobTitle;
 import br.com.mercadinhoprovidence.util.AlertUtils;
 import br.com.mercadinhoprovidence.util.TimeUtils;
-import br.com.mercadinhoprovidence.view.dialogs.TelaConfirmacaoVendaPagamentoView;
+import br.com.mercadinhoprovidence.view.dialogs.TelaConfirmacaoVendaPagamentoView; // adicionada classe vazia para sanar erro de compilação
 import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -510,7 +510,7 @@ public class TelaVenda extends VBox {
         return parteEsquerdaBox;
     }
 
-    private void processarProdutoEscaneado(Produto produto) {
+    private void processarProdutoEscaneado(Product produto) {
         Venda vendaAtual = this.vendaController.getVendaAtual();
 
         Optional<ItemVenda> itemVendaExistenteOptional = vendaAtual.getItensVenda().stream()
@@ -592,7 +592,7 @@ public class TelaVenda extends VBox {
         }
     }
 
-    private Double solicitarAutorizacaoEQuantidade(Produto produto, Double estoqueDisponivel,
+    private Double solicitarAutorizacaoEQuantidade(Product produto, Double estoqueDisponivel,
             Double quantidadeDesejada) {
         TextInputDialog dialog = new TextInputDialog(String.valueOf(quantidadeDesejada));
         dialog.setTitle("Autorização Necessária");
