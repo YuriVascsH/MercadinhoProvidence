@@ -96,3 +96,5 @@ config/local.properties
 # ====================================================================
 .DS_Store
 Thumbs.db
+
+effective-pom*
