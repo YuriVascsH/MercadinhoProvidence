@@ -843,7 +843,15 @@ public class TelaVenda extends VBox {
         if (result.isPresent()) {
             String codigoDigitado = result.get().trim();
 
-            Employee gerente = funcionarioController.buscarFuncionarioPorCodigo(codigoDigitado);
+            Integer codigo;
+            try {
+                codigo = Integer.valueOf(codigoDigitado);
+            } catch (NumberFormatException e) {
+                AlertUtils.showError("Acesso Negado", "Código de gerente inválido.");
+                return;
+            }
+
+            Employee gerente = funcionarioController.buscarPorCodigoVerificador(codigo);
 
             if (gerente != null && gerente.getCargo() == JobTitle.GERENTE) {
                 // Código correto, permite a alteração do modo
