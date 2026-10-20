@@ -6,10 +6,12 @@ import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioResponseDto;
 import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioTableDto;
 import br.com.mercadinhoprovidence.dto.funcionario.FuncionarioUpdateDto;
 import br.com.mercadinhoprovidence.model.Employee;
+import br.com.mercadinhoprovidence.model.enums.JobTitle;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Map;
 
 public class FuncionarioService {
 
@@ -69,7 +71,8 @@ public class FuncionarioService {
         return funcionarioDao.buscarPorId(id);
     }
 
-    public Optional<FuncionarioResponseDto> atualizar(Integer id, FuncionarioUpdateDto funcionarioUpdateDto) throws SQLException {
+    public Optional<FuncionarioResponseDto> atualizar(Integer id, FuncionarioUpdateDto funcionarioUpdateDto)
+            throws SQLException {
         Employee funcionario = funcionarioDao.buscarPorId(id);
         funcionario.setNome(funcionarioUpdateDto.getNome());
         funcionario.setTelefone(funcionarioUpdateDto.getTelefone());
@@ -81,4 +84,61 @@ public class FuncionarioService {
 
         return funcionarioDao.atualizar(funcionario);
     }
+
+    // Novos métodos
+
+    /**
+     * Lista funcionários filtrando pelo cargo.
+     *
+     * @param cargo cargo utilizado para filtrar os funcionários
+     * @return lista de funcionários convertidos para FuncionarioTableDto
+     */
+    public List<FuncionarioTableDto> listarPorCargo(JobTitle cargo) {
+        List<Employee> funcionarios = funcionarioDao.listarPorCargo(cargo);
+
+        return funcionarios.stream()
+                .map(FuncionarioTableDto::new)
+                .toList();
+    }
+
+    /**
+     * Busca um funcionário pelo ID e senha.
+     *
+     * @param id    identificador do funcionário
+     * @param senha senha do funcionário
+     * @return funcionário encontrado ou null
+     */
+    public Employee buscarPorIdSenha(Integer id, String senha) {
+        return funcionarioDao.buscarPorIdSenha(id, senha);
+    }
+
+    /**
+     * Busca um funcionário pelo código verificador.
+     *
+     * @param codigoVerificador código verificador do funcionário
+     * @return funcionário encontrado ou null
+     */
+    public Employee buscarPorCodigoVerificador(Integer codigoVerificador) {
+        return funcionarioDao.buscarPorCodigoVerificador(codigoVerificador);
+    }
+
+    /**
+     * Retorna um mapa contendo o ID e o nome de cada funcionário.
+     *
+     * @return mapa com ID como chave e nome como valor
+     */
+    public Map<Integer, String> buscarTodosComoMap() {
+        return funcionarioDao.buscarTodosComoMap();
+    }
+
+    /**
+     * Busca o nome de um funcionário pelo ID.
+     *
+     * @param idFuncionario identificador do funcionário
+     * @return nome do funcionário ou null
+     */
+    public String buscarNomePorId(Integer idFuncionario) {
+        return funcionarioDao.buscarNomePorId(idFuncionario);
+    }
+
 }
