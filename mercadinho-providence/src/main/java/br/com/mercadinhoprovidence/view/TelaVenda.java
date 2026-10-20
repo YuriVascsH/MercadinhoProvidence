@@ -137,7 +137,7 @@ public class TelaVenda extends VBox {
             if (newScene != null) {
                 newScene.setOnKeyPressed(event -> {
                     if (event.getCode() == KeyCode.F3) {
-                        if (funcionarioLogado != null && funcionarioLogado.getJobTitle() == JobTitle.GERENTE) {
+                        if (funcionarioLogado != null && funcionarioLogado.getCargo() == JobTitle.GERENTE) {
                             alternarModoRemocao();
                         } else {
                             solicitarAutorizacao();
@@ -845,7 +845,7 @@ public class TelaVenda extends VBox {
 
             Employee gerente = funcionarioController.buscarFuncionarioPorCodigo(codigoDigitado);
 
-            if (gerente != null && gerente.getJobTitle() == JobTitle.GERENTE) {
+            if (gerente != null && gerente.getCargo() == JobTitle.GERENTE) {
                 // Código correto, permite a alteração do modo
                 alternarModoRemocao();
                 AlertUtils.showInfo("Autorizado", "Modo de remoção ativado com sucesso!");

@@ -50,7 +50,7 @@ public class Impressora {
 		sb.append("-----------------------------\n");
 
 		for (ItemVenda item : venda.getItensVenda()) {
-			String nome = item.getProduct().getNome();
+			String nome = item.getProduto().getNome();
 			double qtd = item.getQuantidadeOuPeso();
 			double unit = item.getPrecoUnitarioVenda();
 			double total = item.getTotalItem();
@@ -63,9 +63,9 @@ public class Impressora {
 		sb.append(String.format("Subtotal:     R$ %.2f\n", venda.getValorSubtotal()));
 		sb.append(String.format("Desconto:     R$ %.2f\n", venda.getValorDesconto()));
 		sb.append(String.format("TOTAL:        R$ %.2f\n", venda.getValorTotal()));
-		sb.append(String.format("Pago:         R$ %.2f\n", venda.getPagamento().getValorPago()));
-		sb.append(String.format("Troco:        R$ %.2f\n", venda.getPagamento().getTroco()));
-		sb.append("Forma: ").append(venda.getPagamento().getForma().toString()).append("\n");
+		sb.append(String.format("Pago:         R$ %.2f\n", venda.getValorPago()));
+		sb.append(String.format("Troco:        R$ %.2f\n", venda.getTroco()));
+		sb.append("Forma: ").append(venda.getForma().toString()).append("\n");
 
 		sb.append("\nObrigado pela preferência!\n");
 		sb.append("\u001B\u0064\u0005"); // avança 5 linhas

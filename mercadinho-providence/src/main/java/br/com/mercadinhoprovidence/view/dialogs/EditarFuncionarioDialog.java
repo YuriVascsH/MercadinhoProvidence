@@ -33,7 +33,7 @@ public class EditarFuncionarioDialog {
     public static void show(Stage ownerStage, Integer id, Runnable onCompletion) {
         FuncionarioController funcionarioController = new FuncionarioController();
 
-        Funcionario funcionario = funcionarioController.buscarPeloId(id);
+        Employee funcionario = funcionarioController.buscarPeloId(id);
 
         FuncionarioUpdateDto dadosParaAtualizar = new FuncionarioUpdateDto();
 
@@ -90,9 +90,9 @@ public class EditarFuncionarioDialog {
         }
         dpDataNascimento.setStyle(editableStyle);
 
-        ComboBox<JobTitle> cbCargo = new ComboBox<>();
+        ComboBox<JobTitle> cbJobTitle = new ComboBox<>();
         cbJobTitle.getItems().addAll(JobTitle.values());
-        cbJobTitle.setValue(funcionario.getJobTitle());
+        cbJobTitle.setValue(funcionario.getCargo());
         cbJobTitle.setStyle(editableStyle);
         cbJobTitle.setPrefWidth(250);
 
@@ -132,7 +132,7 @@ public class EditarFuncionarioDialog {
         campos.put("E-mail", tfEmail);
         campos.put("Senha: ", tfSenha);
         campos.put("Endereço", tfEndereco);
-        campos.put("Cargo: ", cbCargo);
+        campos.put("Cargo: ", cbJobTitle);
         campos.put("Salário: ", tfSalario);
         campos.put("Data de admissão: ", tfDataAdmissao);
         campos.put("Código de barras: ", codigoBarrasBox);
@@ -200,7 +200,7 @@ public class EditarFuncionarioDialog {
                 dadosParaAtualizar.setEmail(email);
                 dadosParaAtualizar.setEndereco(endereco);
                 dadosParaAtualizar.setSalario(salario);
-                dadosParaAtualizar.setJobTitle(cbJobTitle.getValue());
+                dadosParaAtualizar.setCargo(cbJobTitle.getValue());
                 dadosParaAtualizar.setAtivo(cbAtivo.isSelected());
 
                 // Passar o id + os dados de atualização e retornar um optional

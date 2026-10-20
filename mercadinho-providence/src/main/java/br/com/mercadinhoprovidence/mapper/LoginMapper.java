@@ -23,7 +23,7 @@ public class LoginMapper {
         LoginResponseDto loginResponseDto = new LoginResponseDto();
         loginResponseDto.setName(employee.getNome());
         loginResponseDto.setCodeVerify(employee.getCodigoVerificador());
-        loginResponseDto.setPostion(employee.getJobTitle());
+        loginResponseDto.setPostion(employee.getCargo());
         return loginResponseDto;
 
     }

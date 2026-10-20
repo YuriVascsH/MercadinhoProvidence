@@ -1,14 +1,14 @@
 package br.com.mercadinhoprovidence.dto.funcionario;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 import br.com.mercadinhoprovidence.model.Employee;
 import br.com.mercadinhoprovidence.model.enums.JobTitle;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -30,7 +30,7 @@ public class FuncionarioTableDto {
         this.codigoFuncionario = funcionario.getCodigoVerificador();
         this.nome = funcionario.getNome();
         this.cpf = funcionario.getCpf();
-        this.cargo = funcionario.getJobTitle();
+        this.cargo = funcionario.getCargo();
         this.salario = funcionario.getSalario();
         this.dataAdmissao = funcionario.getDataAdmissao();
         this.ativo = funcionario.getAtivo();
